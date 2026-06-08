@@ -106,10 +106,11 @@ Reiner CSS-3D-MacBook, der beim Laden aufklappt und „Xepter" aufs Display boot
 
 ### Screenshots (so wurden sie erzeugt)
 Per **Microlink** (Free-Tier) aufgenommen, lokal gespeichert & mit macOS `sips` optimiert → **keine Laufzeit-Abhängigkeit**.
-- Desktop: `viewport 1280×800`, `sips -Z 1280 -s format jpeg -s formatOptions 82` → `public/projects/*.jpg`
-- Mobile: `viewport 390×844 isMobile`, `sips -Z 520 ... formatOptions 86` → `public/projects/mobile/*.jpg`
+Aufnahme mit **`viewport.deviceScaleFactor=2`** (Retina) für gestochen scharfe Bilder, danach auf Anzeige-Größe herunterskaliert:
+- Desktop: `viewport 1280×800 @2×` (→ 2560×1600 PNG), `sips --resampleWidth 1600 -s format jpeg -s formatOptions 88` → `public/projects/*.jpg` (1600×1000)
+- Mobile: `viewport 390×844 isMobile @2×` (→ 780×1688 PNG), `sips --resampleWidth 560 ... formatOptions 88` → `public/projects/mobile/*.jpg` (560×1212)
 - Bei Änderung der Live-Seite: Microlink-URL mit **`&force=true`** (busted Cache), neu laden, `sips`, ersetzen.
-  (So wurde z. B. der entfernte Banner beim Symphonieorchester neu aufgenommen.)
+  (Microlink-API: `https://api.microlink.io/?url=…&screenshot=true&meta=false&force=true&viewport.width=…&viewport.deviceScaleFactor=2`.)
 
 ---
 

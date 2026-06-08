@@ -40,16 +40,6 @@ export default function Hero() {
       <div className="relative z-10 mx-auto grid w-full max-w-[1800px] grid-cols-1 items-center gap-12 px-6 sm:px-10 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:px-16 xl:px-24">
         {/* Left — copy */}
         <div className="order-2 lg:order-1">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
-            className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-line-2 bg-white/[0.02] px-4 py-2"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--color-accent)]" />
-            <span className="eyebrow !text-ink-dim">Freelance Webentwickler</span>
-          </motion.div>
-
           <h1 className="font-display text-[clamp(3rem,9vw,6.4rem)] font-semibold leading-[0.92] tracking-[-0.03em]">
             {LINES.map((t, i) => (
               <span key={t} className="block overflow-hidden pb-[0.06em]">

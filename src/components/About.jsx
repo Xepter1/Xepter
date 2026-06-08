@@ -1,12 +1,6 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, inView } from '../lib/anim'
 
-const STATS = [
-  { k: '4', v: 'Jahre Ausbilder', sub: 'Informatiker · DRÄXLMAIER Group' },
-  { k: '∞', v: 'Leidenschaft', sub: 'Code seit der Kindheit' },
-  { k: '3', v: 'Projekte', sub: 'live & im Einsatz' },
-]
-
 export default function About() {
   return (
     <section id="ueber" className="relative overflow-hidden py-28 sm:py-36">
@@ -23,7 +17,7 @@ export default function About() {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_0.85fr] lg:items-center lg:gap-24">
           {/* Left — narrative */}
           <motion.div
             variants={fadeUp}
@@ -38,10 +32,10 @@ export default function About() {
 
             <div className="mt-9 space-y-6 text-lg leading-relaxed text-ink-dim">
               <p>
-                Ich bin <span className="text-ink">Xepter</span> — Student des
-                Wirtschaftsingenieurwesens. Seit ich ein Kind bin, programmiere
-                ich leidenschaftlich gerne: aus Neugier, aus Spieltrieb und aus
-                dem Anspruch, Dinge spürbar besser zu machen.
+                Ich bin <span className="text-ink">Patrick</span>, 27, und
+                studiere Wirtschaftsingenieurwesen. Seit ich ein Kind bin,
+                programmiere ich leidenschaftlich gerne: aus Neugier, aus
+                Spieltrieb und aus dem Anspruch, Dinge spürbar besser zu machen.
               </p>
               <p>
                 Die letzten vier Jahre habe ich als{' '}
@@ -59,13 +53,12 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Right — portrait + stats */}
+          {/* Right — portrait */}
           <motion.div
             variants={stagger}
             initial="hidden"
             whileInView="show"
             viewport={inView}
-            className="flex flex-col gap-5"
           >
             <motion.div
               variants={fadeUp}
@@ -84,7 +77,7 @@ export default function About() {
               />
               <img
                 src="/xepter-portrait.jpg"
-                alt="Xepter — Freelance Webentwickler"
+                alt="Patrick — Freelance Webentwickler (Xepter)"
                 width={675}
                 height={900}
                 loading="lazy"
@@ -100,24 +93,6 @@ export default function About() {
                 </p>
               </div>
             </motion.div>
-
-            <div className="grid grid-cols-3 gap-3">
-              {STATS.map((s) => (
-                <motion.div
-                  key={s.v}
-                  variants={fadeUp}
-                  className="rounded-2xl border border-line bg-white/[0.02] p-5 transition-colors duration-500 hover:border-accent/40"
-                >
-                  <div className="font-display text-3xl font-semibold text-ink">
-                    {s.k}
-                  </div>
-                  <div className="mt-1 text-sm font-medium text-ink">{s.v}</div>
-                  <div className="mt-1 text-xs leading-snug text-ink-faint">
-                    {s.sub}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>

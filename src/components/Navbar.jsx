@@ -7,7 +7,6 @@ import { useGo } from '../lib/nav'
 const SECTIONS = [
   { label: 'Projekte', id: 'projekte' },
   { label: 'Über mich', id: 'ueber' },
-  { label: 'Leistungen', id: 'leistungen' },
 ]
 
 export default function Navbar() {

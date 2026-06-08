@@ -58,8 +58,8 @@ function Preview({ project, flip }) {
             src={project.img}
             alt={`Screenshot der Website ${project.name}`}
             loading="lazy"
-            width={1280}
-            height={800}
+            width={1600}
+            height={1000}
             onError={() => setFailed(true)}
             className="h-full w-full object-cover object-top transition-transform duration-[1.2s] ease-out group-hover:scale-[1.04]"
           />
