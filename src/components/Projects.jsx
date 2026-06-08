@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { fadeUp, inView, EASE } from '../lib/anim'
 import { IconArrowUpRight } from './Icons'
+import SectionMark from './SectionMark'
 
 // Screenshots liegen lokal unter /public/projects/ (eigenständig, schnell).
 // Austauschen? Einfach die JPGs ersetzen oder img-Pfad anpassen.
@@ -10,6 +11,7 @@ const PROJECTS = [
     name: 'Landshuter Symphonieorchester',
     desc: 'Webauftritt für ein klassisches Symphonieorchester — Konzertkalender, Programm und digitale Bühne für die Klassik.',
     tag: 'Kultur',
+    year: '2024',
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
     img: '/projects/symphonieorchester.jpg',
     imgMobile: '/projects/mobile/symphonieorchester.jpg',
@@ -19,6 +21,8 @@ const PROJECTS = [
     name: 'DesignbyEms',
     desc: 'Markenauftritt und Portfolio für ein kreatives Designstudio — reduziert, elegant und ganz auf die Arbeit fokussiert.',
     tag: 'Branding',
+    year: '2024',
+    live: true,
     url: 'https://designbyems.de/',
     img: '/projects/designbyems.jpg',
     imgMobile: '/projects/mobile/designbyems.jpg',
@@ -28,6 +32,7 @@ const PROJECTS = [
     name: 'Tankstelle Stettner',
     desc: 'Digitaler Auftritt einer regionalen Tankstelle — Services, Standort und Kontakt klar auf den Punkt gebracht.',
     tag: 'Lokal',
+    year: '2023',
     url: 'https://datenschutz.fraunhofer-lab.de/',
     img: '/projects/tankstelle-stettner.jpg',
     imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
@@ -115,12 +120,26 @@ function Preview({ project, flip }) {
 
 function Row({ project, index }) {
   const ref = useRef(null)
+  const [active, setActive] = useState(false)
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
   })
   const y = useTransform(scrollYProgress, [0, 1], [60, -60])
   const flip = index % 2 === 1
+
+  // "You are here" — only the row crossing the viewport centre is active,
+  // so at most one warm tick is ever lit.
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      ([entry]) => setActive(entry.isIntersecting),
+      { rootMargin: '-45% 0px -45% 0px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
 
   return (
     <motion.article
@@ -145,15 +164,30 @@ function Row({ project, index }) {
 
       {/* Copy */}
       <div className={flip ? 'lg:order-1' : ''}>
-        <div className="mb-5 flex items-baseline gap-4">
-          <span className="font-mono text-sm text-accent">
-            0{index + 1}
+        <p className="spec mb-4 flex items-center gap-3">
+          {/* you-are-here tick — violet hairline by default, warm spark on the centred/hovered row */}
+          <span
+            aria-hidden="true"
+            className={`inline-block h-px w-5 origin-left transition-[background-color,transform] duration-300 group-hover:scale-x-150 group-hover:bg-spark ${
+              active ? 'scale-x-150 bg-spark' : 'bg-line-2'
+            }`}
+          />
+          <span>{project.tag}</span>
+          <span aria-hidden="true" className="opacity-40">
+            ·
           </span>
-          <span className="h-px flex-1 bg-line" />
-          <span className="rounded-full border border-line-2 px-3 py-1 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink-faint">
-            {project.tag}
-          </span>
-        </div>
+          {project.live ? (
+            <span className="inline-flex items-center gap-1.5 text-spark">
+              Live
+              <span
+                aria-hidden="true"
+                className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-spark"
+              />
+            </span>
+          ) : (
+            <span>{project.year}</span>
+          )}
+        </p>
 
         <h3 className="font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-medium leading-[1.05] tracking-[-0.02em]">
           {project.name}
@@ -189,19 +223,14 @@ export default function Projects() {
     <section id="projekte" className="relative py-28 sm:py-36">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Header */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={inView}
-          className="mb-20 max-w-2xl"
-        >
-          <span className="eyebrow">01 — Ausgewählte Arbeiten</span>
-          <h2 className="mt-5 font-display text-[clamp(2.4rem,5.5vw,4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
-            Projekte, die einen{' '}
-            <span className="text-gradient">Eindruck</span> hinterlassen.
-          </h2>
-        </motion.div>
+        <SectionMark
+          word="Arbeit"
+          lines={[
+            'Projekte, die einen',
+            { text: 'Eindruck', accent: true, suffix: ' hinterlassen.' },
+          ]}
+          className="mb-20"
+        />
 
         {/* Rows */}
         <div className="flex flex-col gap-24 sm:gap-32">

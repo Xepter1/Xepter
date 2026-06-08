@@ -20,10 +20,17 @@
   --color-line: rgba(255, 255, 255, 0.08);
   --color-line-2: rgba(255, 255, 255, 0.14);
 
-  /* Accent — electric cyan-blue */
+  /* Accent — electric violet */
   --color-accent: #bf5af2;
   --color-accent-2: #8b3df0;
   --color-accent-soft: rgba(191, 90, 242, 0.14);
+
+  /* Editorial micro-text — AA-safe quiet grey (5.84:1 on base) for informational kicker/spec lines */
+  --color-ink-meta: #828b9c;
+
+  /* spark = aliveness ONLY: H2 underline + LIVE dot + active-row tick.
+     Never on buttons / links / focus / gradients / eyebrows. (warm amber, 11:1 on base) */
+  --color-spark: #ffb04d;
 
   /* Type */
   --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, system-ui, sans-serif;
@@ -98,6 +105,44 @@ section[id] {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-accent);
+}
+
+/* Editorial section kicker — a quiet mono word above the headline (replaces numbered eyebrows) */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink-meta);
+}
+
+/* Borderless typographic project meta line (replaces the number + chip) */
+.spec {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ink-meta);
+}
+
+/* The single warm "spark" underline drawn under one accent word */
+.spark-underline {
+  background: var(--color-spark);
+  border-radius: 1px;
+}
+
+/* LIVE indicator dot — slow breathe to read as "alive/now" */
+@keyframes spark-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+.live-dot {
+  animation: spark-breathe 2.4s ease-in-out infinite;
 }
 
 .text-gradient {
@@ -731,4 +776,10 @@ section[id] {
   .scroll-dot {
     animation: none;
   }
+  .live-dot {
+    animation: none;
+  }
+  /* SectionMark's hairline / kicker / clip-reveal / spark-underline are Framer-driven and
+     gated in JS via useReducedMotion() (Framer's `initial` overrides CSS), so they render
+     at their final visible state when reduced motion is requested. */
 }

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, inView } from '../lib/anim'
+import SectionMark from './SectionMark'
 
 export default function About() {
   return (
@@ -19,18 +20,19 @@ export default function About() {
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_0.85fr] lg:items-center lg:gap-24">
           {/* Left — narrative */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={inView}
-          >
-            <span className="eyebrow">02 — Über mich</span>
-            <h2 className="mt-5 font-display text-[clamp(2.2rem,5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
-              Ingenieurs­denken trifft auf gestalterischen Anspruch.
-            </h2>
+          <div>
+            <SectionMark
+              word="Person"
+              lines={['Ingenieurs­denken trifft auf', 'gestalterischen Anspruch.']}
+            />
 
-            <div className="mt-9 space-y-6 text-lg leading-relaxed text-ink-dim">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={inView}
+              className="mt-9 space-y-6 text-lg leading-relaxed text-ink-dim"
+            >
               <p>
                 Ich bin <span className="text-ink">Patrick</span>, 27, und
                 studiere Wirtschaftsingenieurwesen. Seit ich ein Kind bin,
@@ -50,8 +52,8 @@ export default function About() {
                 Das Ergebnis: Websites, die nicht nur gut aussehen, sondern
                 durchdacht funktionieren.
               </p>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Right — portrait */}
           <motion.div

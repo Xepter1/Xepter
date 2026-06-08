@@ -25,3 +25,21 @@ export const stagger = {
 
 // Default viewport config for whileInView
 export const inView = { once: true, margin: '-90px' }
+
+// Clip-up reveal (mask a line and slide it up) — custom = delay in seconds
+export const clipUp = {
+  hidden: { y: '110%' },
+  show: (delay = 0) => ({
+    y: '0%',
+    transition: { duration: 0.72, delay, ease: EASE },
+  }),
+}
+
+// Self-drawing horizontal rule / underline — custom = delay in seconds. Pair with style={{ originX: 0 }}
+export const drawX = {
+  hidden: { scaleX: 0 },
+  show: (delay = 0) => ({
+    scaleX: 1,
+    transition: { duration: 0.8, delay, ease: EASE },
+  }),
+}
