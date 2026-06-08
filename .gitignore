@@ -11,3 +11,6 @@ dist-ssr
 *.log
 .env
 .env.*
+
+# Quell-/Scratch-Ordner (optimierte Assets liegen in public/)
+Bilder/

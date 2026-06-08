@@ -2,8 +2,8 @@ import { motion } from 'framer-motion'
 import { fadeUp, stagger, inView } from '../lib/anim'
 
 const STATS = [
-  { k: '6.', v: 'Semester', sub: 'Wirtschaftsingenieurwesen' },
-  { k: '∞', v: 'Leidenschaft', sub: 'Code seit jungen Jahren' },
+  { k: '4', v: 'Jahre Ausbilder', sub: 'Informatiker · DRÄXLMAIER Group' },
+  { k: '∞', v: 'Leidenschaft', sub: 'Code seit der Kindheit' },
   { k: '3', v: 'Projekte', sub: 'live & im Einsatz' },
 ]
 
@@ -18,7 +18,7 @@ export default function About() {
           left: '-10%',
           top: '20%',
           background:
-            'radial-gradient(circle, rgba(44,123,242,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.16), transparent 60%)',
         }}
       />
 
@@ -38,17 +38,19 @@ export default function About() {
 
             <div className="mt-9 space-y-6 text-lg leading-relaxed text-ink-dim">
               <p>
-                Ich bin{' '}
-                <span className="text-ink">Xepter</span> — Student des
-                Wirtschaftsingenieurwesens im sechsten Semester. Seit jungen
-                Jahren schreibe ich Code: aus Neugier, aus Leidenschaft und aus
+                Ich bin <span className="text-ink">Xepter</span> — Student des
+                Wirtschaftsingenieurwesens. Seit ich ein Kind bin, programmiere
+                ich leidenschaftlich gerne: aus Neugier, aus Spieltrieb und aus
                 dem Anspruch, Dinge spürbar besser zu machen.
               </p>
               <p>
-                Was als Hobby begann, ist zu meiner Handschrift geworden. Ich
-                verbinde das analytische, strukturierte Denken eines Ingenieurs
-                mit einem feinen Gespür für Ästhetik — und genau diese Mischung
-                fließt in jedes Projekt, das meinen Namen trägt.
+                Die letzten vier Jahre habe ich als{' '}
+                <span className="text-ink">Ausbilder für Informatiker</span> bei
+                der <span className="text-ink">DRÄXLMAIER Group</span>{' '}
+                gearbeitet — und dabei gelernt, dass sauberer Code und klare
+                Vermittlung Hand in Hand gehen. Ingenieurs­denken, technische
+                Tiefe und ein feines Gespür für Ästhetik fließen heute in jedes
+                Projekt, das meinen Namen trägt.
               </p>
               <p className="text-ink">
                 Das Ergebnis: Websites, die nicht nur gut aussehen, sondern
@@ -57,7 +59,7 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Right — stats + monogram */}
+          {/* Right — portrait + stats */}
           <motion.div
             variants={stagger}
             initial="hidden"
@@ -67,25 +69,36 @@ export default function About() {
           >
             <motion.div
               variants={fadeUp}
-              className="relative overflow-hidden rounded-3xl border border-line-2 bg-gradient-to-br from-card to-base p-8"
+              className="group relative overflow-hidden rounded-3xl border border-line-2 bg-card"
             >
               <div
-                className="glow"
+                className="glow z-10"
                 style={{
                   width: 240,
                   height: 240,
                   right: '-20%',
                   top: '-30%',
                   background:
-                    'radial-gradient(circle, rgba(56,201,245,0.25), transparent 65%)',
+                    'radial-gradient(circle, rgba(191,90,242,0.25), transparent 65%)',
                 }}
               />
-              <span className="font-display text-[5rem] font-semibold leading-none text-gradient">
-                X
-              </span>
-              <p className="mt-4 font-mono text-sm uppercase tracking-[0.2em] text-ink-faint">
-                Webentwicklung & Design
-              </p>
+              <img
+                src="/xepter-portrait.jpg"
+                alt="Xepter — Freelance Webentwickler"
+                width={675}
+                height={900}
+                loading="lazy"
+                className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base via-base/15 to-transparent" />
+              <div className="absolute bottom-0 left-0 z-10 p-6">
+                <p className="font-display text-2xl font-semibold leading-none text-ink">
+                  Xepter
+                </p>
+                <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
+                  Webentwicklung &amp; Design
+                </p>
+              </div>
             </motion.div>
 
             <div className="grid grid-cols-3 gap-3">

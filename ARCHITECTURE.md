@@ -27,6 +27,10 @@ Befehle: `npm install` · `npm run dev` (→ localhost:5173) · `npm run build` 
 index.html                 # Font-Links, Meta, Theme-Color
 vite.config.js             # react + tailwindcss Plugins, server.host
 vercel.json                # SPA-Rewrite (alle Routen → index.html)
+Dockerfile                 # Multi-Stage: Node-Build → nginx-Serve (s. §9)
+nginx.conf                 # nginx-Config mit SPA-Fallback (try_files → index.html)
+docker-compose.yml         # Portainer-Git-Stack: build . → Port 8088:80
+.dockerignore              # schlanker Build-Context
 public/
   favicon.svg
   _redirects               # SPA-Fallback (Netlify/Cloudflare)
@@ -44,7 +48,7 @@ src/
     Hero.jsx               # Headline + CTAs + <Macbook/> (breites max-w-[1800px] Layout)
     Macbook.jsx            # Reiner CSS-3D-MacBook (s. §4)
     Projects.jsx           # Galerie: Browser-Frame + iPhone-Overlay (s. §5)
-    About.jsx              # „Über mich" + Stats + Monogramm-Karte
+    About.jsx              # „Über mich" + echte Bio + Portrait-Karte (public/xepter-portrait.jpg) + Stats
     Services.jsx           # 4 Leistungs-Cards
     ContactCTA.jsx         # Abschluss-CTA auf der Startseite → /kontakt
     Footer.jsx             # Wordmark, Nav, Legal-Links, Back-to-top
@@ -64,7 +68,7 @@ src/
 **Surfaces:** `--color-base #07080c` · `--color-panel #0c0e14` · `--color-card #111420` · `--color-card-2 #161a28`
 **Ink:** `--color-ink #f3f6fb` · `--color-ink-dim #aab2c2` · `--color-ink-faint #6b7384`
 **Lines:** `--color-line rgba(255,255,255,.08)` · `--color-line-2 rgba(255,255,255,.14)`
-**Akzent (elektrisches Cyan-Blau):** `--color-accent #38c9f5` · `--color-accent-2 #2c7bf2` · `--color-accent-soft`
+**Akzent (elektrisches Violett):** `--color-accent #bf5af2` · `--color-accent-2 #8b3df0` · `--color-accent-soft`
 **Fonts:** `--font-display` (Clash Display) · `--font-sans` (Satoshi) · `--font-mono` (JetBrains Mono)
 **Easing:** `--ease-out-expo cubic-bezier(.16,1,.3,1)`
 
@@ -134,6 +138,19 @@ Per **Microlink** (Free-Tier) aufgenommen, lokal gespeichert & mit macOS `sips` 
 
 Hinweis Recht: Vorlagen sind solide & aktuell (DDG, §36 VSBG, BayLDA, kein toter ODR-Link), aber **kein
 Anwaltsersatz** — im Zweifel mit einem Generator (e-recht24) gegenchecken.
+
+---
+
+## 9. Deploy (GitHub + Raspi via Portainer)
+
+- **Repo:** `https://github.com/Xepter1/Xepter.git` (public, Branch `main`). Push lokal mit dediziertem SSH —
+  `GIT_SSH_COMMAND='ssh -i ~/.ssh/id_ed25519_webhosting -o IdentitiesOnly=yes' git push origin main`.
+- **Raspi-Testumgebung:** Portainer-**Git-Stack** → Repo-URL + `docker-compose.yml` als Compose-Pfad → Deploy.
+  Portainer klont, baut das Image (Node-Build → nginx) und startet den Container. Erreichbar unter `:8088`.
+- **SPA-Fallback** liegt in `nginx.conf` (`try_files $uri $uri/ /index.html`) → `/kontakt`, `/impressum`,
+  `/datenschutz` funktionieren auch bei direktem Aufruf/Reload. `dist/` ist `.gitignore`d → wird im Build erzeugt.
+- Update-Flow: pushen → in Portainer Stack „Pull and redeploy". Port in `docker-compose.yml` (`8088:80`) anpassbar.
+- **Offen:** Reverse-Proxy-Anbindung (Traefik/nginx-proxy) für eigene Domain statt Port — Labels noch nicht gesetzt.
 
 ---
 

@@ -22,7 +22,7 @@ export default function Hero() {
           right: '-6%',
           top: '4%',
           background:
-            'radial-gradient(circle, rgba(44,123,242,0.28), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.28), transparent 60%)',
         }}
       />
       <div
@@ -33,7 +33,7 @@ export default function Hero() {
           left: '-8%',
           bottom: '2%',
           background:
-            'radial-gradient(circle, rgba(56,201,245,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(191,90,242,0.16), transparent 60%)',
         }}
       />
 

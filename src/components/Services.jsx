@@ -65,7 +65,7 @@ export default function Services() {
                     right: '-15%',
                     top: '-25%',
                     background:
-                      'radial-gradient(circle, rgba(56,201,245,0.18), transparent 65%)',
+                      'radial-gradient(circle, rgba(191,90,242,0.18), transparent 65%)',
                   }}
                 />
                 <div className="relative z-10">

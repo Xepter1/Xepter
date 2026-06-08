@@ -21,9 +21,9 @@
   --color-line-2: rgba(255, 255, 255, 0.14);
 
   /* Accent — electric cyan-blue */
-  --color-accent: #38c9f5;
-  --color-accent-2: #2c7bf2;
-  --color-accent-soft: rgba(56, 201, 245, 0.14);
+  --color-accent: #bf5af2;
+  --color-accent-2: #8b3df0;
+  --color-accent-soft: rgba(191, 90, 242, 0.14);
 
   /* Type */
   --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, system-ui, sans-serif;
@@ -161,7 +161,7 @@ section[id] {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(56, 201, 245, 0.4);
+  text-decoration-color: rgba(191, 90, 242, 0.4);
   transition: text-decoration-color 0.3s ease;
 }
 .legal-prose a:hover {
@@ -210,11 +210,11 @@ section[id] {
 .btn-primary {
   color: #04121a;
   background: linear-gradient(105deg, var(--color-accent-2), var(--color-accent));
-  box-shadow: 0 8px 30px -8px rgba(56, 201, 245, 0.5),
+  box-shadow: 0 8px 30px -8px rgba(191, 90, 242, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .btn-primary:hover {
-  box-shadow: 0 14px 44px -8px rgba(56, 201, 245, 0.7),
+  box-shadow: 0 14px 44px -8px rgba(191, 90, 242, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
@@ -352,7 +352,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     circle at 50% 47%,
-    rgba(56, 201, 245, 0.06),
+    rgba(191, 90, 242, 0.06),
     transparent 26%
   );
 }
@@ -391,7 +391,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     60% 55% at 50% 42%,
-    rgba(56, 201, 245, 0.16),
+    rgba(191, 90, 242, 0.16),
     transparent 70%
   );
   opacity: 0;
@@ -447,7 +447,7 @@ section[id] {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 38px rgba(56, 201, 245, 0.35);
+  text-shadow: 0 0 38px rgba(191, 90, 242, 0.35);
 }
 .screen-tag {
   font-family: var(--font-mono);

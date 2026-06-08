@@ -16,7 +16,7 @@ export default function ContactCTA() {
           top: '0%',
           transform: 'translateX(-50%)',
           background:
-            'radial-gradient(circle, rgba(44,123,242,0.22), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.22), transparent 60%)',
         }}
       />
       <div className="grid-bg absolute inset-0 z-0 opacity-60" />
