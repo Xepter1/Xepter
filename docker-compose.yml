@@ -1,0 +1,9 @@
+services:
+  xepter:
+    build: .
+    image: xepter-portfolio
+    container_name: xepter-portfolio
+    restart: unless-stopped
+    ports:
+      # host:container — linke Zahl bei Bedarf ändern, falls Port belegt ist
+      - "8088:80"
