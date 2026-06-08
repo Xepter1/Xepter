@@ -1,0 +1,161 @@
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Link, useLocation } from 'react-router-dom'
+import { EASE } from '../lib/anim'
+import { useGo } from '../lib/nav'
+
+const SECTIONS = [
+  { label: 'Projekte', id: 'projekte' },
+  { label: 'Über mich', id: 'ueber' },
+  { label: 'Leistungen', id: 'leistungen' },
+]
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const [menu, setMenu] = useState(false)
+  const go = useGo()
+  const { pathname } = useLocation()
+  const onContact = pathname === '/kontakt'
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = menu ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [menu])
+
+  const handleSection = (e, id) => {
+    e.preventDefault()
+    setMenu(false)
+    go(id)
+  }
+
+  return (
+    <>
+      <motion.header
+        initial={{ y: -90, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
+          scrolled || onContact
+            ? 'glass border-b border-line'
+            : 'border-b border-transparent'
+        }`}
+      >
+        <nav className="mx-auto flex h-[68px] max-w-[1800px] items-center justify-between px-6 sm:px-10 lg:px-16 xl:px-24">
+          {/* Wordmark */}
+          <Link
+            to="/"
+            onClick={(e) => {
+              if (pathname === '/') {
+                e.preventDefault()
+                go('top')
+              }
+              setMenu(false)
+            }}
+            className="group flex items-center gap-2"
+            aria-label="Xepter — Startseite"
+          >
+            <span className="font-display text-[1.35rem] font-semibold tracking-tight text-ink">
+              Xepter
+            </span>
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)] transition-transform duration-500 group-hover:scale-150" />
+          </Link>
+
+          {/* Desktop links */}
+          <div className="hidden items-center gap-1 md:flex">
+            {SECTIONS.map((l) => (
+              <a
+                key={l.id}
+                href={`/#${l.id}`}
+                onClick={(e) => handleSection(e, l.id)}
+                className="relative px-4 py-2 text-[0.93rem] text-ink-dim transition-colors duration-300 hover:text-ink"
+              >
+                {l.label}
+              </a>
+            ))}
+            <Link
+              to="/kontakt"
+              onClick={() => setMenu(false)}
+              className={`btn btn-ghost ml-3 h-11 px-5 text-[0.9rem] ${
+                onContact ? '!border-accent !text-accent' : ''
+              }`}
+            >
+              Kontakt
+            </Link>
+          </div>
+
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setMenu((m) => !m)}
+            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-line-2 md:hidden"
+            aria-label={menu ? 'Menü schließen' : 'Menü öffnen'}
+            aria-expanded={menu}
+          >
+            <span className="relative block h-3 w-5">
+              <span
+                className={`absolute left-0 h-[1.6px] w-5 bg-ink transition-all duration-300 ${
+                  menu ? 'top-1.5 rotate-45' : 'top-0'
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-1.5 h-[1.6px] w-5 bg-ink transition-all duration-300 ${
+                  menu ? '-rotate-45' : ''
+                }`}
+              />
+              <span
+                className={`absolute left-0 h-[1.6px] w-5 bg-ink transition-all duration-300 ${
+                  menu ? 'top-1.5 opacity-0' : 'top-3'
+                }`}
+              />
+            </span>
+          </button>
+        </nav>
+      </motion.header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {menu && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 flex flex-col justify-center px-8 md:hidden glass"
+          >
+            <div className="flex flex-col gap-2">
+              {SECTIONS.map((l, i) => (
+                <motion.a
+                  key={l.id}
+                  href={`/#${l.id}`}
+                  onClick={(e) => handleSection(e, l.id)}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.08 * i + 0.1, ease: EASE }}
+                  className="font-display text-4xl font-medium tracking-tight text-ink"
+                >
+                  {l.label}
+                </motion.a>
+              ))}
+            </div>
+            <Link
+              to="/kontakt"
+              onClick={() => setMenu(false)}
+              className="btn btn-primary mt-10 w-full justify-center"
+            >
+              Kontakt
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
