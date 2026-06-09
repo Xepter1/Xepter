@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { IconArrowUp } from './Icons'
 import { useGo } from '../lib/nav'
+import Wordmark from './Wordmark'
 
 const SECTIONS = [
   { label: 'Projekte', id: 'projekte' },
@@ -17,9 +18,7 @@ export default function Footer() {
         <div className="flex items-end justify-between gap-6 py-14">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-                Xepter
-              </span>
+              <Wordmark className="font-display text-4xl font-semibold tracking-tight sm:text-5xl" />
               <span className="mb-1 h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)]" />
             </div>
             <p className="mt-3 max-w-xs text-ink-faint">

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
+import Wordmark from './Wordmark'
 
 /**
  * Pure-CSS 3D MacBook Pro.
@@ -66,7 +67,7 @@ export default function Macbook() {
                 style={{ containerType: 'inline-size' }}
               >
                 <div className="screen-brand">
-                  <span className="screen-logo">Xepter</span>
+                  <Wordmark className="screen-logo" logoEm={0.78} dy="0.04em" />
                   <span className="screen-tag">WEBENTWICKLUNG</span>
                 </div>
                 <div className="screen-glare" />

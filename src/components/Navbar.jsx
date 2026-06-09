@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 import { EASE } from '../lib/anim'
 import { useGo } from '../lib/nav'
+import Wordmark from './Wordmark'
 
 const SECTIONS = [
   { label: 'Projekte', id: 'projekte' },
@@ -63,9 +64,10 @@ export default function Navbar() {
             className="group flex items-center gap-2"
             aria-label="Xepter — Startseite"
           >
-            <span className="font-display text-[1.35rem] font-semibold tracking-tight text-ink">
-              Xepter
-            </span>
+            <Wordmark
+              className="font-display text-[1.35rem] font-semibold tracking-tight text-ink"
+              alt=""
+            />
             <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)] transition-transform duration-500 group-hover:scale-150" />
           </Link>
 
