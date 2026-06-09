@@ -1,0 +1,20 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: xepter-web:latest
+    container_name: xepter-web
+    restart: unless-stopped
+    networks: [caddy]
+    labels:
+      # Apex-Domain: statische Seite ausliefern (nginx lauscht auf Port 80)
+      caddy_0: xepter.de
+      caddy_0.reverse_proxy: "{{upstreams 80}}"
+      # www -> auf die nackte Domain weiterleiten (eine kanonische Adresse)
+      caddy_1: www.xepter.de
+      caddy_1.redir: "https://xepter.de{uri}"
+
+networks:
+  caddy:
+    external: true
