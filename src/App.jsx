@@ -10,6 +10,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
 import LeistungenPage from './pages/LeistungenPage'
+import UeberMichPage from './pages/UeberMichPage'
 import ContactPage from './pages/ContactPage'
 import ImpressumPage from './pages/ImpressumPage'
 import DatenschutzPage from './pages/DatenschutzPage'
@@ -62,6 +63,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/leistungen" element={<LeistungenPage />} />
+          <Route path="/ueber-mich" element={<UeberMichPage />} />
           <Route path="/kontakt" element={<ContactPage />} />
           <Route path="/impressum" element={<ImpressumPage />} />
           <Route path="/datenschutz" element={<DatenschutzPage />} />

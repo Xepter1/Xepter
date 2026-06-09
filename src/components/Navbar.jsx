@@ -10,7 +10,7 @@ import Wordmark from './Wordmark'
 const NAV = [
   { label: 'Projekte', id: 'projekte' },
   { label: 'Leistungen', to: '/leistungen' },
-  { label: 'Über mich', id: 'ueber' },
+  { label: 'Über mich', to: '/ueber-mich' },
 ]
 
 export default function Navbar() {

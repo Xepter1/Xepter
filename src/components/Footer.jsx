@@ -3,10 +3,7 @@ import { IconArrowUp } from './Icons'
 import { useGo } from '../lib/nav'
 import Wordmark from './Wordmark'
 
-const SECTIONS = [
-  { label: 'Projekte', id: 'projekte' },
-  { label: 'Über mich', id: 'ueber' },
-]
+const SECTIONS = [{ label: 'Projekte', id: 'projekte' }]
 
 export default function Footer() {
   const go = useGo()
@@ -58,6 +55,12 @@ export default function Footer() {
               className="text-sm text-ink-faint transition-colors hover:text-ink"
             >
               Leistungen
+            </Link>
+            <Link
+              to="/ueber-mich"
+              className="text-sm text-ink-faint transition-colors hover:text-ink"
+            >
+              Über mich
             </Link>
             <Link
               to="/kontakt"
