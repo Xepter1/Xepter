@@ -474,10 +474,10 @@ section[id] {
   opacity: 0;
   transform: translateY(8px) scale(0.96);
   filter: blur(6px);
-  transition: opacity 0.9s ease 1.45s, transform 1.1s var(--ease-out-expo) 1.45s,
-    filter 0.9s ease 1.45s;
+  transition: opacity 0.85s ease, transform 1.05s var(--ease-out-expo),
+    filter 0.85s ease;
 }
-.is-open .screen-brand {
+.is-rendered .screen-brand {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
@@ -485,7 +485,7 @@ section[id] {
 .screen-logo {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.7rem, 6.5cqw, 3.4rem);
+  font-size: clamp(2.1rem, 8.4cqw, 4.4rem);
   letter-spacing: -0.02em;
   line-height: 1;
   background: linear-gradient(100deg, #ffffff 10%, var(--color-accent) 90%);
@@ -500,6 +500,114 @@ section[id] {
   letter-spacing: 0.42em;
   text-indent: 0.42em;
   color: var(--color-ink-faint);
+}
+.screen-tagline {
+  max-width: 84%;
+  margin-top: 0.3em;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: clamp(0.6rem, 2.5cqw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+  color: var(--color-ink-dim);
+  text-wrap: balance;
+}
+
+/* --- macOS Terminal boot ("the brand is built live") --- */
+.term {
+  position: absolute;
+  inset: 6%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2.4cqw;
+  overflow: hidden;
+  background: rgba(22, 18, 30, 0.9);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 4cqw 9cqw rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  font-family: 'SF Mono', 'Menlo', var(--font-mono);
+  /* fades out when the brand is "rendered" */
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-out-expo);
+}
+.is-rendered .term {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+.term-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.5cqw;
+  height: 6.5cqw;
+  min-height: 13px;
+  padding: 0 2.8cqw;
+  background: linear-gradient(180deg, rgba(64, 58, 74, 0.7), rgba(42, 37, 52, 0.6));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.term-dot {
+  width: 2.3cqw;
+  height: 2.3cqw;
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+}
+.term-dot--r { background: #ff5f57; }
+.term-dot--y { background: #febc2e; }
+.term-dot--g { background: #28c840; }
+.term-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 2.5cqw;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.term-body {
+  flex: 1;
+  padding: 3cqw 3.4cqw;
+  font-size: 3.1cqw;
+  line-height: 1.55;
+  color: #e7e3f0;
+  overflow: hidden;
+}
+.term-line {
+  white-space: pre;
+}
+
+/* syntax / log tokens */
+.tok.prompt { color: #6fe0a3; }
+.tok.cmd { color: #f4f1fb; }
+.tok.arg { color: #9bd1ff; }
+.tok.kw { color: #c792ea; }
+.tok.fn { color: #82aaff; }
+.tok.tag { color: #7fb3ff; }
+.tok.accent { color: var(--color-accent); }
+.tok.punc { color: #b8b2c8; }
+.tok.ok { color: #28c840; }
+.tok.live { color: #28c840; }
+.tok.dim { color: #a9a2bd; }
+
+.term-caret {
+  display: inline-block;
+  width: 1.3cqw;
+  min-width: 4px;
+  height: 3.2cqw;
+  min-height: 9px;
+  margin-left: 0.5cqw;
+  transform: translateY(0.6cqw);
+  background: var(--color-accent);
+  animation: term-blink 1s steps(1) infinite;
+}
+@keyframes term-blink {
+  50% { opacity: 0; }
 }
 
 /* --- Base / keyboard deck (screen-forward minimal) --- */

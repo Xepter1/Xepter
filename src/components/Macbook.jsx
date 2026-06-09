@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import Wordmark from './Wordmark'
+import MacTerminal from './MacTerminal'
 
 /**
  * Pure-CSS 3D MacBook Pro.
@@ -9,6 +10,8 @@ import Wordmark from './Wordmark'
  */
 export default function Macbook() {
   const [open, setOpen] = useState(false)
+  const [rendered, setRendered] = useState(false) // brand "born" after terminal build
+  const [runId, setRunId] = useState(0) // bump to replay the boot sequence
   const deviceRef = useRef(null)
   const reduce = useReducedMotion()
 
@@ -16,11 +19,19 @@ export default function Macbook() {
   useEffect(() => {
     if (reduce) {
       setOpen(true)
+      setRendered(true) // no terminal animation — show the brand directly
       return
     }
     const t = setTimeout(() => setOpen(true), 650)
     return () => clearTimeout(t)
   }, [reduce])
+
+  // Click the open display to replay the build sequence (delight)
+  const replay = () => {
+    if (reduce || !open) return
+    setRendered(false)
+    setRunId((n) => n + 1)
+  }
 
   // Subtle parallax tilt following the cursor (desktop, motion allowed)
   useEffect(() => {
@@ -58,17 +69,29 @@ export default function Macbook() {
       <div className="mac-float">
         <div
           ref={deviceRef}
-          className={`device ${open ? 'is-open' : ''}`}
+          className={`device ${open ? 'is-open' : ''} ${
+            rendered ? 'is-rendered' : ''
+          }`}
         >
           <div className="lid">
             <div className="lid-shell">
               <div
                 className="screen"
                 style={{ containerType: 'inline-size' }}
+                onClick={replay}
               >
+                {!reduce && (
+                  <MacTerminal
+                    key={runId}
+                    start={open}
+                    onDone={() => setRendered(true)}
+                  />
+                )}
                 <div className="screen-brand">
                   <Wordmark className="screen-logo" logoEm={0.78} dy="0.04em" />
-                  <span className="screen-tag">WEBENTWICKLUNG</span>
+                  <span className="screen-tagline">
+                    Für einen professionellen Auftritt im Internet
+                  </span>
                 </div>
                 <div className="screen-glare" />
               </div>
