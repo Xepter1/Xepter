@@ -15,7 +15,7 @@ const PROJECTS = [
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
     img: '/projects/symphonieorchester.jpg',
     imgMobile: '/projects/mobile/symphonieorchester.jpg',
-    accent: '#3B82F6',
+    accent: '#8A3FF0',
   },
   {
     name: 'DesignbyEms',
@@ -26,7 +26,7 @@ const PROJECTS = [
     url: 'https://designbyems.de/',
     img: '/projects/designbyems.jpg',
     imgMobile: '/projects/mobile/designbyems.jpg',
-    accent: '#22D3EE',
+    accent: '#FBB04C',
   },
   {
     name: 'Tankstelle Stettner',
@@ -36,7 +36,7 @@ const PROJECTS = [
     url: 'https://datenschutz.fraunhofer-lab.de/',
     img: '/projects/tankstelle-stettner.jpg',
     imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
-    accent: '#38C9F5',
+    accent: '#a86cf5',
   },
 ]
 
@@ -72,7 +72,7 @@ function Preview({ project, flip }) {
           <div
             className="flex h-full w-full items-center justify-center"
             style={{
-              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #0c0e14`,
+              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #2a1a50`,
             }}
           >
             <span className="font-display text-3xl font-semibold tracking-tight text-ink/90">
@@ -105,7 +105,7 @@ function Preview({ project, flip }) {
                 <div
                   className="h-full w-full"
                   style={{
-                    background: `linear-gradient(160deg, ${project.accent}33, #0c0e14)`,
+                    background: `linear-gradient(160deg, ${project.accent}33, #2a1a50)`,
                   }}
                 />
               )}

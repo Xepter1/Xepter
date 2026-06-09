@@ -13,7 +13,7 @@ export default function About() {
           left: '-10%',
           top: '20%',
           background:
-            'radial-gradient(circle, rgba(139,61,240,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(138,63,240,0.16), transparent 60%)',
         }}
       />
 
@@ -74,7 +74,7 @@ export default function About() {
                   right: '-20%',
                   top: '-30%',
                   background:
-                    'radial-gradient(circle, rgba(191,90,242,0.25), transparent 65%)',
+                    'radial-gradient(circle, rgba(138,63,240,0.25), transparent 65%)',
                 }}
               />
               <img

@@ -48,7 +48,7 @@ export default function ContactPage() {
           right: '-10%',
           top: '-6%',
           background:
-            'radial-gradient(circle, rgba(139,61,240,0.22), transparent 60%)',
+            'radial-gradient(circle, rgba(138,63,240,0.22), transparent 60%)',
         }}
       />
       <div
@@ -59,7 +59,7 @@ export default function ContactPage() {
           left: '-8%',
           bottom: '0%',
           background:
-            'radial-gradient(circle, rgba(191,90,242,0.14), transparent 60%)',
+            'radial-gradient(circle, rgba(251,176,76,0.12), transparent 60%)',
         }}
       />
 

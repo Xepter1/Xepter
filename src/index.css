@@ -2,35 +2,35 @@
 
 /* ============================================================
    XEPTER — Design Tokens (Tailwind v4 @theme)
-   Industrial Luxury · deep black + electric cyan-blue
+   Industrial Luxury · warm aubergine + electric lila / orange
    ============================================================ */
 @theme {
-  /* Surfaces */
-  --color-base: #07080c;
-  --color-panel: #0c0e14;
-  --color-card: #111420;
-  --color-card-2: #161a28;
+  /* Surfaces — aubergine ramp (the "new black" is a deep purple) */
+  --color-base: #221443;
+  --color-panel: #2a1a50;
+  --color-card: #33205e;
+  --color-card-2: #3d286c;
 
-  /* Ink */
-  --color-ink: #f3f6fb;
-  --color-ink-dim: #aab2c2;
-  --color-ink-faint: #6b7384;
+  /* Ink — cream / lavender (the "new white") */
+  --color-ink: #f4effb;
+  --color-ink-dim: #d7c9ee;
+  --color-ink-faint: #a892cb;
 
   /* Lines */
-  --color-line: rgba(255, 255, 255, 0.08);
-  --color-line-2: rgba(255, 255, 255, 0.14);
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-2: rgba(255, 255, 255, 0.16);
 
-  /* Accent — electric violet */
-  --color-accent: #bf5af2;
-  --color-accent-2: #8b3df0;
-  --color-accent-soft: rgba(191, 90, 242, 0.14);
+  /* Accent — electric lila (primary) */
+  --color-accent: #8a3ff0;
+  --color-accent-2: #5e2bc4;
+  --color-accent-soft: rgba(138, 63, 240, 0.16);
 
-  /* Editorial micro-text — AA-safe quiet grey (5.84:1 on base) for informational kicker/spec lines */
-  --color-ink-meta: #828b9c;
+  /* Editorial micro-text — AA-safe quiet lavender (~6.4:1 on base) for informational kicker/spec lines */
+  --color-ink-meta: #b3a0d4;
 
-  /* spark = aliveness ONLY: H2 underline + LIVE dot + active-row tick.
-     Never on buttons / links / focus / gradients / eyebrows. (warm amber, 11:1 on base) */
-  --color-spark: #ffb04d;
+  /* spark = warm orange — the present-but-poised secondary accent: H2 underline + LIVE dot +
+     active-row tick + select highlights. Lila stays the primary accent on buttons/links. */
+  --color-spark: #fbb04c;
 
   /* Type */
   --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, system-ui, sans-serif;
@@ -65,7 +65,7 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: #04121a;
+  color: var(--color-ink);
 }
 
 /* Section anchor offset for fixed nav */
@@ -88,12 +88,12 @@ section[id] {
   background: var(--color-base);
 }
 ::-webkit-scrollbar-thumb {
-  background: #20242f;
+  background: #3a2a5e;
   border-radius: 99px;
   border: 3px solid var(--color-base);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c3140;
+  background: #4a3870;
 }
 
 /* ============================================================
@@ -206,7 +206,7 @@ section[id] {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(191, 90, 242, 0.4);
+  text-decoration-color: rgba(138, 63, 240, 0.4);
   transition: text-decoration-color 0.3s ease;
 }
 .legal-prose a:hover {
@@ -227,7 +227,7 @@ section[id] {
 }
 
 .glass {
-  background: rgba(10, 12, 18, 0.6);
+  background: rgba(26, 16, 52, 0.62);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
@@ -253,13 +253,13 @@ section[id] {
 }
 
 .btn-primary {
-  color: #04121a;
+  color: #fbf7ff;
   background: linear-gradient(105deg, var(--color-accent-2), var(--color-accent));
-  box-shadow: 0 8px 30px -8px rgba(191, 90, 242, 0.5),
+  box-shadow: 0 8px 30px -8px rgba(138, 63, 240, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .btn-primary:hover {
-  box-shadow: 0 14px 44px -8px rgba(191, 90, 242, 0.7),
+  box-shadow: 0 14px 44px -8px rgba(138, 63, 240, 0.75),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
@@ -397,7 +397,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     circle at 50% 47%,
-    rgba(191, 90, 242, 0.06),
+    rgba(138, 63, 240, 0.07),
     transparent 26%
   );
 }
@@ -420,7 +420,7 @@ section[id] {
   position: absolute;
   inset: var(--bezel);
   border-radius: 7px;
-  background: radial-gradient(120% 130% at 50% 0%, #0b1822 0%, #060709 55%, #050608 100%);
+  background: radial-gradient(120% 130% at 50% 0%, #1c1340 0%, #0c0818 55%, #0a0614 100%);
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9),
     inset 0 0 60px rgba(0, 0, 0, 0.55);
@@ -436,7 +436,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     60% 55% at 50% 42%,
-    rgba(191, 90, 242, 0.16),
+    rgba(138, 63, 240, 0.18),
     transparent 70%
   );
   opacity: 0;
@@ -492,7 +492,7 @@ section[id] {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 38px rgba(191, 90, 242, 0.35);
+  text-shadow: 0 0 38px rgba(138, 63, 240, 0.4);
 }
 .screen-tag {
   font-family: var(--font-mono);
@@ -582,7 +582,7 @@ section[id] {
   gap: 7px;
   height: 38px;
   padding: 0 14px;
-  background: #0e1017;
+  background: #1c1340;
   border-bottom: 1px solid var(--color-line);
 }
 .browser-dot {
@@ -725,7 +725,7 @@ section[id] {
   aspect-ratio: 1;
   max-width: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #20354a, #04070b 68%);
+  background: radial-gradient(circle at 38% 32%, #3a2a5e, #0a0614 68%);
 }
 
 @media (max-width: 1023px) {
