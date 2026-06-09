@@ -10,11 +10,9 @@ import {
 } from '../components/Icons'
 
 /*
- * TODO (Xepter): Kontaktdaten + Formular-Endpunkt nachtragen.
- * - SOCIALS: echte URLs eintragen (href).
- * - EMAIL: echte Adresse eintragen.
- * - Formular: an einen Endpunkt hängen (Formspree, Resend, eigene API-Route)
- *   und handleSubmit ersetzen.
+ * Kontaktformular = mailto: öffnet das Mailprogramm des Besuchers mit
+ * vorausgefüllter Nachricht an mail@xepter.de (kein Backend, kein Drittanbieter).
+ * Offen: echte SOCIALS-URLs eintragen (href stehen noch auf '#').
  */
 const SOCIALS = [
   { icon: IconGithub, label: 'GitHub', href: '#' },
@@ -33,7 +31,15 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Platzhalter — noch kein Endpunkt verbunden.
+    const data = new FormData(e.currentTarget)
+    const name = (data.get('name') || '').toString().trim()
+    const subject = (data.get('subject') || '').toString().trim()
+    const msg = (data.get('msg') || '').toString().trim()
+    const body = `Name: ${name}\n\n${msg}`
+    const href = `mailto:mail@xepter.de?subject=${encodeURIComponent(
+      subject || 'Anfrage über xepter.de'
+    )}&body=${encodeURIComponent(body)}`
+    window.location.href = href
     setSent(true)
   }
 
@@ -85,17 +91,14 @@ export default function ContactPage() {
                 Direkter Draht
               </h2>
               <a
-                href="mailto:hallo@xepter.de"
+                href="mailto:mail@xepter.de"
                 className="group mt-4 inline-flex items-center gap-3 font-display text-2xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-3xl"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line-2 text-accent transition-colors group-hover:border-accent/50">
                   <IconMail width={20} height={20} />
                 </span>
-                hallo@xepter.de
+                mail@xepter.de
               </a>
-              <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
-                ✶ Platzhalter — echte Adresse folgt
-              </p>
             </div>
 
             <div>
@@ -134,10 +137,7 @@ export default function ContactPage() {
           >
             {!sent ? (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
-                  <Field id="email" label="E-Mail" type="email" placeholder="du@beispiel.de" autoComplete="email" />
-                </div>
+                <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
                 <Field id="subject" label="Betreff" type="text" placeholder="Worum geht es?" />
                 <div className="flex flex-col gap-2">
                   <label htmlFor="msg" className="text-sm font-medium text-ink-dim">
@@ -157,7 +157,7 @@ export default function ContactPage() {
                   <IconArrowUpRight width={18} height={18} />
                 </button>
                 <p className="text-center font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
-                  ✶ Formular wird in Kürze scharf geschaltet
+                  Öffnet dein E-Mail-Programm mit vorausgefüllter Nachricht
                 </p>
               </form>
             ) : (
@@ -170,10 +170,11 @@ export default function ContactPage() {
                 <span className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent-soft text-accent">
                   <IconMail width={26} height={26} />
                 </span>
-                <h3 className="mt-6 font-display text-2xl font-medium">Fast geschafft!</h3>
+                <h3 className="mt-6 font-display text-2xl font-medium">Mailprogramm geöffnet</h3>
                 <p className="mt-3 max-w-xs text-ink-dim">
-                  Der Versand wird bald aktiviert. Bis dahin: Danke fürs
-                  Vorbeischauen — wir hören uns!
+                  Deine Nachricht liegt vorausgefüllt in deinem E-Mail-Programm —
+                  klick dort auf Senden. Falls sich nichts geöffnet hat, schreib
+                  direkt an mail@xepter.de.
                 </p>
                 <button
                   onClick={() => setSent(false)}
