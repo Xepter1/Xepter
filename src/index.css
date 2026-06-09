@@ -5,11 +5,11 @@
    Industrial Luxury · warm aubergine + electric lila / orange
    ============================================================ */
 @theme {
-  /* Surfaces — deep aubergine ramp (base = user-picked "new black") */
-  --color-base: #190530;
-  --color-panel: #210a3e;
-  --color-card: #2a0f4c;
-  --color-card-2: #34165a;
+  /* Surfaces — near-black with a faint aubergine warmth (low saturation = premium, not "purple") */
+  --color-base: #0d0a14;
+  --color-panel: #14111d;
+  --color-card: #1b1726;
+  --color-card-2: #241f30;
 
   /* Ink — cream / lavender (the "new white") */
   --color-ink: #f4effb;
@@ -227,7 +227,7 @@ section[id] {
 }
 
 .glass {
-  background: rgba(20, 5, 40, 0.66);
+  background: rgba(13, 10, 20, 0.68);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
@@ -420,7 +420,7 @@ section[id] {
   position: absolute;
   inset: var(--bezel);
   border-radius: 7px;
-  background: radial-gradient(120% 130% at 50% 0%, #200a3e 0%, #0c0320 55%, #08021a 100%);
+  background: radial-gradient(120% 130% at 50% 0%, #161226 0%, #0a0812 55%, #07060d 100%);
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9),
     inset 0 0 60px rgba(0, 0, 0, 0.55);
@@ -582,7 +582,7 @@ section[id] {
   gap: 7px;
   height: 38px;
   padding: 0 14px;
-  background: #1d0838;
+  background: #14111d;
   border-bottom: 1px solid var(--color-line);
 }
 .browser-dot {
