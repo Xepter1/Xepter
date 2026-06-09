@@ -88,9 +88,18 @@ export default function Macbook() {
                   />
                 )}
                 <div className="screen-brand">
-                  <Wordmark className="screen-logo" logoEm={0.78} dy="0.04em" />
+                  <span className="screen-logo-wrap">
+                    <Wordmark
+                      className="screen-logo"
+                      logoEm={0.78}
+                      dy="0.04em"
+                    />
+                    <span className="screen-dot" aria-hidden="true" />
+                  </span>
                   <span className="screen-tagline">
-                    Für einen professionellen Auftritt im Internet
+                    Weil der erste{' '}
+                    <span className="text-gradient screen-em">Eindruck</span>{' '}
+                    zählt!
                   </span>
                 </div>
                 <div className="screen-glare" />

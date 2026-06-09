@@ -12,9 +12,6 @@ const PROMPT = 'xepter ~ %'
 
 // Each line: { prompt?, type? (typed char-by-char), tokens:[{t,c}] }
 const SCRIPT = [
-  { prompt: true, type: true, tokens: [
-    { t: 'cat ', c: 'cmd' }, { t: 'src/Brand.jsx', c: 'arg' },
-  ] },
   { prompt: false, type: true, tokens: [
     { t: 'export ', c: 'kw' }, { t: 'const ', c: 'kw' }, { t: 'Brand', c: 'fn' },
     { t: ' = () => ', c: 'punc' }, { t: '<h1>', c: 'tag' },
@@ -61,7 +58,7 @@ export default function MacTerminal({ start, onDone }) {
 
     const run = async () => {
       setLines([])
-      await wait(300) // brief boot after the lid opens
+      await wait(200) // brief boot after the lid opens
       for (let i = 0; i < SCRIPT.length; i++) {
         if (cancelled) return
         const line = SCRIPT[i]
@@ -73,7 +70,7 @@ export default function MacTerminal({ start, onDone }) {
         if (line.type) {
           for (let c = 1; c <= total; c++) {
             if (cancelled) return
-            await wait(26 + Math.random() * 36)
+            await wait(12 + Math.random() * 16)
             setLines((p) => {
               const a = [...p]
               a[a.length - 1] = { ...a[a.length - 1], revealed: c }
@@ -85,12 +82,12 @@ export default function MacTerminal({ start, onDone }) {
             a[a.length - 1] = { ...a[a.length - 1], typing: false }
             return a
           })
-          await wait(line.prompt ? 240 : 520)
+          await wait(line.prompt ? 150 : 300)
         } else {
-          await wait(260)
+          await wait(170)
         }
       }
-      await wait(820)
+      await wait(560)
       if (!cancelled) onDoneRef.current && onDoneRef.current()
     }
     run()
