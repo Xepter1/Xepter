@@ -72,7 +72,7 @@ function Preview({ project, flip }) {
           <div
             className="flex h-full w-full items-center justify-center"
             style={{
-              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #1c1038`,
+              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #210a3e`,
             }}
           >
             <span className="font-display text-3xl font-semibold tracking-tight text-ink/90">
@@ -105,7 +105,7 @@ function Preview({ project, flip }) {
                 <div
                   className="h-full w-full"
                   style={{
-                    background: `linear-gradient(160deg, ${project.accent}33, #1c1038)`,
+                    background: `linear-gradient(160deg, ${project.accent}33, #210a3e)`,
                   }}
                 />
               )}
