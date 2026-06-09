@@ -919,3 +919,279 @@ section[id] {
      gated in JS via useReducedMotion() (Framer's `initial` overrides CSS), so they render
      at their final visible state when reduced motion is requested. */
 }
+
+/* ============================================================
+   CMS Showcase — pure-CSS iMac + Safari + Payload admin (dark)
+   "Du verwaltest deine Website selbst." (Leistungen-Sektion)
+   ============================================================ */
+.imac {
+  width: min(100%, 580px);
+  margin: 0 auto;
+}
+.imac-head {
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  padding: 2.3%;
+  background: linear-gradient(160deg, #2b2e35 0%, #16181d 55%, #0d0e12 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.12), 0 40px 70px -30px rgba(0, 0, 0, 0.85);
+}
+.imac-screen {
+  position: relative;
+  aspect-ratio: 16 / 10.2;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #1a1a1e;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9);
+  container-type: inline-size;
+}
+/* glossy glare */
+.imac-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, transparent 42%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+  z-index: 6;
+  pointer-events: none;
+}
+.imac-chin {
+  position: relative;
+  height: clamp(34px, 3.6vw, 54px);
+  border-radius: 0 0 16px 16px;
+  background: linear-gradient(180deg, #23262c 0%, #15171b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 26px 36px -18px rgba(0, 0, 0, 0.7);
+}
+.imac-chin img {
+  height: clamp(12px, 1.3vw, 18px);
+  width: auto;
+  opacity: 0.5;
+}
+.imac-neck {
+  width: 17%;
+  height: 26px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #20232a, #15171c);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+}
+.imac-foot {
+  width: 42%;
+  height: 11px;
+  margin: 0 auto;
+  border-radius: 0 0 12px 12px / 0 0 100% 100%;
+  background: linear-gradient(180deg, #23262c, #121317);
+  box-shadow: 0 22px 30px -16px rgba(0, 0, 0, 0.75);
+}
+
+/* --- Safari window inside the screen --- */
+.safari {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1c1c20;
+}
+.safari-bar {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  height: 8.6cqw;
+  min-height: 26px;
+  padding: 0 3cqw;
+  background: linear-gradient(180deg, #313338, #26282c);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+.safari-dots {
+  display: flex;
+  gap: 1.4cqw;
+}
+.safari-dot {
+  width: 2.3cqw;
+  height: 2.3cqw;
+  min-width: 7px;
+  min-height: 7px;
+  border-radius: 50%;
+}
+.safari-dot--r { background: #ff5f57; }
+.safari-dot--y { background: #febc2e; }
+.safari-dot--g { background: #28c840; }
+.safari-url {
+  flex: 1;
+  margin: 0 2cqw;
+  height: 5.4cqw;
+  min-height: 17px;
+  border-radius: 99px;
+  background: #1d1f23;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1cqw;
+  font-family: var(--font-mono);
+  font-size: 2.5cqw;
+  color: #b9bcc4;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.safari-url svg { width: 2.6cqw; height: 2.6cqw; opacity: 0.6; }
+
+/* --- Payload admin (dark) --- */
+.pl {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  background: #18181b;
+  color: #e7e7ea;
+  font-family: var(--font-sans);
+}
+.pl-side {
+  width: 30cqw;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding: 2.2cqw 2.2cqw;
+  background: #131316;
+  border-right: 1px solid #2a2a30;
+}
+.pl-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 0 1cqw 1.9cqw;
+  border-bottom: 1px solid #26262c;
+  margin-bottom: 1.4cqw;
+}
+.pl-brand img { height: 4cqw; min-height: 13px; width: auto; }
+.pl-brand span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.7cqw;
+  line-height: 1.05;
+  color: #f2f2f4;
+}
+.pl-group {
+  font-size: 1.95cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f6f78;
+  padding: 1.5cqw 1cqw 0.6cqw;
+}
+.pl-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 1.2cqw 1.4cqw;
+  border-radius: 1.5cqw;
+  font-size: 2.5cqw;
+  color: #c4c4cc;
+}
+.pl-nav .dot {
+  width: 1.5cqw;
+  height: 1.5cqw;
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: #56565f;
+  flex: none;
+}
+.pl-nav.is-active {
+  background: #232329;
+  color: #fff;
+}
+.pl-nav.is-active .dot { background: var(--color-accent); }
+.pl-account {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 1.5cqw 1cqw 0;
+  border-top: 1px solid #26262c;
+  font-size: 2.4cqw;
+  color: #9a9aa2;
+}
+.pl-avatar {
+  width: 4.6cqw;
+  height: 4.6cqw;
+  min-width: 15px;
+  min-height: 15px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent-2), var(--color-accent));
+  flex: none;
+}
+
+.pl-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3.4cqw 3.6cqw;
+  overflow: hidden;
+}
+.pl-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2cqw;
+  margin-bottom: 3cqw;
+}
+.pl-crumb {
+  font-size: 2.2cqw;
+  color: #7c7c85;
+  margin-bottom: 0.8cqw;
+}
+.pl-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 4.4cqw;
+  letter-spacing: -0.01em;
+  color: #f4f4f6;
+}
+.pl-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqw;
+  padding: 1.7cqw 2.6cqw;
+  border-radius: 1.4cqw;
+  background: #f3f3f5;
+  color: #18181b;
+  font-weight: 600;
+  font-size: 2.5cqw;
+  white-space: nowrap;
+}
+.pl-table {
+  border: 1px solid #2a2a30;
+  border-radius: 2cqw;
+  overflow: hidden;
+}
+.pl-row {
+  display: grid;
+  grid-template-columns: 1fr 0.62fr 0.42cqw;
+  grid-template-columns: 1.5fr 1fr 0.7fr;
+  gap: 2cqw;
+  align-items: center;
+  padding: 2.5cqw 3cqw;
+  font-size: 2.6cqw;
+  border-bottom: 1px solid #232329;
+}
+.pl-row:last-child { border-bottom: 0; }
+.pl-row--head {
+  background: #1d1d21;
+  color: #80808a;
+  font-size: 2.1cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pl-row .ptitle { color: #f0f0f2; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-row .pmeta { color: #a6a6ae; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqw;
+  font-size: 2.3cqw;
+  color: #57d98a;
+}
+.pl-badge .bdot { width: 1.5cqw; height: 1.5cqw; min-width: 5px; min-height: 5px; border-radius: 50%; background: #34c171; box-shadow: 0 0 1.6cqw rgba(52,193,113,0.6); }
+.pl-badge--off { color: #6f6f78; }
+.pl-badge--off .bdot { background: #4a4a52; box-shadow: none; }

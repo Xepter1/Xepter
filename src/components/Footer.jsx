@@ -54,6 +54,12 @@ export default function Footer() {
               </a>
             ))}
             <Link
+              to="/leistungen"
+              className="text-sm text-ink-faint transition-colors hover:text-ink"
+            >
+              Leistungen
+            </Link>
+            <Link
               to="/kontakt"
               className="text-sm text-ink-faint transition-colors hover:text-ink"
             >

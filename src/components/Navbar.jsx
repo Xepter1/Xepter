@@ -5,8 +5,11 @@ import { EASE } from '../lib/anim'
 import { useGo } from '../lib/nav'
 import Wordmark from './Wordmark'
 
-const SECTIONS = [
+// id  → home-page section (smooth-scroll anchor)
+// to  → its own route (page)
+const NAV = [
   { label: 'Projekte', id: 'projekte' },
+  { label: 'Leistungen', to: '/leistungen' },
   { label: 'Über mich', id: 'ueber' },
 ]
 
@@ -73,16 +76,29 @@ export default function Navbar() {
 
           {/* Desktop links */}
           <div className="hidden items-center gap-1 md:flex">
-            {SECTIONS.map((l) => (
-              <a
-                key={l.id}
-                href={`/#${l.id}`}
-                onClick={(e) => handleSection(e, l.id)}
-                className="relative px-4 py-2 text-[0.93rem] text-ink-dim transition-colors duration-300 hover:text-ink"
-              >
-                {l.label}
-              </a>
-            ))}
+            {NAV.map((l) =>
+              l.to ? (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setMenu(false)}
+                  className={`relative px-4 py-2 text-[0.93rem] transition-colors duration-300 hover:text-ink ${
+                    pathname === l.to ? 'text-ink' : 'text-ink-dim'
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <a
+                  key={l.id}
+                  href={`/#${l.id}`}
+                  onClick={(e) => handleSection(e, l.id)}
+                  className="relative px-4 py-2 text-[0.93rem] text-ink-dim transition-colors duration-300 hover:text-ink"
+                >
+                  {l.label}
+                </a>
+              )
+            )}
             <Link
               to="/kontakt"
               onClick={() => setMenu(false)}
@@ -133,19 +149,36 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col justify-center px-8 md:hidden glass"
           >
             <div className="flex flex-col gap-2">
-              {SECTIONS.map((l, i) => (
-                <motion.a
-                  key={l.id}
-                  href={`/#${l.id}`}
-                  onClick={(e) => handleSection(e, l.id)}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.08 * i + 0.1, ease: EASE }}
-                  className="font-display text-4xl font-medium tracking-tight text-ink"
-                >
-                  {l.label}
-                </motion.a>
-              ))}
+              {NAV.map((l, i) =>
+                l.to ? (
+                  <motion.div
+                    key={l.to}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.08 * i + 0.1, ease: EASE }}
+                  >
+                    <Link
+                      to={l.to}
+                      onClick={() => setMenu(false)}
+                      className="font-display text-4xl font-medium tracking-tight text-ink"
+                    >
+                      {l.label}
+                    </Link>
+                  </motion.div>
+                ) : (
+                  <motion.a
+                    key={l.id}
+                    href={`/#${l.id}`}
+                    onClick={(e) => handleSection(e, l.id)}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.08 * i + 0.1, ease: EASE }}
+                    className="font-display text-4xl font-medium tracking-tight text-ink"
+                  >
+                    {l.label}
+                  </motion.a>
+                )
+              )}
             </div>
             <Link
               to="/kontakt"
