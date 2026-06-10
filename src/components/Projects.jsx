@@ -23,7 +23,7 @@ const PROJECTS = [
     tag: 'Branding',
     year: '2026',
     live: true,
-    url: 'https://designbyems.de/',
+    url: 'https://www.designbyems.de/',
     img: '/projects/designbyems.jpg',
     imgMobile: '/projects/mobile/designbyems.jpg',
     accent: '#22D3EE',
