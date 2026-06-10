@@ -26,7 +26,7 @@ export default function SectionMark({ word, lines, className = '' }) {
       initial={initial}
       whileInView="show"
       viewport={inView}
-      className={`max-w-[15ch] sm:max-w-2xl ${className}`}
+      className={`max-w-2xl ${className}`}
     >
       {/* self-drawing hairline */}
       <motion.span
@@ -46,7 +46,7 @@ export default function SectionMark({ word, lines, className = '' }) {
       )}
 
       {/* elevated headline — clip-reveal per line (same device as the Hero) */}
-      <h2 className="mt-5 font-display text-[clamp(2.4rem,5.5vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
+      <h2 className="mt-5 break-words font-display text-[clamp(2rem,6vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
         {lines.map((line, i) => {
           const isObj = typeof line === 'object' && line !== null
           const text = isObj ? line.text : line
