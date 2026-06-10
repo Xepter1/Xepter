@@ -72,13 +72,13 @@ export default function ContactPage() {
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         {/* Heading */}
         <motion.div {...fade(0.05)} className="max-w-3xl">
-          <span className="eyebrow">Kontakt</span>
+          <span className="eyebrow !text-spark">Kontakt</span>
           <h1 className="mt-5 font-display text-[clamp(2.6rem,7vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
             Lass uns einen bleibenden{' '}
             <span className="text-gradient">ersten Eindruck</span> schaffen.
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-dim">
-            Ob konkretes Projekt oder lose Idee — schreib mir ein paar Zeilen.
+            Ob konkretes Projekt oder lose Idee, schreib mir ein paar Zeilen.
             Ich antworte in der Regel innerhalb von 24 Stunden.
           </p>
         </motion.div>
@@ -123,9 +123,9 @@ export default function ContactPage() {
             </div>
 
             <div className="mt-auto hidden lg:block">
-              <p className="max-w-xs text-sm leading-relaxed text-ink-faint">
-                „Der erste Eindruck entscheidet." — und beginnt oft mit einer
-                ersten Nachricht.
+              <p className="max-w-sm text-lg font-medium leading-relaxed text-spark">
+                „Der erste Eindruck entscheidet." Und er beginnt mit einer ersten
+                Nachricht.
               </p>
             </div>
           </motion.div>
@@ -172,8 +172,8 @@ export default function ContactPage() {
                 </span>
                 <h3 className="mt-6 font-display text-2xl font-medium">Mailprogramm geöffnet</h3>
                 <p className="mt-3 max-w-xs text-ink-dim">
-                  Deine Nachricht liegt vorausgefüllt in deinem E-Mail-Programm —
-                  klick dort auf Senden. Falls sich nichts geöffnet hat, schreib
+                  Deine Nachricht liegt vorausgefüllt in deinem E-Mail-Programm.
+                  Klick dort auf Senden. Falls sich nichts geöffnet hat, schreib
                   direkt an mail@xepter.de.
                 </p>
                 <button

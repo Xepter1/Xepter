@@ -13,7 +13,7 @@ export default function DatenschutzPage() {
     <LegalLayout
       eyebrow="Rechtliches"
       title="Datenschutz"
-      intro="Der Schutz deiner persönlichen Daten ist mir wichtig. Hier erfährst du, welche Daten beim Besuch dieser Website verarbeitet werden — und welche Rechte du hast."
+      intro="Der Schutz deiner persönlichen Daten ist mir wichtig. Hier erfährst du, welche Daten beim Besuch dieser Website verarbeitet werden und welche Rechte du hast."
     >
       <h2>1. Verantwortlicher</h2>
       <p>
@@ -56,7 +56,7 @@ export default function DatenschutzPage() {
       <p>
         Wenn du uns über das Kontaktformular oder per E-Mail kontaktierst, werden
         deine Angaben (z. B. Name, E-Mail-Adresse, Nachricht) zur Bearbeitung deiner
-        Anfrage gespeichert. Rechtsgrundlage ist — je nach Anliegen — Art. 6 Abs. 1
+        Anfrage gespeichert. Rechtsgrundlage ist, je nach Anliegen, Art. 6 Abs. 1
         lit. b DSGVO (vorvertragliche Maßnahmen / Vertrag) bzw. Art. 6 Abs. 1 lit. f
         DSGVO (berechtigtes Interesse an der Beantwortung). Diese Daten werden
         gelöscht, sobald sie zur Erreichung des Zwecks nicht mehr erforderlich sind

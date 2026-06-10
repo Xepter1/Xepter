@@ -82,7 +82,7 @@ export default function Footer() {
             </Link>
           </nav>
           <p className="font-mono text-xs text-ink-faint">
-            © 2026 Xepter — mit Präzision gebaut.
+            © 2026 Xepter · mit Präzision gebaut.
           </p>
         </div>
       </div>

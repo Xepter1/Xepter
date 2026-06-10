@@ -36,12 +36,14 @@ export default function SectionMark({ word, lines, className = '' }) {
         className="mb-6 block h-px w-16 origin-left bg-line-2 sm:w-[88px]"
       />
 
-      {/* quiet mono kicker word */}
-      <span className="block overflow-hidden">
-        <motion.span variants={clipUp} custom={0.12} className="kicker block">
-          {word}
-        </motion.span>
-      </span>
+      {/* quiet mono kicker word (optional) */}
+      {word && (
+        <span className="block overflow-hidden">
+          <motion.span variants={clipUp} custom={0.12} className="kicker block">
+            {word}
+          </motion.span>
+        </span>
+      )}
 
       {/* elevated headline — clip-reveal per line (same device as the Hero) */}
       <h2 className="mt-5 font-display text-[clamp(2.4rem,5.5vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">

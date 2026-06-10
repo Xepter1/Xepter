@@ -69,8 +69,9 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
             className="mt-8 max-w-md text-lg leading-relaxed text-ink-dim"
           >
-            Ich gestalte und entwickle Websites, die im ersten Moment wirken und
-            im zweiten überzeugen. Klar, schnell und kompromisslos im Detail.
+            Du bekommst einen Auftritt, der dich professionell zeigt, online
+            leicht gefunden wird und aus Besuchern echte Kunden macht. Sichtbar,
+            schnell und bis ins Detail durchdacht.
           </motion.p>
 
           <motion.div

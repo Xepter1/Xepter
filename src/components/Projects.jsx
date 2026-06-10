@@ -10,7 +10,7 @@ import SectionMark from './SectionMark'
 const PROJECTS = [
   {
     name: 'Landshuter Symphonieorchester',
-    desc: 'Webauftritt für ein klassisches Symphonieorchester — Konzertkalender, Programm und digitale Bühne für die Klassik.',
+    desc: 'Webauftritt für ein klassisches Symphonieorchester mit Konzertkalender, Programm und digitaler Bühne für die Klassik.',
     tag: 'Kultur',
     year: '2026',
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
@@ -20,7 +20,7 @@ const PROJECTS = [
   },
   {
     name: 'DesignbyEms',
-    desc: 'Markenauftritt und Portfolio für ein kreatives Designstudio — reduziert, elegant und ganz auf die Arbeit fokussiert.',
+    desc: 'Markenauftritt und Portfolio für ein kreatives Designstudio, reduziert, elegant und ganz auf die Arbeit fokussiert.',
     tag: 'Branding',
     year: '2026',
     live: true,
@@ -163,10 +163,6 @@ function Row({ project, index }) {
               active ? 'scale-x-150 bg-spark' : 'bg-line-2'
             }`}
           />
-          <span>{project.tag}</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
           {project.live ? (
             <span className="inline-flex items-center gap-1.5 text-spark">
               Live
@@ -236,9 +232,9 @@ function CtaPreview() {
             Freier Platz
           </span>
           <h4 className="relative mt-3 font-display text-[clamp(1.3rem,3vw,2.3rem)] font-semibold leading-[1.05] tracking-tight text-ink">
-            Hier könnte deine
+            Das hier könnte
             <br />
-            Website stehen.
+            deine Website sein.
           </h4>
           <span className="relative mt-4 font-mono text-[0.58rem] uppercase tracking-[0.3em] text-ink-faint">
             designed by Xepter
@@ -258,7 +254,7 @@ function CtaPreview() {
               }}
             >
               <span className="font-display text-[0.6rem] font-semibold leading-tight text-ink">
-                Hier könnte deine Website stehen.
+                Das hier könnte deine Website sein.
               </span>
               <span className="mt-2 h-1 w-1 rounded-full bg-spark shadow-[0_0_8px_var(--color-spark)]" />
             </div>
@@ -311,7 +307,7 @@ function CtaRow() {
         </h3>
 
         <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-dim">
-          Hier ist Platz für deine Website — gestaltet und entwickelt mit
+          Hier ist Platz für deine Website, gestaltet und entwickelt mit
           demselben Anspruch wie die Projekte oben. Lass uns deine zur nächsten
           machen, die hier steht.
         </p>
@@ -341,7 +337,6 @@ export default function Projects() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Header */}
         <SectionMark
-          word="Arbeit"
           lines={[
             'Projekte, die einen',
             { text: 'Eindruck', accent: true, suffix: ' hinterlassen.' },

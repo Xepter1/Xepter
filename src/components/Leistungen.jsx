@@ -68,7 +68,7 @@ export default function Leistungen() {
                 Bei mir bekommst du keine starre Seite, die bei jeder Kleinigkeit
                 den Entwickler braucht. Über einen sicheren{' '}
                 <span className="text-ink">Admin-Login</span> pflegst du deine
-                Inhalte selbst — so einfach, wie du es kennst.
+                Inhalte selbst. So einfach, wie du es kennst.
               </motion.p>
 
               <motion.ul
@@ -90,7 +90,7 @@ export default function Leistungen() {
                 variants={fadeUp}
                 className="mt-8 max-w-md text-base leading-relaxed text-ink-faint"
               >
-                Ein eigenes, voll ausgestattetes CMS — kein Baukasten, keine
+                Ein eigenes, voll ausgestattetes CMS. Kein Baukasten, keine
                 monatliche Lizenz. Es gehört zu deiner Website dazu.
               </motion.p>
             </motion.div>

@@ -22,7 +22,6 @@ export default function About() {
           {/* Left — narrative */}
           <div>
             <SectionMark
-              word="Person"
               lines={['Ingenieurs­denken trifft auf', 'gestalterischen Anspruch.']}
             />
 
@@ -36,20 +35,20 @@ export default function About() {
               <p>
                 Ich bin <span className="text-ink">Patrick</span>, 27, und
                 studiere Wirtschaftsingenieurwesen. Seit ich ein Kind bin,
-                programmiere ich leidenschaftlich gerne: aus Neugier, aus
-                Spieltrieb und aus dem Anspruch, Dinge spürbar besser zu machen.
+                programmiere ich leidenschaftlich gerne.
               </p>
               <p>
                 Die letzten vier Jahre habe ich als{' '}
                 <span className="text-ink">Ausbilder für Informatiker</span> bei
                 der <span className="text-ink">DRÄXLMAIER Group</span>{' '}
-                gearbeitet — und dabei gelernt, dass sauberer Code und klare
-                Vermittlung Hand in Hand gehen. Ingenieurs­denken, technische
-                Tiefe und ein feines Gespür für Ästhetik fließen heute in jedes
-                Projekt, das meinen Namen trägt.
+                gearbeitet und dabei gelernt, dass sauberer Code und klare
+                Vermittlung Hand in Hand gehen. Durch meine Erfahrungen aus dem
+                Studium verbinde ich Ingenieurwissenschaften mit Informatikskills
+                und einem feinen Gespür für Ästhetik, das in jedes Projekt
+                fließt, das meinen Namen trägt.
               </p>
               <p className="text-ink">
-                Das Ergebnis: Websites, die nicht nur gut aussehen, sondern
+                So entstehen Websites, die nicht nur gut aussehen, sondern
                 durchdacht funktionieren.
               </p>
             </motion.div>
@@ -79,7 +78,7 @@ export default function About() {
               />
               <img
                 src="/xepter-portrait.jpg"
-                alt="Patrick — Freelance Webentwickler (Xepter)"
+                alt="Patrick, Freelance Webentwickler (Xepter)"
                 width={675}
                 height={900}
                 loading="lazy"
@@ -88,10 +87,7 @@ export default function About() {
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base via-base/15 to-transparent" />
               <div className="absolute bottom-0 left-0 z-10 p-6">
                 <p className="font-display text-2xl font-semibold leading-none text-ink">
-                  Xepter
-                </p>
-                <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
-                  Webentwicklung &amp; Design
+                  Patrick
                 </p>
               </div>
             </motion.div>
