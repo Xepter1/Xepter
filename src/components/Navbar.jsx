@@ -13,6 +13,18 @@ const NAV = [
   { label: 'Über mich', to: '/ueber-mich' },
 ]
 
+// Warm-orange underline that wipes in from the left on hover (or stays lit on the active route)
+function NavUnderline({ active = false }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`pointer-events-none absolute bottom-1.5 left-4 right-4 h-[1.5px] origin-left rounded-full bg-spark transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 ${
+        active ? 'scale-x-100' : 'scale-x-0'
+      }`}
+    />
+  )
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
@@ -82,28 +94,30 @@ export default function Navbar() {
                   key={l.to}
                   to={l.to}
                   onClick={() => setMenu(false)}
-                  className={`relative px-4 py-2 text-[0.93rem] transition-colors duration-300 hover:text-ink ${
+                  className={`group relative px-4 py-2 text-[0.93rem] transition-colors duration-300 hover:text-ink ${
                     pathname === l.to ? 'text-ink' : 'text-ink-dim'
                   }`}
                 >
                   {l.label}
+                  <NavUnderline active={pathname === l.to} />
                 </Link>
               ) : (
                 <a
                   key={l.id}
                   href={`/#${l.id}`}
                   onClick={(e) => handleSection(e, l.id)}
-                  className="relative px-4 py-2 text-[0.93rem] text-ink-dim transition-colors duration-300 hover:text-ink"
+                  className="group relative px-4 py-2 text-[0.93rem] text-ink-dim transition-colors duration-300 hover:text-ink"
                 >
                   {l.label}
+                  <NavUnderline />
                 </a>
               )
             )}
             <Link
               to="/kontakt"
               onClick={() => setMenu(false)}
-              className={`btn btn-ghost ml-3 h-11 px-5 text-[0.9rem] ${
-                onContact ? '!border-accent !text-accent' : ''
+              className={`btn btn-ghost is-spark ml-3 h-11 px-5 text-[0.9rem] ${
+                onContact ? '!border-spark !text-spark' : ''
               }`}
             >
               Kontakt
@@ -183,7 +197,7 @@ export default function Navbar() {
             <Link
               to="/kontakt"
               onClick={() => setMenu(false)}
-              className="btn btn-primary mt-10 w-full justify-center"
+              className="btn btn-spark mt-10 w-full justify-center"
             >
               Kontakt
             </Link>

@@ -37,7 +37,7 @@ export default function ContactCTA() {
           Du hast ein Projekt im Kopf oder einfach eine gute Idee? Erzähl mir
           davon — ich melde mich zeitnah zurück.
         </p>
-        <Link to="/kontakt" className="btn btn-primary mt-10">
+        <Link to="/kontakt" className="btn btn-spark mt-10">
           Kontakt aufnehmen
           <IconArrowUpRight width={18} height={18} />
         </Link>

@@ -70,7 +70,7 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
             className="mt-8 max-w-md text-lg leading-relaxed text-ink-dim"
           >
-            Ich gestalte und entwickle Websites, die im ersten Moment wirken — und
+            Ich gestalte und entwickle Websites, die im ersten Moment wirken und
             im zweiten überzeugen. Klar, schnell und kompromisslos im Detail.
           </motion.p>
 
@@ -80,11 +80,11 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <a href="#projekte" className="btn btn-primary">
+            <a href="#projekte" className="btn btn-spark">
               Projekte ansehen
               <IconArrowRight width={19} height={19} />
             </a>
-            <Link to="/kontakt" className="btn btn-ghost">
+            <Link to="/kontakt" className="btn btn-ghost is-spark">
               Kontakt aufnehmen
               <IconArrowUpRight width={18} height={18} />
             </Link>

@@ -28,9 +28,12 @@
   /* Editorial micro-text — AA-safe quiet grey (5.84:1 on base) for informational kicker/spec lines */
   --color-ink-meta: #828b9c;
 
-  /* spark = aliveness ONLY: H2 underline + LIVE dot + active-row tick.
-     Never on buttons / links / focus / gradients / eyebrows. (warm amber, 11:1 on base) */
+  /* spark = the warm "action / alive" accent (warm amber, 11:1 on base):
+     primary CTA buttons, nav hover underline, H2 underline, LIVE dot, active-row tick.
+     Violet stays brand/atmosphere; orange carries the action. */
   --color-spark: #ffb04d;
+  --color-spark-deep: #f59331;
+  --color-spark-soft: rgba(255, 176, 77, 0.14);
 
   /* Type */
   --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, system-ui, sans-serif;
@@ -273,6 +276,24 @@ section[id] {
   background: rgba(255, 255, 255, 0.07);
   border-color: var(--color-accent);
   transform: translateY(-2px);
+}
+
+/* Warm orange (spark) action CTA — filled */
+.btn-spark {
+  color: #1a1205;
+  background: linear-gradient(105deg, var(--color-spark-deep), var(--color-spark));
+  box-shadow: 0 8px 30px -8px rgba(255, 176, 77, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.btn-spark:hover {
+  box-shadow: 0 14px 44px -8px rgba(255, 176, 77, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Ghost button whose hover/active accent is warm orange instead of violet */
+.btn-ghost.is-spark:hover {
+  border-color: var(--color-spark);
 }
 
 /* Atmospheric glow blob */
