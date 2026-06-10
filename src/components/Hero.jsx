@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { EASE } from '../lib/anim'
 import Macbook from './Macbook'
-import { IconArrowRight, IconArrowUpRight } from './Icons'
+import { IconArrowRight } from './Icons'
 
 const LINES = ['Ich baue', 'Websites,', 'die überzeugen.']
 
@@ -44,7 +43,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            className="eyebrow mb-5"
+            className="eyebrow mb-5 !text-spark"
           >
             Der erste Eindruck entscheidet.
           </motion.p>
@@ -80,14 +79,10 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <a href="#projekte" className="btn btn-spark">
+            <a href="#projekte" className="btn btn-spark-outline">
               Projekte ansehen
               <IconArrowRight width={19} height={19} />
             </a>
-            <Link to="/kontakt" className="btn btn-ghost is-spark">
-              Kontakt aufnehmen
-              <IconArrowUpRight width={18} height={18} />
-            </Link>
           </motion.div>
         </div>
 

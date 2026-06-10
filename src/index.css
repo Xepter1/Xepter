@@ -296,6 +296,17 @@ section[id] {
   border-color: var(--color-spark);
 }
 
+/* Orange-outlined CTA — warm border at rest (the "Kontakt aufnehmen" hover look, made permanent) */
+.btn-spark-outline {
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-spark);
+}
+.btn-spark-outline:hover {
+  background: var(--color-spark-soft);
+  transform: translateY(-2px);
+}
+
 /* Atmospheric glow blob */
 .glow {
   position: absolute;
