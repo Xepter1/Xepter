@@ -307,6 +307,35 @@ section[id] {
   transform: translateY(-2px);
 }
 
+/* ── Brand mark (the "X" glyph) + warm-orange hover ignite ───────────── */
+.logo-mark {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+.logo-mark-img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+/* Orange silhouette of the X, masked from the logo's alpha — fades in on
+   hover so every violet shape lights up orange at once (the dot is handled
+   separately in the navbar). */
+.logo-mark-spark {
+  position: absolute;
+  inset: 0;
+  background: var(--color-spark);
+  -webkit-mask: url('/logo.png') center / contain no-repeat;
+  mask: url('/logo.png') center / contain no-repeat;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-expo);
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(255, 176, 77, 0.7));
+}
+.group:hover .logo-mark-spark {
+  opacity: 1;
+}
+
 /* Atmospheric glow blob */
 .glow {
   position: absolute;

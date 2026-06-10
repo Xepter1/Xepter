@@ -82,8 +82,9 @@ export default function Navbar() {
             <Wordmark
               className="font-display text-[1.35rem] font-semibold tracking-tight text-ink"
               alt=""
+              spark
             />
-            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)] transition-transform duration-500 group-hover:scale-150" />
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)] transition-all duration-500 group-hover:scale-150 group-hover:bg-spark group-hover:shadow-[0_0_16px_var(--color-spark)]" />
           </Link>
 
           {/* Desktop links */}
