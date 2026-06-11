@@ -45,7 +45,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
             className="eyebrow mb-5 !text-spark"
           >
-            Der erste Eindruck entscheidet.
+            Der erste Eindruck zählt.
           </motion.p>
 
           <h1 className="font-display text-[clamp(2.8rem,8.2vw,5.8rem)] font-semibold leading-[0.95] tracking-[-0.03em]">

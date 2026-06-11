@@ -47,7 +47,9 @@ export default function Leistungen() {
           {/* Left — copy */}
           <div className="order-2 lg:order-1">
             <SectionMark
-              word="Ihr CMS"
+              word="Dein CMS"
+              wordAccent
+              rule={false}
               lines={[
                 'Deine Website',
                 { text: 'pflegst du', accent: true, suffix: ' selbst.' },

@@ -19,7 +19,7 @@ export default function Footer() {
               <span className="mb-1 h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)]" />
             </div>
             <p className="mt-3 max-w-xs text-ink-faint">
-              Der erste Eindruck entscheidet.
+              Weil der erste Eindruck zählt!
             </p>
           </div>
 
@@ -88,7 +88,7 @@ export default function Footer() {
             </Link>
           </nav>
           <p className="font-mono text-xs text-ink-faint">
-            © 2026 Xepter · mit Präzision gebaut.
+            © 2026 Xepter
           </p>
         </div>
       </div>

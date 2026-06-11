@@ -10,7 +10,7 @@ import SectionMark from './SectionMark'
 const PROJECTS = [
   {
     name: 'Landshuter Symphonieorchester',
-    desc: 'Webauftritt für ein klassisches Symphonieorchester mit Konzertkalender, Programm und digitaler Bühne für die Klassik.',
+    desc: 'Konzeption einer Website für ein klassisches Symphonieorchester mit Konzertkalender, Newsübersicht und Galerie. Mit CMS für die selbstständige Pflege.',
     tag: 'Kultur',
     year: '2026',
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
@@ -20,10 +20,9 @@ const PROJECTS = [
   },
   {
     name: 'DesignbyEms',
-    desc: 'Markenauftritt und Portfolio für ein kreatives Designstudio, reduziert, elegant und ganz auf die Arbeit fokussiert.',
+    desc: 'Konzeption der Website für die Grafikdesignerin Emili Gassner, reduziert, elegant und ganz auf ihre Arbeit fokussiert.',
     tag: 'Branding',
     year: '2026',
-    live: true,
     url: 'https://designbyems.de/',
     img: '/projects/designbyems.jpg',
     imgMobile: '/projects/mobile/designbyems.jpg',
@@ -228,10 +227,7 @@ function CtaPreview() {
           }}
         >
           <div className="grid-bg absolute inset-0 opacity-40" />
-          <span className="relative font-mono text-[0.62rem] uppercase tracking-[0.32em] text-spark">
-            Freier Platz
-          </span>
-          <h4 className="relative mt-3 font-display text-[clamp(1.3rem,3vw,2.3rem)] font-semibold leading-[1.05] tracking-tight text-ink">
+          <h4 className="relative font-display text-[clamp(1.3rem,3vw,2.3rem)] font-semibold leading-[1.05] tracking-tight text-ink">
             Das hier könnte
             <br />
             deine Website sein.
@@ -303,7 +299,7 @@ function CtaRow() {
         </p>
 
         <h3 className="font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-medium leading-[1.05] tracking-[-0.02em]">
-          Dein Projekt?
+          Jetzt?
         </h3>
 
         <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-dim">

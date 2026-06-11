@@ -22,6 +22,9 @@ export default function About() {
           {/* Left — narrative */}
           <div>
             <SectionMark
+              word="Über mich"
+              wordAccent
+              rule={false}
               lines={['Ingenieurs­denken trifft auf', 'gestalterischen Anspruch.']}
             />
 
@@ -47,7 +50,7 @@ export default function About() {
                 und einem feinen Gespür für Ästhetik, das in jedes Projekt
                 fließt, das meinen Namen trägt.
               </p>
-              <p className="text-ink">
+              <p className="font-medium text-spark">
                 So entstehen Websites, die nicht nur gut aussehen, sondern
                 durchdacht funktionieren.
               </p>

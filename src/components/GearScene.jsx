@@ -194,7 +194,7 @@ export default function GearScene({
       <section className="relative overflow-hidden pt-28 sm:pt-32">
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-2">
           <div className={imgLeft ? 'lg:order-2' : ''}>
-            <p className="eyebrow !text-spark mb-5">{eyebrow}</p>
+            {eyebrow && <p className="eyebrow !text-spark mb-5">{eyebrow}</p>}
             <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
               {headline.join(' ')}
             </h1>
@@ -204,7 +204,7 @@ export default function GearScene({
           </div>
           <img
             src={`/${dir}/d/${still}.webp`}
-            alt={`Explosionsdarstellung, ${eyebrow}`}
+            alt={`Explosionsdarstellung${eyebrow ? `, ${eyebrow}` : ''}`}
             width={frameW}
             height={frameH}
             className={`w-full ${imgLeft ? 'lg:order-1' : ''}`}
@@ -272,14 +272,16 @@ export default function GearScene({
               imgLeft ? 'lg:order-2' : ''
             }`}
           >
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
-              className="eyebrow !text-spark mb-5"
-            >
-              {eyebrow}
-            </motion.p>
+            {eyebrow && (
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+                className="eyebrow !text-spark mb-5"
+              >
+                {eyebrow}
+              </motion.p>
+            )}
             <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
               {headline.map((t, i) => (
                 <span key={t} className="block overflow-hidden pb-[0.06em]">
@@ -328,7 +330,7 @@ export default function GearScene({
           >
             <canvas
               ref={canvasRef}
-              aria-label={`Explosionsdarstellung, gesteuert durch Scrollen (${eyebrow})`}
+              aria-label={`Explosionsdarstellung, gesteuert durch Scrollen${eyebrow ? ` (${eyebrow})` : ''}`}
               role="img"
               style={{ aspectRatio: `${frameW} / ${frameH}` }}
               className="h-full w-full lg:mx-auto lg:h-auto lg:max-h-[78svh]"

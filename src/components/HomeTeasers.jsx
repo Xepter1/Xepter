@@ -60,7 +60,7 @@ const CARDS = [
   {
     to: '/aussergewoehnliches',
     eyebrow: 'Motion',
-    title: 'Wollen Sie außergewöhnliche Animationen?',
+    title: 'Willst du außergewöhnliche Animationen?',
     glow: {
       right: '-12%',
       top: '-25%',
@@ -79,8 +79,8 @@ const CARDS = [
   },
   {
     to: '/selbst-verwalten',
-    eyebrow: 'Ihr CMS',
-    title: 'Wollen Sie Ihre Website selbst pflegen?',
+    eyebrow: 'Dein CMS',
+    title: 'Willst du deine Website selbst pflegen?',
     glow: {
       left: '-12%',
       bottom: '-25%',
@@ -115,7 +115,7 @@ export default function HomeTeasers() {
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <SectionMark
           word="Entdecken"
-          lines={['Sehen Sie selbst,', { text: 'was möglich', accent: true, suffix: ' ist.' }]}
+          lines={['Sieh selbst,', { text: 'was möglich', accent: true, suffix: ' ist.' }]}
         />
 
         <motion.div

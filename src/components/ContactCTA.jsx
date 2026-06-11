@@ -34,8 +34,8 @@ export default function ContactCTA() {
           <span className="text-gradient">ersten Eindruck</span> schaffen.
         </h2>
         <p className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-ink-dim">
-          Du hast ein Projekt im Kopf oder einfach eine gute Idee? Erzähl mir
-          davon. Ich melde mich zeitnah zurück.
+          Du hast ein Projekt im Kopf? Erzähl mir davon. Ich melde mich
+          innerhalb von 24 Stunden zurück.
         </p>
         <Link to="/kontakt" className="btn btn-spark mt-10">
           Kontakt aufnehmen

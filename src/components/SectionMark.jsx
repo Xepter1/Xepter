@@ -15,7 +15,13 @@ import { clipUp, drawX, inView } from '../lib/anim'
  *              underline under `text` and `suffix` stays on the same masked line.
  *   className — extra classes on the wrapper (e.g. spacing).
  */
-export default function SectionMark({ word, lines, className = '' }) {
+export default function SectionMark({
+  word,
+  lines,
+  className = '',
+  wordAccent = false,
+  rule = true,
+}) {
   const reduce = useReducedMotion()
   // Framer's `initial` overrides CSS, so honour reduced-motion in JS:
   // start already in the visible "show" state — nothing animates, nothing hides.
@@ -28,18 +34,24 @@ export default function SectionMark({ word, lines, className = '' }) {
       viewport={inView}
       className={`max-w-2xl ${className}`}
     >
-      {/* self-drawing hairline */}
-      <motion.span
-        variants={drawX}
-        custom={0}
-        style={{ originX: 0 }}
-        className="mb-6 block h-px w-16 origin-left bg-line-2 sm:w-[88px]"
-      />
+      {/* self-drawing hairline (optional) */}
+      {rule && (
+        <motion.span
+          variants={drawX}
+          custom={0}
+          style={{ originX: 0 }}
+          className="mb-6 block h-px w-16 origin-left bg-line-2 sm:w-[88px]"
+        />
+      )}
 
-      {/* quiet mono kicker word (optional) */}
+      {/* quiet mono kicker word (optional) — wordAccent paints it warm like the Motion kicker */}
       {word && (
         <span className="block overflow-hidden">
-          <motion.span variants={clipUp} custom={0.12} className="kicker block">
+          <motion.span
+            variants={clipUp}
+            custom={0.12}
+            className={`kicker block ${wordAccent ? '!text-spark' : ''}`}
+          >
             {word}
           </motion.span>
         </span>

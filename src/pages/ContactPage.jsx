@@ -44,7 +44,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden pt-36 pb-28 sm:pt-44">
+    <main className="relative min-h-screen overflow-hidden pt-28 pb-24 sm:pt-32">
       <div className="grid-bg absolute inset-0 z-0" />
       <div
         className="glow"
@@ -79,25 +79,50 @@ export default function ContactPage() {
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-dim">
             Ob konkretes Projekt oder lose Idee, schreib mir ein paar Zeilen.
-            Ich antworte in der Regel innerhalb von 24 Stunden.
+            Ich antworte innerhalb von 24 Stunden.
           </p>
         </motion.div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20">
-          {/* Left — direct + socials */}
+        <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20 sm:mt-12">
+          {/* Left — quote, direct line + socials */}
           <motion.div {...fade(0.15)} className="flex flex-col gap-10">
-            <div>
-              <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
-                Direkter Draht
-              </h2>
+            <div className="hidden lg:block">
+              <p className="max-w-sm text-lg font-medium leading-relaxed text-spark">
+                „Der erste Eindruck entscheidet." Und er beginnt mit deiner
+                ersten Nachricht.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
               <a
                 href="mailto:mail@xepter.de"
-                className="group mt-4 inline-flex items-center gap-3 font-display text-2xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-3xl"
+                className="group inline-flex items-center gap-3 font-display text-2xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-3xl"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line-2 text-accent transition-colors group-hover:border-accent/50">
                   <IconMail width={20} height={20} />
                 </span>
                 mail@xepter.de
+              </a>
+              <a
+                href="tel:+4915144227255"
+                className="group inline-flex items-center gap-3 font-display text-xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-2xl"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line-2 text-accent transition-colors group-hover:border-accent/50">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    width={20}
+                    height={20}
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </span>
+                0151 44227255
               </a>
             </div>
 
@@ -120,13 +145,6 @@ export default function ContactPage() {
                   )
                 })}
               </div>
-            </div>
-
-            <div className="mt-auto hidden lg:block">
-              <p className="max-w-sm text-lg font-medium leading-relaxed text-spark">
-                „Der erste Eindruck entscheidet." Und er beginnt mit einer ersten
-                Nachricht.
-              </p>
             </div>
           </motion.div>
 
