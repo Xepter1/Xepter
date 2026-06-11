@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   motion,
   useScroll,
@@ -44,12 +44,23 @@ export default function GearScene({
   const counterRef = useRef(null)
   const reduce = useReducedMotion()
 
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)')
+    const on = () => setIsMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ['start start', 'end end'],
   })
   // subtle parallax: the copy drifts up gently while the object scrubs
-  const copyY = useTransform(scrollYProgress, [0, 1], [0, -64])
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -90])
+  // mobile only: the copy overlay fades out early so the full object is free
+  const copyOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0])
 
   const imgLeft = side === 'left'
 
@@ -228,12 +239,17 @@ export default function GearScene({
         />
 
         <div
-          className={`relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-20 sm:px-8 lg:gap-12 lg:pt-0 ${
+          className={`relative z-10 h-full w-full lg:mx-auto lg:grid lg:h-auto lg:max-w-7xl lg:items-center lg:gap-12 lg:px-8 ${
             imgLeft ? 'lg:grid-cols-[1.1fr_0.9fr]' : 'lg:grid-cols-[0.9fr_1.1fr]'
           }`}
         >
-          {/* Copy */}
-          <motion.div style={{ y: copyY }} className={imgLeft ? 'lg:order-2' : ''}>
+          {/* Copy — mobil ausblendendes Overlay oben, Desktop normale Spalte */}
+          <motion.div
+            style={{ y: copyY, opacity: isMobile ? copyOpacity : undefined }}
+            className={`absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-base from-30% via-base/80 to-transparent px-5 pb-20 pt-24 sm:px-8 lg:static lg:z-auto lg:bg-none lg:p-0 lg:pb-0 ${
+              imgLeft ? 'lg:order-2' : ''
+            }`}
+          >
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -278,19 +294,22 @@ export default function GearScene({
             </motion.p>
           </motion.div>
 
-          {/* Object */}
+          {/* Object — mobil füllt es den ganzen Viewport (voll sichtbar, nichts
+              abgeschnitten), Desktop sitzt es in der Spalte. */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.1, delay: 0.35, ease: EASE }}
-            className={`relative ${imgLeft ? 'lg:order-1' : ''}`}
+            className={`absolute inset-0 z-10 flex items-center justify-center px-4 lg:relative lg:inset-auto lg:z-auto lg:block lg:px-0 ${
+              imgLeft ? 'lg:order-1' : ''
+            }`}
           >
             <canvas
               ref={canvasRef}
               aria-label={`Explosionsdarstellung, gesteuert durch Scrollen (${eyebrow})`}
               role="img"
               style={{ aspectRatio: `${frameW} / ${frameH}` }}
-              className="mx-auto w-full max-h-[60svh] lg:max-h-[78svh]"
+              className="h-full w-full lg:mx-auto lg:h-auto lg:max-h-[78svh]"
             />
           </motion.div>
         </div>

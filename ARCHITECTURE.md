@@ -200,7 +200,14 @@ Reihenfolge: **Burger → Objektiv → CMS** (`Leistungen.jsx`):
 
 GearScene-Props: `dir` (Asset-Ordner unter /public), `frameCount/frameW/frameH` (aus Skript-Output),
 `side` ('right'|'left'), `reverse` (bool, Scroll-Richtung umkehren), `still` (Frame fürs Reduced-Motion-
-Standbild, Default 0), `eyebrow`, `headline` (Array von Zeilen), `body`. Defaults = Objektiv. ⚠️ Dynamische Größe über **Inline-`aspectRatio`**, NICHT `aspect-[…]`-Tailwind (das würde
+Standbild, Default 0), `eyebrow`, `headline` (Array von Zeilen), `body`. Defaults = Objektiv.
+
+**Mobil (<lg) anderes Layout** als Desktop (sonst lief die Headline in die Navbar und das Hochformat-
+Motiv wurde unten abgeschnitten): der **Canvas füllt den ganzen Sticky-Viewport** (`absolute inset-0`,
+Objekt contain-zentriert → immer voll sichtbar), die **Copy liegt als Overlay oben** (`absolute top-0`,
+`pt-24` für Navbar-Abstand, dunkler Scrim für Lesbarkeit) und **blendet beim Scrollen aus**
+(`copyOpacity = useTransform(scrollYProgress,[0,0.22],[1,0])`, nur mobil via `isMobile`-State). Ab `lg`
+schalten `lg:static`/`lg:grid` zurück auf den Zweispalter. Dynamische Canvas-Größe via Inline-`aspectRatio`. ⚠️ Dynamische Größe über **Inline-`aspectRatio`**, NICHT `aspect-[…]`-Tailwind (das würde
 der JIT bei dynamischen Werten nicht erzeugen). Querformat-Motive wirken in der halben Spalte kleiner.
 
 ### Komponente `GearScene.jsx`
