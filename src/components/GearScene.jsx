@@ -181,8 +181,23 @@ export default function GearScene() {
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         {/* atmosphere */}
         <div className="grid-bg absolute inset-0" />
+        {/* Mobile: ein dezenter Glow mittig hinter dem Objekt (das Layout stapelt,
+            die Desktop-Glows würden seitlich verrutschen) */}
         <div
-          className="glow"
+          className="glow lg:hidden"
+          style={{
+            width: 360,
+            height: 360,
+            left: '50%',
+            bottom: '12%',
+            transform: 'translateX(-50%)',
+            background:
+              'radial-gradient(circle, rgba(139,61,240,0.18), transparent 60%)',
+          }}
+        />
+        {/* Desktop: seitliche Glows neben/hinter dem Objekt */}
+        <div
+          className="glow hidden lg:block"
           style={{
             width: 640,
             height: 640,
@@ -193,7 +208,7 @@ export default function GearScene() {
           }}
         />
         <div
-          className="glow"
+          className="glow hidden lg:block"
           style={{
             width: 420,
             height: 420,
