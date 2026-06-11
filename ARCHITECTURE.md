@@ -187,8 +187,10 @@ mit „Veröffentlicht/Entwurf"-Badges. Alles `cqw`-skaliert → passt sich der 
 ## 7b. Scroll-Frame-Animation „Explosion" (GearScene) — Hero von `/leistungen`
 
 Apple-artiger Scroll-Scrub: ein Objekt **zerlegt sich beim Runterscrollen** in seine Einzelteile und
-**setzt sich beim Hochscrollen** wieder zusammen. **Aktuelles Motiv: Kopfhörer** (vorher ein Getriebe,
-vom User verworfen — „zu viele Teile", unleserlich). Faustregel fürs Motiv: **5–10 saubere Teile**.
+**setzt sich beim Hochscrollen** wieder zusammen. **Aktuelles Motiv: Kamera-Objektiv** (Querformat
+1500×902; davor Kopfhörer, davor ein Getriebe — „zu viele Teile", unleserlich). Faustregel fürs Motiv:
+**5–10 saubere Teile**. ⚠️ Querformat-Motive wirken in der 2-Spalten-Hero kleiner — bei Bedarf die
+Sektion auf volle Breite umbauen (Text über statt neben dem Bild).
 
 ### Komponente `GearScene.jsx`
 > Name ist historisch (war mal das Getriebe), Pfad/Ordner `gear` bewusst **nicht umbenannt**.

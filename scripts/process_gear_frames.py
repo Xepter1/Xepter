@@ -48,7 +48,7 @@ MARGIN_FRAC = 0.02        # zusaetzlicher Rand um die Objekt-BBox (Anteil der la
 
 # Statisches Wasserzeichen als Pixel-Box (y0, x0, y1, x1) ODER None.
 # Bei sauberem Export auf None lassen. Sonst die Box im Quell-Pixelraster eintragen.
-WATERMARK = (2710, 2130, 2880, 2880)   # KlingAI 3.0 4K, unten rechts (2880x2880-Quelle)
+WATERMARK = (1350, 1140, 1440, 1440)   # KlingAI 3.0, unten rechts (1440x1440 Objektiv-Quelle)
 
 
 def black_watermark(fr):

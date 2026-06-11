@@ -24,7 +24,7 @@ import { EASE } from '../lib/anim'
  */
 const FRAME_COUNT = 97
 const FRAME_W = 1500
-const FRAME_H = 1491
+const FRAME_H = 902
 
 function frameSrc(folder, i) {
   return `/gear/${folder}/${i}.webp`
@@ -165,7 +165,7 @@ export default function GearScene() {
           </div>
           <img
             src={frameSrc('d', 0)}
-            alt="Explosionsdarstellung von Kopfhörern"
+            alt="Explosionsdarstellung eines Objektivs"
             width={FRAME_W}
             height={FRAME_H}
             className="w-full"
@@ -235,8 +235,8 @@ export default function GearScene() {
               transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
               className="mt-6 max-w-md text-lg leading-relaxed text-ink-dim"
             >
-              Dann scroll langsam weiter. Die Kopfhörer zerlegen sich in ihre
-              Einzelteile und setzen sich rückwärts wieder zusammen. Direkt im
+              Dann scroll langsam weiter. Das Objektiv zerlegt sich in seine
+              Einzelteile und setzt sich rückwärts wieder zusammen. Direkt im
               Browser, butterweich, ohne Plugins.
             </motion.p>
             <motion.p
@@ -262,9 +262,9 @@ export default function GearScene() {
           >
             <canvas
               ref={canvasRef}
-              aria-label="Explosionsdarstellung von Kopfhörern, gesteuert durch Scrollen"
+              aria-label="Explosionsdarstellung eines Objektivs, gesteuert durch Scrollen"
               role="img"
-              className="mx-auto aspect-[1500/1491] w-full max-h-[60svh] lg:max-h-[78svh]"
+              className="mx-auto aspect-[1500/902] w-full max-h-[60svh] lg:max-h-[78svh]"
             />
           </motion.div>
         </div>
