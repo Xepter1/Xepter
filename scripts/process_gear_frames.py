@@ -1,179 +1,136 @@
 #!/usr/bin/env python3
 """
-Gear-Video -> freigestellte Frame-Sequenz fuer die Scroll-Animation (/leistungen).
+Explosions-Video (schwarzer Hintergrund) -> Frame-Sequenz fuer den Scroll-Scrub (/leistungen).
 
-Eingabe:  Bilder/Video.mp4 (960x960, weisser Studio-Hintergrund, KlingAI-Watermark)
-Ausgabe:  public/gear/d/<i>.webp (Desktop, 879x769) und public/gear/m/<i>.webp (480 breit),
-          jeweils mit Alpha.
+Eingabe:  ein Video mit SCHWARZEM Hintergrund (ideal #000, ohne Wasserzeichen, 4K).
+Ausgabe:  public/gear/d/<i>.webp (Desktop) und public/gear/m/<i>.webp (Mobile),
+          jeweils mit Alpha (RGBA).
 
-Schritte pro Frame:
- 1. Watermark-Zone mit Hintergrundweiss fuellen (Zone ist in allen Frames objektfrei).
- 2. Aeusserer Hintergrund per Flood-Fill vom Rand (FIXED_RANGE tol 12 — bewusst
-    konservativ: ein ueberbelichteter Alu-Halter geht stellenweise nahtlos ins
-    Hintergrundweiss ueber und darf nicht angefressen werden).
- 3. Bodenschatten entfernen: Kandidaten (hell, entsaettigt, glatt) -> nur Komponenten
-    mit weicher Silhouette (Kontur-Gradient-Median < 48) unten im Bild, plus
-    Luma-Taper-Band fuer die Auslaeufer.
- 4. Eingeschlossene Hintergrund-Taschen (Ringloecher etc.): ultra-weisse Kerne im
-    Inneren, floating-range Flood (kriecht durch weiche Verlaeufe, stoppt an
-    Metallkanten) mit STRENGEN Gates (Region muss fast rein weiss sein), damit
-    niemals Metall gefressen wird.
- 5. Weiches Alpha; an ueberbelichteten Silhouettenkanten breiterer Feather
-    (liest sich als Glow statt als harter Schnitt). Unblend von Weiss.
+Warum so:
+  Keying gegen Schwarz ist trivial, der Alpha-Wert kommt direkt aus der Helligkeit.
+  Schwarz hat Luma 0 -> Alpha 0 -> transparent; das helle Metall ist deckend. So liegt
+  das Objekt als echte Freisteller-Sequenz ueber der dunklen Seite, der Glow scheint
+  durch die transparenten Bereiche. Kein `mix-blend-mode` noetig (der wurde im Browser
+  vom animierten Wrapper isoliert und liess das schwarze Frame als Kasten stehen).
+
+Anpassungsfaehig:
+  - beliebige Aufloesung / Frame-Zahl (zwei Streaming-Durchlaeufe, 4K passt sonst nicht
+    in den Speicher).
+  - Zuschnitt wird AUTOMATISCH aus der Objekt-Ausdehnung ueber alle Frames erkannt
+    (am staerksten zerlegten Punkt fliegen Teile weit, der Crop fasst alles + Rand).
+  - Wasserzeichen optional (WATERMARK = None, falls der Export sauber ist).
+
+Nach dem Lauf druckt das Skript FRAME_COUNT / FRAME_W / FRAME_H -> in
+src/components/GearScene.jsx eintragen, falls sie sich geaendert haben.
+
+Aufruf:  python3 scripts/process_gear_frames.py [pfad/zum/video.mp4]
 """
 import os
+import sys
 import cv2
 import numpy as np
 
-VIDEO = 'Bilder/Video.mp4'
+VIDEO = sys.argv[1] if len(sys.argv) > 1 else 'Bilder/video_black.mp4'
 OUT_D = 'public/gear/d'
 OUT_M = 'public/gear/m'
-W = H = 960
-CROP = (54, 90, 932, 858)        # x0, y0, x1, y1 (Union-BBox + Rand)
-MOBILE_W = 480
-Q_DESKTOP, Q_MOBILE = 80, 75
-CHAIN_HORIZON = 40               # Frames Vorausschau fuer die temporale Kette
-SEEDS = [(5, 5), (W - 6, 5), (5, H - 6), (W - 6, H - 6),
-         (W // 2, 5), (W // 2, H - 6), (5, H // 2), (W - 6, H // 2)]
+
+DESKTOP_W = 1500          # retina-scharf; aus 4K-Quelle heruntergerechnet = sehr sauber
+MOBILE_W = 560
+Q_DESKTOP, Q_MOBILE = 82, 78
+# Luma-Ramp fuer das Alpha: <LO transparent, >HI deckend. WICHTIG an die Quelle anpassen:
+#  - reiner schwarzer BG + dunkle Objektteile (Kopfhoerer): tief ansetzen (4..12), sonst
+#    fallen schwarze Polster/Buegel mit dem BG weg.
+#  - heller Studio-BG / Vignette (altes Getriebe): hoch ansetzen (56..86).
+ALPHA_LO, ALPHA_HI = 4.0, 12.0
+CONTENT_LEVEL = 10        # Luma-Schwelle, ab der ein Pixel als Objekt zaehlt (fuer Crop);
+                          # bei dunklen Objekten tief halten, sonst wird das Objekt beschnitten
+MARGIN_FRAC = 0.02        # zusaetzlicher Rand um die Objekt-BBox (Anteil der laengsten Kante)
+
+# Statisches Wasserzeichen als Pixel-Box (y0, x0, y1, x1) ODER None.
+# Bei sauberem Export auf None lassen. Sonst die Box im Quell-Pixelraster eintragen.
+WATERMARK = (2710, 2130, 2880, 2880)   # KlingAI 3.0 4K, unten rechts (2880x2880-Quelle)
 
 
-def outer_bg(fr, tol=12):
-    m = np.zeros((H + 2, W + 2), np.uint8)
-    tmp = fr.copy()
-    for sx, sy in SEEDS:
-        cv2.floodFill(tmp, m, (sx, sy), 255, loDiff=(tol,) * 3, upDiff=(tol,) * 3,
-                      flags=cv2.FLOODFILL_FIXED_RANGE | cv2.FLOODFILL_MASK_ONLY | (255 << 8))
-    return m[1:-1, 1:-1] > 0
+def black_watermark(fr):
+    if WATERMARK is not None:
+        y0, x0, y1, x1 = WATERMARK
+        fr[y0:y1, x0:x1] = 0
+    return fr
 
 
-def core_flood_pockets(fr, bg, gray, sat):
-    """Nur Regionen keyen, die praktisch reines Hintergrundweiss sind
-    (Ringloecher, offene Spalte). Strenge Gates schuetzen ueberbelichtetes
-    Metall: die Region muss hell UND eng verteilt sein."""
-    core = ((~bg) & (gray >= 246) & (sat <= 10)).astype(np.uint8)
-    nc, lab, stats, _ = cv2.connectedComponentsWithStats(core, connectivity=8)
-    pocket = np.zeros((H, W), np.uint8)
-    for c in range(1, nc):
-        if stats[c, cv2.CC_STAT_AREA] < 12:
-            continue
-        ys, xs = np.where(lab == c)
-        k = int(np.argmax(gray[ys, xs]))
-        seed = (int(xs[k]), int(ys[k]))
-        if pocket[seed[1], seed[0]]:
-            continue
-        m2 = np.zeros((H + 2, W + 2), np.uint8)
-        cv2.floodFill(fr.copy(), m2, seed, 255, loDiff=(5,) * 3, upDiff=(5,) * 3,
-                      flags=cv2.FLOODFILL_MASK_ONLY | (255 << 8))
-        R = (m2[1:-1, 1:-1] > 0) & (~bg)
-        area = int(R.sum())
-        if area == 0 or area > 20000:
-            continue
-        vals = gray[R]
-        if vals.mean() < 232 or np.percentile(vals, 5) < 200:
-            continue
-        pocket[R] = 1
-    return pocket
+def detect_crop(video):
+    """Durchlauf 1: laufendes Luma-Maximum ueber alle Frames -> BBox der Objekt-
+    Ausdehnung (inkl. der am weitesten geflogenen Teile) + Rand."""
+    cap = cv2.VideoCapture(video)
+    maxluma = None
+    n = 0
+    while True:
+        ok, fr = cap.read()
+        if not ok:
+            break
+        fr = black_watermark(fr.astype(np.float32))
+        l = fr.mean(axis=2)
+        maxluma = l if maxluma is None else np.maximum(maxluma, l)
+        n += 1
+    cap.release()
+    if maxluma is None:
+        raise SystemExit(f'Keine Frames in {video}')
+    H, W = maxluma.shape
+    ys, xs = np.where(maxluma > CONTENT_LEVEL)
+    m = round(MARGIN_FRAC * max(H, W))
+    y0 = max(0, int(ys.min()) - m)
+    x0 = max(0, int(xs.min()) - m)
+    y1 = min(H, int(ys.max()) + 1 + m)
+    x1 = min(W, int(xs.max()) + 1 + m)
+    return n, (y0, x0, y1, x1), (W, H)
 
 
 def main():
     os.makedirs(OUT_D, exist_ok=True)
     os.makedirs(OUT_M, exist_ok=True)
 
+    n, (cy0, cx0, cy1, cx1), (W, H) = detect_crop(VIDEO)
+    print(f'{n} Frames · Quelle {W}x{H} · Crop y{cy0}..{cy1} x{cx0}..{cx1}')
+
     cap = cv2.VideoCapture(VIDEO)
-    n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    raw = []
-    for _ in range(n):
+    tot_d = tot_m = 0
+    i = 0
+    while True:
         ok, fr = cap.read()
         if not ok:
             break
-        fr = fr.copy()
-        fr[880:960, 700:960] = (250, 250, 250)   # Watermark
-        raw.append(fr)
-    cap.release()
-    n = len(raw)
-    print(f'{n} Frames gelesen')
+        fr = black_watermark(fr.astype(np.float32))
 
-    tot_d = tot_m = 0
-    white_report = []
-    for i in range(n):
-        fr = raw[i]
-        gray = cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY).astype(np.float32)
-        sat = cv2.cvtColor(fr, cv2.COLOR_BGR2HSV)[:, :, 1].astype(np.float32)
-        bg = outer_bg(fr)
-        fg = (~bg).astype(np.uint8)
-        fg = cv2.morphologyEx(fg, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
-        fg = cv2.morphologyEx(fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+        # Alpha aus der Luma: Hintergrund transparent, Metall deckend
+        luma = fr.mean(axis=2)
+        a = np.clip((luma - ALPHA_LO) / (ALPHA_HI - ALPHA_LO), 0.0, 1.0)
+        a = a * a * (3.0 - 2.0 * a)            # smoothstep
+        bgr = np.clip(fr, 0, 255).astype(np.uint8)
+        alpha = (a * 255).astype(np.uint8)
+        bgr[alpha == 0] = 0                     # transparente Flaeche flach -> kleinere Datei
+        out = np.dstack([bgr, alpha])          # BGRA
 
-        gx = cv2.Sobel(gray, cv2.CV_32F, 1, 0, 3)
-        gy = cv2.Sobel(gray, cv2.CV_32F, 0, 1, 3)
-        grad_raw = cv2.magnitude(gx, gy)
-        grad = cv2.GaussianBlur(grad_raw, (9, 9), 0)
-
-        # --- Bodenschatten ---
-        cand = ((fg > 0) & (gray > 150) & (sat < 32) & (grad < 70)).astype(np.uint8)
-        cand = cv2.morphologyEx(cand, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
-        bg_dil = cv2.dilate(bg.astype(np.uint8), np.ones((7, 7), np.uint8))
-        nc, lab, stats, cents = cv2.connectedComponentsWithStats(cand, connectivity=8)
-        shadow = np.zeros_like(cand)
-        for c in range(1, nc):
-            if stats[c, cv2.CC_STAT_AREA] < 120:
-                continue
-            if cents[c][1] < 0.5 * H:
-                continue
-            sel = (lab == c).astype(np.uint8)
-            if not (bg_dil[sel > 0] > 0).any():
-                continue
-            ring = sel - cv2.erode(sel, np.ones((3, 3), np.uint8))
-            eg = grad_raw[ring > 0]
-            if len(eg) and np.median(eg) < 48:
-                shadow[sel > 0] = 1
-        shadow_f = cv2.GaussianBlur(
-            cv2.dilate(shadow, np.ones((7, 7), np.uint8)).astype(np.float32), (13, 13), 0)
-
-        a = fg.astype(np.float32) * (1.0 - shadow_f)
-        band = cv2.dilate(shadow, np.ones((61, 61), np.uint8)).astype(np.float32)
-        band = cv2.GaussianBlur(band, (31, 31), 0)
-        taper = np.clip((242.0 - gray) / 80.0, 0, 1)
-        a = a * (1.0 - band) + a * taper * band
-
-        # --- eingeschlossene Taschen (nur reines Hintergrundweiss) ---
-        pocket = core_flood_pockets(fr, bg, gray, sat)
-        pband = cv2.dilate(pocket, np.ones((9, 9), np.uint8)).astype(np.float32)
-        pband = cv2.GaussianBlur(pband, (7, 7), 0)
-        pa = np.clip((246.0 - gray) / 26.0, 0, 1)
-        a = a * (1.0 - pband) + a * pa * pband
-
-        # --- Finish ---
-        a = np.clip(a, 0, 1)
-        a = cv2.GaussianBlur(a, (5, 5), 0)
-        # Ueberbelichtete Silhouettenkanten weich ausbluehen lassen: dort, wo die
-        # Objektkante fast weiss ist, breiter feathern (Glow statt harter Schnitt)
-        edge = cv2.morphologyEx(fg, cv2.MORPH_GRADIENT, np.ones((5, 5), np.uint8))
-        hot_edge = ((edge > 0) & (gray >= 244)).astype(np.uint8)
-        hot_zone = cv2.GaussianBlur(
-            cv2.dilate(hot_edge, np.ones((9, 9), np.uint8)).astype(np.float32), (13, 13), 0)
-        a_soft = cv2.GaussianBlur(a, (17, 17), 0)
-        a = a * (1.0 - hot_zone) + a_soft * hot_zone
-        af = a[:, :, None]
-        img = fr.astype(np.float32)
-        unb = np.where(af > 0.02, (img - (1 - af) * 255.0) / np.maximum(af, 0.02), 0)
-        rgba = np.dstack([np.clip(unb, 0, 255).astype(np.uint8), (a * 255).astype(np.uint8)])
-
-        x0, y0, x1, y1 = CROP
-        crop = rgba[y0:y1 + 1, x0:x1 + 1]
-        cv2.imwrite(f'{OUT_D}/{i}.webp', crop, [cv2.IMWRITE_WEBP_QUALITY, Q_DESKTOP])
+        crop = out[cy0:cy1, cx0:cx1]
         ch, cw = crop.shape[:2]
-        mob = cv2.resize(crop, (MOBILE_W, int(ch * MOBILE_W / cw)), interpolation=cv2.INTER_AREA)
+        des = cv2.resize(crop, (DESKTOP_W, round(ch * DESKTOP_W / cw)),
+                         interpolation=cv2.INTER_AREA)
+        mob = cv2.resize(crop, (MOBILE_W, round(ch * MOBILE_W / cw)),
+                         interpolation=cv2.INTER_AREA)
+        cv2.imwrite(f'{OUT_D}/{i}.webp', des, [cv2.IMWRITE_WEBP_QUALITY, Q_DESKTOP])
         cv2.imwrite(f'{OUT_M}/{i}.webp', mob, [cv2.IMWRITE_WEBP_QUALITY, Q_MOBILE])
         tot_d += os.path.getsize(f'{OUT_D}/{i}.webp')
         tot_m += os.path.getsize(f'{OUT_M}/{i}.webp')
-        g = cv2.cvtColor(crop[:, :, :3], cv2.COLOR_BGR2GRAY)
-        white_report.append(int(((g > 238) & (crop[:, :, 3] > 220)).sum()))
+        i += 1
+    cap.release()
 
-    print(f'desktop: {tot_d / 1e6:.2f} MB | mobile: {tot_m / 1e6:.2f} MB')
-    worst = int(np.argmax(white_report))
-    print(f'fast-weisse opake Pixel: max {white_report[worst]} (frame {worst}), '
-          f'mittel {sum(white_report) // len(white_report)}')
+    fw = DESKTOP_W
+    fh = round((cy1 - cy0) * DESKTOP_W / (cx1 - cx0))
+    print(f'desktop {fw}x{fh} | {tot_d / 1e6:.2f} MB  ·  '
+          f'mobile {MOBILE_W} | {tot_m / 1e6:.2f} MB')
+    print('--- in src/components/GearScene.jsx eintragen, falls geaendert: ---')
+    print(f'const FRAME_COUNT = {i}')
+    print(f'const FRAME_W = {fw}')
+    print(f'const FRAME_H = {fh}')
 
 
 if __name__ == '__main__':

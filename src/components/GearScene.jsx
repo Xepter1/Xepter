@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import {
   motion,
   useScroll,
-  useSpring,
+  useTransform,
   useReducedMotion,
 } from 'framer-motion'
 import { EASE } from '../lib/anim'
@@ -10,18 +10,21 @@ import { EASE } from '../lib/anim'
 /**
  * GearScene — scroll-driven exploded-view of a gearbox (Apple-style scrub).
  *
- * 97 pre-keyed frames (transparent WebP, white bg + watermark removed offline)
- * live in /public/gear/{d,m}/<i>.webp. A pinned (sticky) viewport maps the
- * section's scroll progress to a frame index on a <canvas>; a spring smooths
- * the index so the explosion feels weighted, forwards and backwards.
+ * 97 transparent frames (RGBA WebP, gearbox keyed off pure black via luminance) live in
+ * /public/gear/{d,m}/<i>.webp. They composite straight over the near-black page through
+ * the canvas alpha, so the background is gone and the metal keeps soft glowing edges —
+ * no fragile keying, no white halos, and no mix-blend-mode (which a transformed wrapper
+ * isolated, leaving the black frame as a box). A pinned (sticky) viewport maps the
+ * section's raw scroll progress straight to a frame index on a <canvas>, so the scrub
+ * stays 1:1 with the finger (no spring lag, which used to read as stutter).
  *
  * Loading is progressive: every 3rd frame first (a usable scrub after ~1/3 of
  * the bytes), then the rest. While a frame is missing, the nearest loaded
  * neighbour is drawn, so scrubbing never blanks.
  */
 const FRAME_COUNT = 97
-const FRAME_W = 879
-const FRAME_H = 769
+const FRAME_W = 1500
+const FRAME_H = 1491
 
 function frameSrc(folder, i) {
   return `/gear/${folder}/${i}.webp`
@@ -37,12 +40,8 @@ export default function GearScene() {
     target: wrapRef,
     offset: ['start start', 'end end'],
   })
-  // the "weighted" scrub feel — spring smooths the raw scroll without lagging
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 160,
-    damping: 28,
-    restDelta: 0.0005,
-  })
+  // subtle parallax: the copy drifts up gently while the gearbox scrubs
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -64])
 
   useEffect(() => {
     if (reduce) return undefined
@@ -132,7 +131,7 @@ export default function GearScene() {
     resize()
     loadAll()
 
-    const unsub = smooth.on('change', (v) => {
+    const unsub = scrollYProgress.on('change', (v) => {
       current = Math.max(
         0,
         Math.min(FRAME_COUNT - 1, Math.round(v * (FRAME_COUNT - 1)))
@@ -147,7 +146,7 @@ export default function GearScene() {
       if (rafId) cancelAnimationFrame(rafId)
       bitmaps.forEach((b) => b && b.close && b.close())
     }
-  }, [smooth, reduce])
+  }, [scrollYProgress, reduce])
 
   // Reduced motion: a single static image instead of the pinned scrub
   if (reduce) {
@@ -166,7 +165,7 @@ export default function GearScene() {
           </div>
           <img
             src={frameSrc('d', 0)}
-            alt="Explosionsdarstellung eines Getriebes"
+            alt="Explosionsdarstellung von Kopfhörern"
             width={FRAME_W}
             height={FRAME_H}
             className="w-full"
@@ -178,7 +177,7 @@ export default function GearScene() {
   }
 
   return (
-    <section ref={wrapRef} className="relative" style={{ height: '300vh' }}>
+    <section ref={wrapRef} className="relative" style={{ height: '400vh' }}>
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         {/* atmosphere */}
         <div className="grid-bg absolute inset-0" />
@@ -207,7 +206,7 @@ export default function GearScene() {
 
         <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:pt-0">
           {/* Left — copy */}
-          <div>
+          <motion.div style={{ y: copyY }}>
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -236,8 +235,8 @@ export default function GearScene() {
               transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
               className="mt-6 max-w-md text-lg leading-relaxed text-ink-dim"
             >
-              Dann scroll langsam weiter. Das Getriebe zerlegt sich in seine
-              Einzelteile und setzt sich rückwärts wieder zusammen. Direkt im
+              Dann scroll langsam weiter. Die Kopfhörer zerlegen sich in ihre
+              Einzelteile und setzen sich rückwärts wieder zusammen. Direkt im
               Browser, butterweich, ohne Plugins.
             </motion.p>
             <motion.p
@@ -252,7 +251,7 @@ export default function GearScene() {
               </span>
               /{FRAME_COUNT}
             </motion.p>
-          </div>
+          </motion.div>
 
           {/* Right — the gearbox */}
           <motion.div
@@ -263,9 +262,9 @@ export default function GearScene() {
           >
             <canvas
               ref={canvasRef}
-              aria-label="Explosionsdarstellung eines Getriebes, gesteuert durch Scrollen"
+              aria-label="Explosionsdarstellung von Kopfhörern, gesteuert durch Scrollen"
               role="img"
-              className="mx-auto aspect-[879/769] w-full max-h-[60svh] lg:max-h-[78svh]"
+              className="mx-auto aspect-[1500/1491] w-full max-h-[60svh] lg:max-h-[78svh]"
             />
           </motion.div>
         </div>
