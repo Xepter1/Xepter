@@ -8,29 +8,37 @@ import {
 import { EASE } from '../lib/anim'
 
 /**
- * GearScene — scroll-driven exploded-view of a gearbox (Apple-style scrub).
+ * GearScene — scroll-driven exploded-view scrub (Apple-style), wiederverwendbar.
  *
- * 97 transparent frames (RGBA WebP, gearbox keyed off pure black via luminance) live in
- * /public/gear/{d,m}/<i>.webp. They composite straight over the near-black page through
- * the canvas alpha, so the background is gone and the metal keeps soft glowing edges —
- * no fragile keying, no white halos, and no mix-blend-mode (which a transformed wrapper
- * isolated, leaving the black frame as a box). A pinned (sticky) viewport maps the
- * section's raw scroll progress straight to a frame index on a <canvas>, so the scrub
- * stays 1:1 with the finger (no spring lag, which used to read as stutter).
+ * Frames liegen als transparente RGBA-WebP in /public/<dir>/{d,m}/<i>.webp (gegen reines
+ * Schwarz freigestellt, s. scripts/process_gear_frames.py). Sie compositen über die dunkle
+ * Seite per Canvas-Alpha — kein mix-blend-mode (den isoliert der animierte Wrapper, das
+ * schwarze Frame bliebe als Kasten). Ein gepinntes (sticky) Viewport mappt den rohen
+ * Scroll-Fortschritt 1:1 auf einen Frame-Index (keine Feder → kein Nachziehen/Ruckeln).
  *
- * Loading is progressive: every 3rd frame first (a usable scrub after ~1/3 of
- * the bytes), then the rest. While a frame is missing, the nearest loaded
- * neighbour is drawn, so scrubbing never blanks.
+ * Glättung: vor-dekodierte ImageBitmaps (drawImage = billiger Blit, kein WebP-Re-Decode),
+ * rAF-Coalescing (max. 1 Draw je Display-Frame), progressives Laden (jeder 3. Frame zuerst,
+ * fehlende → nächstgelegener geladener). Mobil: niedrigere Canvas-DPR.
+ *
+ * Props:
+ *  dir          Asset-Ordner unter /public (z.B. 'gear' = Objektiv, 'burger').
+ *  frameCount/frameW/frameH   aus dem Skript-Output (drucken bei jedem Lauf).
+ *  side         'right' = Bild rechts/Text links (Default), 'left' = gespiegelt.
+ *  reverse      true, wenn das Video rückwärts ist (Frame 0 = zusammengebaut sonst).
+ *  eyebrow/headline/body   Texte der Sektion.
  */
-const FRAME_COUNT = 97
-const FRAME_W = 1500
-const FRAME_H = 902
-
-function frameSrc(folder, i) {
-  return `/gear/${folder}/${i}.webp`
-}
-
-export default function GearScene() {
+export default function GearScene({
+  dir = 'gear',
+  frameCount = 97,
+  frameW = 1500,
+  frameH = 902,
+  side = 'right',
+  reverse = false,
+  still = 0,
+  eyebrow = 'Motion',
+  headline = ['Sie wollen', 'aufwendige', 'Animationen?'],
+  body = 'Dann scroll langsam weiter. Das Objektiv zerlegt sich in seine Einzelteile und setzt sich rückwärts wieder zusammen. Direkt im Browser, butterweich, ohne Plugins.',
+}) {
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)
   const counterRef = useRef(null)
@@ -40,8 +48,10 @@ export default function GearScene() {
     target: wrapRef,
     offset: ['start start', 'end end'],
   })
-  // subtle parallax: the copy drifts up gently while the gearbox scrubs
+  // subtle parallax: the copy drifts up gently while the object scrubs
   const copyY = useTransform(scrollYProgress, [0, 1], [0, -64])
+
+  const imgLeft = side === 'left'
 
   useEffect(() => {
     if (reduce) return undefined
@@ -51,19 +61,19 @@ export default function GearScene() {
 
     const ctx = canvas.getContext('2d')
     const folder = window.matchMedia('(max-width: 1023px)').matches ? 'm' : 'd'
-    // Pre-decoded ImageBitmaps: drawImage stays a cheap GPU blit, no
-    // per-frame WebP re-decode (the main source of scrub jank).
-    const bitmaps = new Array(FRAME_COUNT).fill(null)
+    const srcOf = (i) => `/${dir}/${folder}/${i}.webp`
+    const bitmaps = new Array(frameCount).fill(null)
     let alive = true
     let lastDrawn = -1
-    let current = 0
+    // Frame am Sektions-Anfang (progress 0) je nach Laufrichtung
+    let current = reverse ? frameCount - 1 : 0
     let rafId = 0
 
     const draw = (idx) => {
       // nearest loaded frame, preferring the requested one
       let img = bitmaps[idx]
       if (!img) {
-        for (let off = 1; off < FRAME_COUNT && !img; off++) {
+        for (let off = 1; off < frameCount && !img; off++) {
           img = bitmaps[idx - off] || bitmaps[idx + off]
         }
       }
@@ -71,9 +81,9 @@ export default function GearScene() {
       const { width: cw, height: chgt } = canvas
       ctx.clearRect(0, 0, cw, chgt)
       // contain-fit
-      const s = Math.min(cw / FRAME_W, chgt / FRAME_H)
-      const w = FRAME_W * s
-      const h = FRAME_H * s
+      const s = Math.min(cw / frameW, chgt / frameH)
+      const w = frameW * s
+      const h = frameH * s
       ctx.drawImage(img, (cw - w) / 2, (chgt - h) / 2, w, h)
       lastDrawn = idx
       if (counterRef.current) {
@@ -92,13 +102,11 @@ export default function GearScene() {
 
     const load = async (i) => {
       try {
-        const res = await fetch(frameSrc(folder, i))
+        const res = await fetch(srcOf(i))
         const blob = await res.blob()
         const bmp = await createImageBitmap(blob)
         if (!alive) return
         bitmaps[i] = bmp
-        // first paint + refresh whenever a better frame for the current
-        // position arrives
         if (lastDrawn === -1 || Math.abs(i - current) < Math.abs(lastDrawn - current)) {
           draw(current)
         }
@@ -110,7 +118,7 @@ export default function GearScene() {
     const loadAll = async () => {
       const pass1 = []
       const pass2 = []
-      for (let i = 0; i < FRAME_COUNT; i++) {
+      for (let i = 0; i < frameCount; i++) {
         ;(i % 3 === 0 ? pass1 : pass2).push(i)
       }
       await Promise.all(pass1.map(load))
@@ -133,10 +141,8 @@ export default function GearScene() {
     loadAll()
 
     const unsub = scrollYProgress.on('change', (v) => {
-      current = Math.max(
-        0,
-        Math.min(FRAME_COUNT - 1, Math.round(v * (FRAME_COUNT - 1)))
-      )
+      const raw = Math.round(v * (frameCount - 1))
+      current = Math.max(0, Math.min(frameCount - 1, reverse ? frameCount - 1 - raw : raw))
       scheduleDraw()
     })
 
@@ -147,30 +153,29 @@ export default function GearScene() {
       if (rafId) cancelAnimationFrame(rafId)
       bitmaps.forEach((b) => b && b.close && b.close())
     }
-  }, [scrollYProgress, reduce])
+  }, [scrollYProgress, reduce, dir, frameCount, frameW, frameH, reverse])
 
   // Reduced motion: a single static image instead of the pinned scrub
   if (reduce) {
     return (
       <section className="relative overflow-hidden pt-28 sm:pt-32">
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-2">
-          <div>
-            <p className="eyebrow !text-spark mb-5">Motion</p>
+          <div className={imgLeft ? 'lg:order-2' : ''}>
+            <p className="eyebrow !text-spark mb-5">{eyebrow}</p>
             <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
-              Sie wollen aufwendige Animationen?
+              {headline.join(' ')}
             </h1>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-dim">
-              Genau so etwas entsteht hier. Aufwendig im Detail, leichtgewichtig
-              im Browser und gebaut, um in Erinnerung zu bleiben.
+              {body}
             </p>
           </div>
           <img
-            src={frameSrc('d', 0)}
-            alt="Explosionsdarstellung eines Objektivs"
-            width={FRAME_W}
-            height={FRAME_H}
-            className="w-full"
-            loading="eager"
+            src={`/${dir}/d/${still}.webp`}
+            alt={`Explosionsdarstellung, ${eyebrow}`}
+            width={frameW}
+            height={frameH}
+            className={`w-full ${imgLeft ? 'lg:order-1' : ''}`}
+            loading="lazy"
           />
         </div>
       </section>
@@ -182,10 +187,8 @@ export default function GearScene() {
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         {/* atmosphere */}
         <div className="grid-bg absolute inset-0" />
-        {/* Mobile: ein dezenter Glow mittig hinter dem Objekt (das Layout stapelt,
-            die Desktop-Glows würden seitlich verrutschen). Bewusst OHNE den teuren
-            blur(90px)-Filter der .glow-Klasse — der radial-gradient ist weich genug,
-            und ein Filter würde den Scroll-Scrub auf dem Handy recompositen lassen. */}
+        {/* Mobile: dezenter Glow mittig hinter dem Objekt, OHNE teuren blur-Filter
+            (würde den Scroll-Scrub auf dem Handy recompositen lassen). */}
         <div
           className="pointer-events-none absolute lg:hidden"
           style={{
@@ -200,14 +203,14 @@ export default function GearScene() {
               'radial-gradient(circle, rgba(139,61,240,0.16), transparent 70%)',
           }}
         />
-        {/* Desktop: seitliche Glows neben/hinter dem Objekt */}
+        {/* Desktop: seitliche Glows, je nach Seite gespiegelt */}
         <div
           className="glow hidden lg:block"
           style={{
             width: 640,
             height: 640,
-            right: '-8%',
             top: '6%',
+            ...(imgLeft ? { left: '-8%' } : { right: '-8%' }),
             background:
               'radial-gradient(circle, rgba(139,61,240,0.2), transparent 60%)',
           }}
@@ -217,26 +220,30 @@ export default function GearScene() {
           style={{
             width: 420,
             height: 420,
-            left: '-6%',
             bottom: '0%',
+            ...(imgLeft ? { right: '-6%' } : { left: '-6%' }),
             background:
               'radial-gradient(circle, rgba(255,176,77,0.07), transparent 60%)',
           }}
         />
 
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:pt-0">
-          {/* Left — copy */}
-          <motion.div style={{ y: copyY }}>
+        <div
+          className={`relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-20 sm:px-8 lg:gap-12 lg:pt-0 ${
+            imgLeft ? 'lg:grid-cols-[1.1fr_0.9fr]' : 'lg:grid-cols-[0.9fr_1.1fr]'
+          }`}
+        >
+          {/* Copy */}
+          <motion.div style={{ y: copyY }} className={imgLeft ? 'lg:order-2' : ''}>
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
               className="eyebrow !text-spark mb-5"
             >
-              Motion
+              {eyebrow}
             </motion.p>
             <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
-              {['Sie wollen', 'aufwendige', 'Animationen?'].map((t, i) => (
+              {headline.map((t, i) => (
                 <span key={t} className="block overflow-hidden pb-[0.06em]">
                   <motion.span
                     className="block"
@@ -255,9 +262,7 @@ export default function GearScene() {
               transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
               className="mt-6 max-w-md text-lg leading-relaxed text-ink-dim"
             >
-              Dann scroll langsam weiter. Das Objektiv zerlegt sich in seine
-              Einzelteile und setzt sich rückwärts wieder zusammen. Direkt im
-              Browser, butterweich, ohne Plugins.
+              {body}
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
@@ -269,22 +274,23 @@ export default function GearScene() {
               <span ref={counterRef} className="text-spark">
                 01
               </span>
-              /{FRAME_COUNT}
+              /{frameCount}
             </motion.p>
           </motion.div>
 
-          {/* Right — the gearbox */}
+          {/* Object */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.1, delay: 0.35, ease: EASE }}
-            className="relative"
+            className={`relative ${imgLeft ? 'lg:order-1' : ''}`}
           >
             <canvas
               ref={canvasRef}
-              aria-label="Explosionsdarstellung eines Objektivs, gesteuert durch Scrollen"
+              aria-label={`Explosionsdarstellung, gesteuert durch Scrollen (${eyebrow})`}
               role="img"
-              className="mx-auto aspect-[1500/902] w-full max-h-[60svh] lg:max-h-[78svh]"
+              style={{ aspectRatio: `${frameW} / ${frameH}` }}
+              className="mx-auto w-full max-h-[60svh] lg:max-h-[78svh]"
             />
           </motion.div>
         </div>

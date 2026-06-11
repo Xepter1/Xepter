@@ -44,7 +44,8 @@ public/
   _redirects               # SPA-Fallback (Netlify/Cloudflare)
   projects/                # Desktop-Screenshots 1600×1000 .jpg (Browser-Frame)
     mobile/                # Mobile-Screenshots 560×1212 .jpg (im iPhone)
-  gear/                    # GearScene-Frames (s. §7b): d/<i>.webp (Desktop 1500) + m/<i>.webp (Mobil 560)
+  gear/                    # GearScene-Frames Objektiv (s. §7b): d/<i>.webp + m/<i>.webp
+  burger/                  # GearScene-Frames Burger (2. Sektion, Bild links, reverse)
 scripts/
   process_gear_frames.py   # Video → freigestellte RGBA-Frame-Sequenz für GearScene (s. §7b)
 src/
@@ -63,7 +64,7 @@ src/
     Projects.jsx           # Galerie: Browser-Frame + iPhone-Overlay (s. §5)
     Leistungen.jsx         # Leistungen-Sektion: Text + <CmsShowcase/> (s. §7)
     CmsShowcase.jsx        # CSS-iMac + Safari + Payload-Admin (CMS-Showcase, s. §7)
-    GearScene.jsx          # Scroll-Frame-Explosion (Hero /leistungen): Canvas-Scrub aus WebP-Frames (s. §7b)
+    GearScene.jsx          # Wiederverwendbare Scroll-Frame-Explosion (Props): Canvas-Scrub aus WebP-Frames (s. §7b)
     About.jsx              # „Über mich": echte Bio + Portrait-Karte (nur Portrait, keine Stats)
     ContactCTA.jsx         # Abschluss-CTA auf der Startseite → /kontakt
     Footer.jsx             # Wordmark, Nav (Anchor|Route), Legal-Links, Back-to-top
@@ -72,7 +73,7 @@ src/
     LegalLayout.jsx        # Gemeinsames Layout für Impressum/Datenschutz
   pages/
     Home.jsx               # Hero → Projects → ContactCTA  (Leistungen & Über mich sind eigene Seiten!)
-    LeistungenPage.jsx     # /leistungen — rendert <Leistungen/>
+    LeistungenPage.jsx     # /leistungen — GearScene (Objektiv) → Leistungen → GearScene (Burger, links)
     UeberMichPage.jsx      # /ueber-mich — rendert <About/>
     ContactPage.jsx        # /kontakt — Formular + Socials
     ImpressumPage.jsx      # /impressum
@@ -187,10 +188,20 @@ mit „Veröffentlicht/Entwurf"-Badges. Alles `cqw`-skaliert → passt sich der 
 ## 7b. Scroll-Frame-Animation „Explosion" (GearScene) — Hero von `/leistungen`
 
 Apple-artiger Scroll-Scrub: ein Objekt **zerlegt sich beim Runterscrollen** in seine Einzelteile und
-**setzt sich beim Hochscrollen** wieder zusammen. **Aktuelles Motiv: Kamera-Objektiv** (Querformat
-1500×902; davor Kopfhörer, davor ein Getriebe — „zu viele Teile", unleserlich). Faustregel fürs Motiv:
-**5–10 saubere Teile**. ⚠️ Querformat-Motive wirken in der 2-Spalten-Hero kleiner — bei Bedarf die
-Sektion auf volle Breite umbauen (Text über statt neben dem Bild).
+**setzt sich beim Hochscrollen** wieder zusammen. Faustregel fürs Motiv: **5–10 saubere Teile**.
+Die Komponente ist **wiederverwendbar (Props)** und wird auf `/leistungen` **zweimal** eingesetzt,
+Reihenfolge: **Burger → Objektiv → CMS** (`Leistungen.jsx`):
+1. **Burger** (`dir="burger"`, Hochformat 1040×1377, **Bild rechts** `side="right"`). Das Video startet
+   explodiert (Frame 0), läuft also **vorwärts → baut sich beim Runterscrollen ZUSAMMEN** (kein `reverse`).
+   `still={96}` = fertiger Burger fürs Reduced-Motion-Standbild. Copy = „aufwendige Animationen" +
+   Restaurant-Nutzen. (Motive davor: Kopfhörer, Getriebe.)
+2. **Kamera-Objektiv** (`dir="gear"`, Querformat 1500×902, **Bild links** `side="left"`). Zerlegt sich
+   beim Runterscrollen. Copy = Produkt-Präsentation.
+
+GearScene-Props: `dir` (Asset-Ordner unter /public), `frameCount/frameW/frameH` (aus Skript-Output),
+`side` ('right'|'left'), `reverse` (bool, Scroll-Richtung umkehren), `still` (Frame fürs Reduced-Motion-
+Standbild, Default 0), `eyebrow`, `headline` (Array von Zeilen), `body`. Defaults = Objektiv. ⚠️ Dynamische Größe über **Inline-`aspectRatio`**, NICHT `aspect-[…]`-Tailwind (das würde
+der JIT bei dynamischen Werten nicht erzeugen). Querformat-Motive wirken in der halben Spalte kleiner.
 
 ### Komponente `GearScene.jsx`
 > Name ist historisch (war mal das Getriebe), Pfad/Ordner `gear` bewusst **nicht umbenannt**.
@@ -224,9 +235,10 @@ Frame als **Kasten** stehen (im Preview fällt das nicht auf, im Browser sofort)
   am `<canvas>`). **Bei neuem Video aktualisieren** — das Skript druckt die Werte.
 
 ### Frame-Pipeline `scripts/process_gear_frames.py` (OpenCV)
-- Aufruf: **`python3 scripts/process_gear_frames.py Bilder/<ordner>/video.mp4`**
-- Output: `public/gear/d/<i>.webp` (Desktop) + `public/gear/m/<i>.webp` (Mobil). **Quellvideo liegt in
-  `Bilder/` (gitignored)** — nur die WebPs sind getrackt.
+- **PRESETS-Dict** im Skript (ein Eintrag je Motiv) hält pro Video: `video`, `alpha`, `content_level`,
+  `watermark`, `desktop_w`, `mobile_w`. Aufruf: **`python3 scripts/process_gear_frames.py <preset>`**
+  (z. B. `gear` oder `burger`). **Output-Ordner = Preset-Name** → `public/<preset>/{d,m}/<i>.webp`.
+  **Quellvideos liegen in `Bilder/` (gitignored)** — nur die WebPs sind getrackt.
 - Schritte pro Frame: Wasserzeichen schwärzen → **Alpha aus der Helligkeit** (`smoothstep(ALPHA_LO..ALPHA_HI)`
   über die Luma) → **Auto-Crop** (Luma-BBox über alle Frames + Rand, fängt auch weit geflogene Teile) →
   auf `DESKTOP_W=1500` / `MOBILE_W=560` skalieren → RGBA-WebP. Zwei **Streaming**-Durchläufe (4K passt
@@ -244,12 +256,17 @@ Frame als **Kasten** stehen (im Preview fällt das nicht auf, im Browser sofort)
   (viel Schwarz) komprimieren klein: Kopfhörer 1500px ≈ **11 MB** Desktop / **3 MB** Mobil.
 
 ### Ein neues Video einbauen — Checkliste
-1. Video in `Bilder/<ordner>/` legen. Beim Rendern (z. B. Kling): **reines Schwarz**, möglichst **ohne
+1. Video in `Bilder/` legen. Beim Rendern (z. B. Kling): **reines Schwarz**, möglichst **ohne
    Wasserzeichen**, **4K**, kräftige Explosion aber **alle Teile im Bild lassen** (Luft drumherum).
-2. Hintergrund-Typ checken → `ALPHA_LO/HI`, `CONTENT_LEVEL`, `WATERMARK` im Skript setzen.
-3. Skript laufen lassen → es druckt `FRAME_COUNT / FRAME_W / FRAME_H` (Dauer 4K ≈ 1 min).
-4. Diese drei Werte + `aspect-[…]` in `GearScene.jsx` eintragen; Copy/`alt`/`aria-label` aufs Motiv anpassen.
+2. **PRESET** im Skript anlegen (Key = Ausgabe-Ordner): `video`, `alpha` (Schwelle, s. o.),
+   `content_level`, `watermark` (Box oder None), `desktop_w/mobile_w`. Hintergrund-Typ bestimmt die Schwelle.
+3. `python3 scripts/process_gear_frames.py <preset>` → druckt `dir / frameCount / frameW / frameH` (4K ≈ 1 min).
+4. Eine **`<GearScene .../>`-Instanz** in `LeistungenPage.jsx` mit diesen Props einsetzen (`dir`,
+   `frameCount`, `frameW`, `frameH`, `side`, ggf. `reverse`, `eyebrow`, `headline`, `body`).
 5. Im **echten Browser** scrollen prüfen (Preview kann nicht scrollen, s. §10) → committen → Portainer redeploy (§9).
+
+Tipp: **`reverse`** setzen, wenn das Video „falsch herum" ist (assembled bei Frame 0). Bottom-Glow/Lichthof
+im Quellvideo (kein reines Schwarz unten) per `watermark`-Box als ganzen Bodenstreifen wegschwärzen.
 
 ---
 
