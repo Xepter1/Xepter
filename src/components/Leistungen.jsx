@@ -29,7 +29,7 @@ function Check() {
 
 export default function Leistungen() {
   return (
-    <section id="leistungen" className="relative overflow-hidden py-28 sm:py-36">
+    <section id="selbst-verwalten" className="relative overflow-hidden pt-36 pb-28 sm:pt-44 sm:pb-36">
       <div
         className="glow"
         style={{
@@ -47,7 +47,7 @@ export default function Leistungen() {
           {/* Left — copy */}
           <div className="order-2 lg:order-1">
             <SectionMark
-              word="Leistungen"
+              word="Ihr CMS"
               lines={[
                 'Deine Website',
                 { text: 'pflegst du', accent: true, suffix: ' selbst.' },
@@ -68,7 +68,7 @@ export default function Leistungen() {
                 Bei mir bekommst du keine starre Seite, die bei jeder Kleinigkeit
                 den Entwickler braucht. Über einen sicheren{' '}
                 <span className="text-ink">Admin-Login</span> pflegst du deine
-                Inhalte selbst. So einfach, wie du es kennst.
+                Inhalte selbst.
               </motion.p>
 
               <motion.ul
@@ -85,14 +85,6 @@ export default function Leistungen() {
                   </li>
                 ))}
               </motion.ul>
-
-              <motion.p
-                variants={fadeUp}
-                className="mt-8 max-w-md text-base leading-relaxed text-ink-faint"
-              >
-                Ein eigenes, voll ausgestattetes CMS. Kein Baukasten, keine
-                monatliche Lizenz. Es gehört zu deiner Website dazu.
-              </motion.p>
             </motion.div>
           </div>
 

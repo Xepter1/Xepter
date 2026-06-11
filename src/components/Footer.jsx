@@ -51,10 +51,16 @@ export default function Footer() {
               </a>
             ))}
             <Link
-              to="/leistungen"
+              to="/aussergewoehnliches"
               className="text-sm text-ink-faint transition-colors hover:text-ink"
             >
-              Leistungen
+              Außergewöhnliches
+            </Link>
+            <Link
+              to="/selbst-verwalten"
+              className="text-sm text-ink-faint transition-colors hover:text-ink"
+            >
+              Selbst verwalten
             </Link>
             <Link
               to="/ueber-mich"

@@ -73,7 +73,8 @@ src/
     LegalLayout.jsx        # Gemeinsames Layout für Impressum/Datenschutz
   pages/
     Home.jsx               # Hero → Projects → ContactCTA  (Leistungen & Über mich sind eigene Seiten!)
-    LeistungenPage.jsx     # /leistungen — GearScene (Objektiv) → Leistungen → GearScene (Burger, links)
+    AussergewoehnlichesPage.jsx  # /aussergewoehnliches — 2x <GearScene/> (Burger + Objektiv)
+    SelbstVerwaltenPage.jsx      # /selbst-verwalten — rendert <Leistungen/> (CMS-Showcase)
     UeberMichPage.jsx      # /ueber-mich — rendert <About/>
     ContactPage.jsx        # /kontakt — Formular + Socials
     ImpressumPage.jsx      # /impressum
@@ -160,13 +161,16 @@ Aufnahme mit **`viewport.deviceScaleFactor=2`** (Retina):
 
 ---
 
-## 7. Leistungen-Seite + CMS-Showcase — `/leistungen`
+## 7. CMS-Showcase — `/selbst-verwalten`
 
-`LeistungenPage.jsx` rendert **zwei** Sektionen untereinander: zuerst den **Scroll-Frame-Hero
-`<GearScene/>`** (s. §7b), darunter die CMS-Sektion `<Leistungen/>`.
+> Seit 2026-06-11 **eigener Reiter** (war Teil von `/leistungen`). Animationen und CMS sind getrennt,
+> weil die Scroll-Explosionen polarisieren, das „selbst pflegen" aber ein harter Verkaufspunkt ist.
+> `SelbstVerwaltenPage.jsx` rendert nur noch `<Leistungen/>`. Die Scroll-Explosionen leben auf
+> `/aussergewoehnliches` (s. §7b).
 
-`Leistungen.jsx`: **links** Verkaufstext „Deine Website **pflegst du** selbst." +
-Vorteils-Checkliste (Bilder, News, Banner, Termine); **rechts** `CmsShowcase.jsx`.
+`Leistungen.jsx`: **links** Verkaufstext „Deine Website **pflegst du** selbst." (Eyebrow „Ihr CMS") +
+Vorteils-Checkliste (Bilder, News, Banner, Termine); **rechts** `CmsShowcase.jsx`. (`<section
+id="selbst-verwalten">`, `pt-36 sm:pt-44` Navbar-Abstand als eigenständige Seite.)
 
 **`CmsShowcase.jsx`** = reiner **CSS-iMac** (`.imac` / `.imac-head` / `.imac-screen` mit `container-type:inline-size`
 / `.imac-chin` mit Mini-Logo / `.imac-neck` / `.imac-foot`) mit **Safari-Fenster** (`.safari*`) und darin einem
@@ -185,12 +189,12 @@ mit „Veröffentlicht/Entwurf"-Badges. Alles `cqw`-skaliert → passt sich der 
 
 ---
 
-## 7b. Scroll-Frame-Animation „Explosion" (GearScene) — Hero von `/leistungen`
+## 7b. Scroll-Frame-Animation „Explosion" (GearScene) — Seite `/aussergewoehnliches`
 
 Apple-artiger Scroll-Scrub: ein Objekt **zerlegt sich beim Runterscrollen** in seine Einzelteile und
 **setzt sich beim Hochscrollen** wieder zusammen. Faustregel fürs Motiv: **5–10 saubere Teile**.
-Die Komponente ist **wiederverwendbar (Props)** und wird auf `/leistungen` **zweimal** eingesetzt,
-Reihenfolge: **Burger → Objektiv → CMS** (`Leistungen.jsx`):
+Die Komponente ist **wiederverwendbar (Props)** und wird auf `/aussergewoehnliches` **zweimal**
+eingesetzt, Reihenfolge **Burger → Objektiv** (das CMS ist ein eigener Reiter, s. §7):
 1. **Burger** (`dir="burger"`, Hochformat 1040×1377, **Bild rechts** `side="right"`). Das Video startet
    explodiert (Frame 0), läuft also **vorwärts → baut sich beim Runterscrollen ZUSAMMEN** (kein `reverse`).
    `still={96}` = fertiger Burger fürs Reduced-Motion-Standbild. Copy = „aufwendige Animationen" +
@@ -292,12 +296,17 @@ im Quellvideo (kein reines Schwarz unten) per `watermark`-Box als ganzen Bodenst
 
 ## 8. Routing & Navigation
 
-- **Routen:** `/` (Home) · `/leistungen` · `/ueber-mich` · `/kontakt` · `/impressum` · `/datenschutz`.
-- **Home** ist bewusst schlank: **Hero → Projects → ContactCTA**. „Leistungen" und „Über mich" sind **eigene Seiten**.
-- **Navbar/Footer `NAV`-Items** sind gemischt:
+- **Routen:** `/` (Home) · `/aussergewoehnliches` · `/selbst-verwalten` · `/ueber-mich` · `/kontakt` ·
+  `/impressum` · `/datenschutz`. **`/leistungen` → Redirect auf `/aussergewoehnliches`** (`<Navigate replace>`,
+  war live).
+- **Home** ist bewusst schlank: **Hero → Projects → ContactCTA**. Alle anderen sind **eigene Seiten**.
+- **Navbar/Footer `NAV`-Items** (Array in `Navbar.jsx`) sind gemischt:
   - `{ id }` → **Home-Sektion** (Smooth-Scroll-Anchor, via `useGo()`): aktuell nur **Projekte** (`#projekte`).
-  - `{ to }` → **eigene Route**: **Leistungen** (`/leistungen`), **Über mich** (`/ueber-mich`).
-  - Reihenfolge: **Projekte · Leistungen · Über mich · Kontakt** (Kontakt = CTA-Button). Aktive Route wird hervorgehoben.
+  - `{ to }` → **eigene Route**: **Außergewöhnliches** (`/aussergewoehnliches`), **Selbst verwalten**
+    (`/selbst-verwalten`), **Über mich** (`/ueber-mich`).
+  - Reihenfolge: **Projekte · Außergewöhnliches · Selbst verwalten · Über mich · Kontakt** (CTA). Aktive
+    Route hervorgehoben. ⚠️ Inline-Links erst ab **`lg`** (vier längere Labels quetschen bei `md`),
+    darunter Hamburger-Menü; Menü-Labels skalieren via `clamp` für schmale Handys.
 - `useGo()` (`lib/nav.js`): auf `/` sanftes Scrollen; von Unterseiten erst `navigate('/', {state:{scrollTo}})`,
   dann scrollt `ScrollManager` (in `App.jsx`).
 - **Breiter Hero**: Hero + Navbar `max-w-[1800px]`; Content-Sektionen `max-w-7xl`.
