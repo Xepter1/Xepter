@@ -62,6 +62,7 @@ src/
     Macbook.jsx            # CSS-3D-MacBook; bootet ein macOS-Terminal → Marke (s. §4)
     MacTerminal.jsx        # Typewriter-Terminal (Code → build → deploy) im MacBook-Display (s. §4)
     Projects.jsx           # Galerie: Browser-Frame + iPhone-Overlay (s. §5)
+    HomeTeasers.jsx        # Startseite nach Projects: 2 Teaser-„Fenster" → /aussergewoehnliches & /selbst-verwalten
     Leistungen.jsx         # Leistungen-Sektion: Text + <CmsShowcase/> (s. §7)
     CmsShowcase.jsx        # CSS-iMac + Safari + Payload-Admin (CMS-Showcase, s. §7)
     GearScene.jsx          # Wiederverwendbare Scroll-Frame-Explosion (Props): Canvas-Scrub aus WebP-Frames (s. §7b)
@@ -72,7 +73,7 @@ src/
     SectionMark.jsx        # Editorial Section-Kicker + Headline + Spark-Underline (Framer)
     LegalLayout.jsx        # Gemeinsames Layout für Impressum/Datenschutz
   pages/
-    Home.jsx               # Hero → Projects → ContactCTA  (Leistungen & Über mich sind eigene Seiten!)
+    Home.jsx               # Hero → Projects → HomeTeasers → ContactCTA (+ idle-prefetch Burger-Frames)
     AussergewoehnlichesPage.jsx  # /aussergewoehnliches — 2x <GearScene/> (Burger + Objektiv)
     SelbstVerwaltenPage.jsx      # /selbst-verwalten — rendert <Leistungen/> (CMS-Showcase)
     UeberMichPage.jsx      # /ueber-mich — rendert <About/>
@@ -299,7 +300,9 @@ im Quellvideo (kein reines Schwarz unten) per `watermark`-Box als ganzen Bodenst
 - **Routen:** `/` (Home) · `/aussergewoehnliches` · `/selbst-verwalten` · `/ueber-mich` · `/kontakt` ·
   `/impressum` · `/datenschutz`. **`/leistungen` → Redirect auf `/aussergewoehnliches`** (`<Navigate replace>`,
   war live).
-- **Home** ist bewusst schlank: **Hero → Projects → ContactCTA**. Alle anderen sind **eigene Seiten**.
+- **Home**: **Hero → Projects → HomeTeasers → ContactCTA**. HomeTeasers = zwei „Fenster"-Karten
+  (Burger-Explosion → `/aussergewoehnliches`, CMS-Admin-Mockup → `/selbst-verwalten`), die direkt auf
+  der Startseite zu den beiden Unterseiten locken. Alle Unterseiten sind eigene Routen.
 - **Navbar/Footer `NAV`-Items** (Array in `Navbar.jsx`) sind gemischt:
   - `{ id }` → **Home-Sektion** (Smooth-Scroll-Anchor, via `useGo()`): aktuell nur **Projekte** (`#projekte`).
   - `{ to }` → **eigene Route**: **Außergewöhnliches** (`/aussergewoehnliches`), **Selbst verwalten**

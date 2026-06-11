@@ -63,7 +63,7 @@ export default function About() {
           >
             <motion.div
               variants={fadeUp}
-              className="group relative overflow-hidden rounded-3xl border border-line-2 bg-card"
+              className="group relative mx-auto max-w-[260px] overflow-hidden rounded-3xl border border-line-2 bg-card sm:max-w-[300px] lg:mx-0 lg:max-w-none"
             >
               <div
                 className="glow z-10"
