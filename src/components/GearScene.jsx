@@ -37,10 +37,10 @@ export default function GearScene() {
     target: wrapRef,
     offset: ['start start', 'end end'],
   })
-  // the "weighted" scrub feel — soft spring instead of raw scroll
+  // the "weighted" scrub feel — spring smooths the raw scroll without lagging
   const smooth = useSpring(scrollYProgress, {
-    stiffness: 65,
-    damping: 22,
+    stiffness: 160,
+    damping: 28,
     restDelta: 0.0005,
   })
 
@@ -52,17 +52,20 @@ export default function GearScene() {
 
     const ctx = canvas.getContext('2d')
     const folder = window.matchMedia('(max-width: 1023px)').matches ? 'm' : 'd'
-    const images = new Array(FRAME_COUNT).fill(null)
+    // Pre-decoded ImageBitmaps: drawImage stays a cheap GPU blit, no
+    // per-frame WebP re-decode (the main source of scrub jank).
+    const bitmaps = new Array(FRAME_COUNT).fill(null)
     let alive = true
     let lastDrawn = -1
     let current = 0
+    let rafId = 0
 
     const draw = (idx) => {
       // nearest loaded frame, preferring the requested one
-      let img = images[idx]
+      let img = bitmaps[idx]
       if (!img) {
         for (let off = 1; off < FRAME_COUNT && !img; off++) {
-          img = images[idx - off] || images[idx + off]
+          img = bitmaps[idx - off] || bitmaps[idx + off]
         }
       }
       if (!img) return
@@ -79,23 +82,31 @@ export default function GearScene() {
       }
     }
 
-    const load = (i) =>
-      new Promise((resolve) => {
-        const img = new Image()
-        img.decoding = 'async'
-        img.onload = () => {
-          if (!alive) return resolve()
-          images[i] = img
-          // first paint + refresh whenever a better frame for the current
-          // position arrives
-          if (lastDrawn === -1 || Math.abs(i - current) < Math.abs(lastDrawn - current)) {
-            draw(current)
-          }
-          resolve()
-        }
-        img.onerror = () => resolve()
-        img.src = frameSrc(folder, i)
+    // coalesce draws to one per display frame
+    const scheduleDraw = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = 0
+        if (current !== lastDrawn) draw(current)
       })
+    }
+
+    const load = async (i) => {
+      try {
+        const res = await fetch(frameSrc(folder, i))
+        const blob = await res.blob()
+        const bmp = await createImageBitmap(blob)
+        if (!alive) return
+        bitmaps[i] = bmp
+        // first paint + refresh whenever a better frame for the current
+        // position arrives
+        if (lastDrawn === -1 || Math.abs(i - current) < Math.abs(lastDrawn - current)) {
+          draw(current)
+        }
+      } catch {
+        /* einzelner Frame fehlgeschlagen: nearest-loaded Fallback greift */
+      }
+    }
 
     const loadAll = async () => {
       const pass1 = []
@@ -122,18 +133,19 @@ export default function GearScene() {
     loadAll()
 
     const unsub = smooth.on('change', (v) => {
-      const idx = Math.max(
+      current = Math.max(
         0,
         Math.min(FRAME_COUNT - 1, Math.round(v * (FRAME_COUNT - 1)))
       )
-      current = idx
-      if (idx !== lastDrawn) draw(idx)
+      scheduleDraw()
     })
 
     return () => {
       alive = false
       unsub()
       ro.disconnect()
+      if (rafId) cancelAnimationFrame(rafId)
+      bitmaps.forEach((b) => b && b.close && b.close())
     }
   }, [smooth, reduce])
 
