@@ -28,6 +28,12 @@ export default function ImpressumPage() {
         <a href="mailto:mail@xepter.de">mail@xepter.de</a>
       </p>
 
+      <h2>Umsatzsteuer</h2>
+      <p>
+        Als Kleinunternehmer im Sinne von § 19 UStG wird keine Umsatzsteuer
+        berechnet und folglich auch nicht ausgewiesen.
+      </p>
+
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p>
         Patrick Fraunhofer,

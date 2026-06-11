@@ -3,8 +3,9 @@ import LegalLayout from '../components/LegalLayout'
 /*
  * Name (Patrick Fraunhofer), E-Mail (mail@xepter.de) und Hosting (Hetzner)
  * sind eingetragen.
- * - Wenn du später Analyse/Tracking, Schriften von Drittservern (aktuell lokal
- *   eingebunden!), Maps, Fonts-CDN o. Ä. nutzt: hier ergänzen.
+ * - Schriften sind lokal selbst gehostet (siehe src/index.css, /public/fonts);
+ *   es findet keine Übertragung an Google/Fontshare statt.
+ * - Wenn du später Analyse/Tracking, Maps, Fonts-CDN o. Ä. nutzt: hier ergänzen.
  * - Solide DSGVO-Vorlage — im Zweifel mit einem Generator (e-recht24 / Datenschutz-
  *   Generator) gegenchecken.
  */
