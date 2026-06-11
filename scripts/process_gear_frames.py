@@ -36,7 +36,7 @@ PRESETS = {
         'content_level': 10,
         'watermark': (1350, 1140, 1440, 1440),   # KlingAI, unten rechts (1440x1440)
         'desktop_w': 1500,
-        'mobile_w': 560,
+        'mobile_w': 720,
     },
     # Output-Ordner public/burger/  ·  Motiv: explodierender Burger (Hochformat 3:4)
     'burger': {
@@ -47,7 +47,7 @@ PRESETS = {
         # UND einen schwachen Lichthof (Luma 10-39), der sonst als Schmier opak bliebe
         'watermark': (3090, 0, 3332, 2488),
         'desktop_w': 1040,             # Hochformat, hoehenbegrenzt in halber Spalte (~530px CSS)
-        'mobile_w': 480,
+        'mobile_w': 640,
     },
 }
 

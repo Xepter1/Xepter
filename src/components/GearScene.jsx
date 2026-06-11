@@ -61,6 +61,9 @@ export default function GearScene({
   const copyY = useTransform(scrollYProgress, [0, 1], [0, -90])
   // mobile only: the copy overlay fades out early so the full object is free
   const copyOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0])
+  // mobile only: dim the object during the first phase so the copy reads cleanly,
+  // then lift the dim to reveal the full bright object
+  const dimOpacity = useTransform(scrollYProgress, [0, 0.3], [0.55, 0])
 
   const imgLeft = side === 'left'
 
@@ -127,18 +130,21 @@ export default function GearScene({
     }
 
     const loadAll = async () => {
-      const pass1 = []
-      const pass2 = []
-      for (let i = 0; i < frameCount; i++) {
-        ;(i % 3 === 0 ? pass1 : pass2).push(i)
-      }
+      // Handy: nur jeden 2. Frame dekodieren -> halber RAM (decodierte Bitmaps sind
+      // teuer); der nearest-loaded Fallback zeichnet für ungerade Indizes den Nachbarn.
+      const step = folder === 'm' ? 2 : 1
+      const idxs = []
+      for (let i = 0; i < frameCount; i += step) idxs.push(i)
+      const pass1 = idxs.filter((_, k) => k % 3 === 0)
+      const pass2 = idxs.filter((_, k) => k % 3 !== 0)
       await Promise.all(pass1.map(load))
       if (alive) await Promise.all(pass2.map(load))
     }
 
     const resize = () => {
-      // Mobil niedrigere Backing-Auflösung → weniger Fill-Rate pro Scroll-Frame
-      const dpr = Math.min(window.devicePixelRatio || 1, folder === 'm' ? 1.5 : 2)
+      // DPR bei 2 gedeckelt (auf 3x-Handys spart das Fill-Rate, ohne sichtbar weicher
+      // zu sein). Schärfe kommt v.a. aus der Quell-Frame-Breite (s. Skript-Presets).
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
       const rect = canvas.getBoundingClientRect()
       canvas.width = Math.max(1, Math.round(rect.width * dpr))
       canvas.height = Math.max(1, Math.round(rect.height * dpr))
@@ -149,7 +155,22 @@ export default function GearScene({
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
     resize()
-    loadAll()
+
+    // Frames erst laden, wenn die Sektion in die Nähe des Viewports kommt. Spart den
+    // Initial-Load: die 2. Sektion (Objektiv) lädt erst beim Heranscrollen, nicht
+    // schon beim Seitenaufruf. Die 1. Sektion ist sofort in Reichweite -> lädt direkt.
+    let loadStarted = false
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!loadStarted && entries.some((e) => e.isIntersecting)) {
+          loadStarted = true
+          io.disconnect()
+          loadAll()
+        }
+      },
+      { rootMargin: '120% 0px' }
+    )
+    io.observe(wrap)
 
     const unsub = scrollYProgress.on('change', (v) => {
       const raw = Math.round(v * (frameCount - 1))
@@ -161,6 +182,7 @@ export default function GearScene({
       alive = false
       unsub()
       ro.disconnect()
+      io.disconnect()
       if (rafId) cancelAnimationFrame(rafId)
       bitmaps.forEach((b) => b && b.close && b.close())
     }
@@ -312,6 +334,15 @@ export default function GearScene({
               className="h-full w-full lg:mx-auto lg:h-auto lg:max-h-[78svh]"
             />
           </motion.div>
+
+          {/* Mobile: Abdunklung über dem Objekt in der ersten Phase (hebt den Text
+              ab), löst beim Scrollen mit auf. Liegt über dem Canvas (z-10), unter
+              der Copy (z-20). Auf Desktop ausgeblendet. */}
+          <motion.div
+            aria-hidden="true"
+            style={{ opacity: dimOpacity }}
+            className="pointer-events-none absolute inset-0 z-10 bg-base lg:hidden"
+          />
         </div>
 
         {/* scroll cue */}

@@ -205,9 +205,22 @@ Standbild, Default 0), `eyebrow`, `headline` (Array von Zeilen), `body`. Default
 **Mobil (<lg) anderes Layout** als Desktop (sonst lief die Headline in die Navbar und das Hochformat-
 Motiv wurde unten abgeschnitten): der **Canvas füllt den ganzen Sticky-Viewport** (`absolute inset-0`,
 Objekt contain-zentriert → immer voll sichtbar), die **Copy liegt als Overlay oben** (`absolute top-0`,
-`pt-24` für Navbar-Abstand, dunkler Scrim für Lesbarkeit) und **blendet beim Scrollen aus**
-(`copyOpacity = useTransform(scrollYProgress,[0,0.22],[1,0])`, nur mobil via `isMobile`-State). Ab `lg`
-schalten `lg:static`/`lg:grid` zurück auf den Zweispalter. Dynamische Canvas-Größe via Inline-`aspectRatio`. ⚠️ Dynamische Größe über **Inline-`aspectRatio`**, NICHT `aspect-[…]`-Tailwind (das würde
+`pt-24` für Navbar-Abstand, dunkler Scrim) und **blendet beim Scrollen aus**
+(`copyOpacity = useTransform(scrollYProgress,[0,0.22],[1,0])`, nur mobil via `isMobile`-State). Zusätzlich
+**dunkelt eine Schicht das Objekt in der ersten Phase ab** (`dimOpacity [0,0.3]→[0.55,0]`, `lg:hidden`),
+damit der Text abhebt; beim Scrollen hellt der volle Burger auf. Ab `lg` schalten `lg:static`/`lg:grid`
+zurück auf den Zweispalter. Dynamische Canvas-Größe via Inline-`aspectRatio`.
+
+**Performance / Last (wichtig bei 2 Sequenzen auf einer Seite):**
+- **Lazy-Load pro Sektion** (IntersectionObserver, `rootMargin 120%`): die 2. Sektion lädt erst beim
+  Heranscrollen, nicht beim Seitenaufruf.
+- **Mobil nur jeder 2. Frame dekodiert** (`step=2` in loadAll) → halber RAM (dekodierte Bitmaps sind
+  teuer; nearest-loaded Fallback zeichnet ungerade Indizes). Desktop alle Frames.
+- **Canvas-DPR bei 2 gedeckelt** (3x-Handys sparen Fill-Rate). Schärfe kommt aus der Quell-Frame-Breite
+  (Preset `mobile_w`: Objektiv 720, Burger 640; Desktop 1500/1040).
+- **Prefetch:** `Home.jsx` wärmt im Leerlauf (`requestIdleCallback`) jeden 3. Burger-Frame der passenden
+  Auflösung vor → Wechsel auf `/leistungen` startet sofort. Die Seite/Text laden ohnehin instant; Frames
+  kommen progressiv nach (nie ein leeres Feld) → kein „Kunde sieht nichts"-Risiko. ⚠️ Dynamische Größe über **Inline-`aspectRatio`**, NICHT `aspect-[…]`-Tailwind (das würde
 der JIT bei dynamischen Werten nicht erzeugen). Querformat-Motive wirken in der halben Spalte kleiner.
 
 ### Komponente `GearScene.jsx`
