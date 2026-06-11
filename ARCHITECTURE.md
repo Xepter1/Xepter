@@ -44,6 +44,9 @@ public/
   _redirects               # SPA-Fallback (Netlify/Cloudflare)
   projects/                # Desktop-Screenshots 1600×1000 .jpg (Browser-Frame)
     mobile/                # Mobile-Screenshots 560×1212 .jpg (im iPhone)
+  gear/                    # GearScene-Frames (s. §7b): d/<i>.webp (Desktop 1500) + m/<i>.webp (Mobil 560)
+scripts/
+  process_gear_frames.py   # Video → freigestellte RGBA-Frame-Sequenz für GearScene (s. §7b)
 src/
   main.jsx
   index.css                # >>> Design-Tokens + ALLE bespoke CSS (s. §3) <<<
@@ -60,6 +63,7 @@ src/
     Projects.jsx           # Galerie: Browser-Frame + iPhone-Overlay (s. §5)
     Leistungen.jsx         # Leistungen-Sektion: Text + <CmsShowcase/> (s. §7)
     CmsShowcase.jsx        # CSS-iMac + Safari + Payload-Admin (CMS-Showcase, s. §7)
+    GearScene.jsx          # Scroll-Frame-Explosion (Hero /leistungen): Canvas-Scrub aus WebP-Frames (s. §7b)
     About.jsx              # „Über mich": echte Bio + Portrait-Karte (nur Portrait, keine Stats)
     ContactCTA.jsx         # Abschluss-CTA auf der Startseite → /kontakt
     Footer.jsx             # Wordmark, Nav (Anchor|Route), Legal-Links, Back-to-top
@@ -157,7 +161,10 @@ Aufnahme mit **`viewport.deviceScaleFactor=2`** (Retina):
 
 ## 7. Leistungen-Seite + CMS-Showcase — `/leistungen`
 
-`LeistungenPage.jsx` → `Leistungen.jsx`: **links** Verkaufstext „Deine Website **pflegst du** selbst." +
+`LeistungenPage.jsx` rendert **zwei** Sektionen untereinander: zuerst den **Scroll-Frame-Hero
+`<GearScene/>`** (s. §7b), darunter die CMS-Sektion `<Leistungen/>`.
+
+`Leistungen.jsx`: **links** Verkaufstext „Deine Website **pflegst du** selbst." +
 Vorteils-Checkliste (Bilder, News, Banner, Termine); **rechts** `CmsShowcase.jsx`.
 
 **`CmsShowcase.jsx`** = reiner **CSS-iMac** (`.imac` / `.imac-head` / `.imac-screen` mit `container-type:inline-size`
@@ -174,6 +181,73 @@ mit „Veröffentlicht/Entwurf"-Badges. Alles `cqw`-skaliert → passt sich der 
 
 **Status:** statisch (Draft). **Phase 2 geplant:** Cursor klickt „＋ Erstellen" → neuer Eintrag erscheint →
 öffentliche Seite aktualisiert sich live.
+
+---
+
+## 7b. Scroll-Frame-Animation „Explosion" (GearScene) — Hero von `/leistungen`
+
+Apple-artiger Scroll-Scrub: ein Objekt **zerlegt sich beim Runterscrollen** in seine Einzelteile und
+**setzt sich beim Hochscrollen** wieder zusammen. **Aktuelles Motiv: Kopfhörer** (vorher ein Getriebe,
+vom User verworfen — „zu viele Teile", unleserlich). Faustregel fürs Motiv: **5–10 saubere Teile**.
+
+### Komponente `GearScene.jsx`
+> Name ist historisch (war mal das Getriebe), Pfad/Ordner `gear` bewusst **nicht umbenannt**.
+
+- Sektion ist **`height: 400vh`**, darin ein `sticky top-0`-Viewport (`h-[100svh]`). Das Bild bleibt
+  stehen, während die 400vh durchgescrollt werden. **Diese Höhe = die Scroll-Strecke der Explosion**
+  (höher = ruhiger/langsamer, niedriger = schneller).
+- `useScroll({ target, offset: ['start start','end end'] })` liefert `scrollYProgress` 0→1.
+  **Bewusst OHNE `useSpring`.** Rohes scrollYProgress ist 1:1 am Finger. (Eine Feder gab „Gewicht",
+  hing bei schnellem Scrollen aber nach und las sich als **Ruckeln/Hänger**. Direkt = flüssig.)
+- Pro Tick: `idx = round(progress * (FRAME_COUNT-1))`, gezeichnet auf ein `<canvas>` per `drawImage`.
+
+**Das „flüssige" Geheimnis (3 Tricks):**
+1. **Vor-dekodierte `ImageBitmap`s** statt `<img>`. `createImageBitmap(blob)` einmal beim Laden →
+   `drawImage` ist danach ein billiger GPU-Blit, **kein WebP-Re-Decode pro Scroll-Tick** (das war die
+   Hauptquelle für Jank).
+2. **rAF-Coalescing**: pro Display-Frame max. **ein** `draw` (`scheduleDraw`), egal wie viele Scroll-
+   Events feuern.
+3. **Progressives Laden**: erst jeder 3. Frame (nach ~1/3 der Bytes scrubbar), dann der Rest. Fehlt ein
+   Frame, wird der **nächstgelegene geladene** gezeichnet → nie ein Blank.
+
+**⚠️ Echtes Alpha, KEIN `mix-blend-mode`.** Zuerst probiert: opake Frames auf Schwarz +
+`mix-blend-mode: screen`. Im echten Browser wird der Blend aber vom **animierten Framer-Wrapper**
+(opacity/transform erzeugen einen isolierten Stacking-Context) **isoliert**, dann bleibt das schwarze
+Frame als **Kasten** stehen (im Preview fällt das nicht auf, im Browser sofort). **Lösung:** Frames sind
+**RGBA mit echter Transparenz** und compositen direkt über die dunkle Seite. Kein Blend-Mode, bombenfest.
+
+- **Parallax**: die linke Copy driftet via `useTransform(scrollYProgress,[0,1],[0,-64])` leicht nach oben.
+- **reduced-motion**: kein Scrub, ein statisches Frame (`/gear/d/0.webp`) + Text.
+- Maße als Konstanten oben in der Datei: **`FRAME_COUNT`, `FRAME_W`, `FRAME_H`** (+ `aspect-[FRAME_W/FRAME_H]`
+  am `<canvas>`). **Bei neuem Video aktualisieren** — das Skript druckt die Werte.
+
+### Frame-Pipeline `scripts/process_gear_frames.py` (OpenCV)
+- Aufruf: **`python3 scripts/process_gear_frames.py Bilder/<ordner>/video.mp4`**
+- Output: `public/gear/d/<i>.webp` (Desktop) + `public/gear/m/<i>.webp` (Mobil). **Quellvideo liegt in
+  `Bilder/` (gitignored)** — nur die WebPs sind getrackt.
+- Schritte pro Frame: Wasserzeichen schwärzen → **Alpha aus der Helligkeit** (`smoothstep(ALPHA_LO..ALPHA_HI)`
+  über die Luma) → **Auto-Crop** (Luma-BBox über alle Frames + Rand, fängt auch weit geflogene Teile) →
+  auf `DESKTOP_W=1500` / `MOBILE_W=560` skalieren → RGBA-WebP. Zwei **Streaming**-Durchläufe (4K passt
+  sonst nicht in den RAM).
+- 🔑 **Die EINE wichtige Entscheidung pro Video — die Alpha-Schwelle (Hintergrund vs. Objekt):**
+  - **Reines Schwarz als BG + evtl. dunkle Objektteile** (Kopfhörer mit schwarzen Polstern/Bügel):
+    Schwelle **TIEF** → `ALPHA_LO=4, ALPHA_HI=12`, `CONTENT_LEVEL=10`. Sonst fallen die schwarzen Teile
+    mit dem Hintergrund weg.
+  - **Heller / Vignette-BG** (das alte Getriebe, Studio-Weiß/Grau bis Luma ~61): Schwelle **HOCH** →
+    `ALPHA_LO=56, ALPHA_HI=86`. Sonst bleibt ein leuchtender Kasten stehen.
+  - Vorgehen: kurz die Luma von Rand-BG vs. dunkelsten Objektteilen messen, Schwelle dazwischen legen.
+- `WATERMARK = (y0,x0,y1,x1)` im Quell-Pixelraster (statisch, wird geschwärzt) **oder `None`** bei sauberem Export.
+- **Auflösung:** 4K-Quelle ideal, weil das Herunterrechnen auf 1500px **supersampled = sehr sauber**.
+  On-Screen-Decke ~1400–1600px, **true 4K NICHT ausliefern** (nur als Downsample-Quelle). Dunkle Motive
+  (viel Schwarz) komprimieren klein: Kopfhörer 1500px ≈ **11 MB** Desktop / **3 MB** Mobil.
+
+### Ein neues Video einbauen — Checkliste
+1. Video in `Bilder/<ordner>/` legen. Beim Rendern (z. B. Kling): **reines Schwarz**, möglichst **ohne
+   Wasserzeichen**, **4K**, kräftige Explosion aber **alle Teile im Bild lassen** (Luft drumherum).
+2. Hintergrund-Typ checken → `ALPHA_LO/HI`, `CONTENT_LEVEL`, `WATERMARK` im Skript setzen.
+3. Skript laufen lassen → es druckt `FRAME_COUNT / FRAME_W / FRAME_H` (Dauer 4K ≈ 1 min).
+4. Diese drei Werte + `aspect-[…]` in `GearScene.jsx` eintragen; Copy/`alt`/`aria-label` aufs Motiv anpassen.
+5. Im **echten Browser** scrollen prüfen (Preview kann nicht scrollen, s. §10) → committen → Portainer redeploy (§9).
 
 ---
 
@@ -213,6 +287,10 @@ mit „Veröffentlicht/Entwurf"-Badges. Alles `cqw`-skaliert → passt sich der 
   Für Screenshots: CSS-Override injizieren (`*{opacity:1!important}`, `[style*="translate"]{transform:none}`),
   und für Standbilder des Reveals manuell `is-rendered` an `.device` setzen bzw. `.term` ausblenden.
   **Im echten Browser läuft alles korrekt** (Tempo ~3,5–4 s).
+- **Scroll-getriebene Inhalte (GearScene, §7b) lassen sich im Preview NICHT abspielen** — das Preview
+  rendert „hidden", der Scroll friert ein und das `<canvas>` bekommt keine Layout-Größe (bleibt 1×1).
+  Verifikation stattdessen: das **Compositing** prüfen, indem man einen Frame als `<img>` über `#07080c`
+  injiziert und screenshottet; den **Scrub-Flow** muss der User im echten Browser bestätigen.
 - **Container-Queries:** Terminal (`.term*`) und iMac-Admin (`.imac*/.pl*`) skalieren über `cqw` relativ zum
   jeweiligen Screen-Container (`container-type: inline-size`). Größen daher in `cqw`, nicht `px/rem`.
 - **Prozent-Höhen ohne definierte Elternhöhe** vermeiden (führte beim iMac-`chin` dazu, dass das Logo in
