@@ -118,7 +118,8 @@ export default function GearScene() {
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      // Mobil niedrigere Backing-Auflösung → weniger Fill-Rate pro Scroll-Frame
+      const dpr = Math.min(window.devicePixelRatio || 1, folder === 'm' ? 1.5 : 2)
       const rect = canvas.getBoundingClientRect()
       canvas.width = Math.max(1, Math.round(rect.width * dpr))
       canvas.height = Math.max(1, Math.round(rect.height * dpr))
@@ -182,17 +183,21 @@ export default function GearScene() {
         {/* atmosphere */}
         <div className="grid-bg absolute inset-0" />
         {/* Mobile: ein dezenter Glow mittig hinter dem Objekt (das Layout stapelt,
-            die Desktop-Glows würden seitlich verrutschen) */}
+            die Desktop-Glows würden seitlich verrutschen). Bewusst OHNE den teuren
+            blur(90px)-Filter der .glow-Klasse — der radial-gradient ist weich genug,
+            und ein Filter würde den Scroll-Scrub auf dem Handy recompositen lassen. */}
         <div
-          className="glow lg:hidden"
+          className="pointer-events-none absolute lg:hidden"
           style={{
-            width: 360,
-            height: 360,
+            width: 420,
+            height: 420,
             left: '50%',
-            bottom: '12%',
+            bottom: '10%',
             transform: 'translateX(-50%)',
+            borderRadius: '50%',
+            zIndex: 0,
             background:
-              'radial-gradient(circle, rgba(139,61,240,0.18), transparent 60%)',
+              'radial-gradient(circle, rgba(139,61,240,0.16), transparent 70%)',
           }}
         />
         {/* Desktop: seitliche Glows neben/hinter dem Objekt */}
