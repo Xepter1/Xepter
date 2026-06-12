@@ -285,12 +285,8 @@ function CtaRow() {
             aria-hidden="true"
             className="inline-block h-px w-5 origin-left bg-spark transition-transform duration-300 group-hover:scale-x-150"
           />
-          <span>Nächstes Projekt</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-spark">
-            Frei
+          <span className="inline-flex items-center gap-1.5">
+            Dein Projekt
             <span
               aria-hidden="true"
               className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-spark"
@@ -305,7 +301,7 @@ function CtaRow() {
         <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-dim">
           Hier ist Platz für deine Website, gestaltet und entwickelt mit
           demselben Anspruch wie die Projekte oben. Lass uns deine zur nächsten
-          machen, die hier steht.
+          machen.
         </p>
 
         <Link

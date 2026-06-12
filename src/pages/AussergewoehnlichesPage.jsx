@@ -25,7 +25,7 @@ export default function AussergewoehnlichesPage() {
         frameH={902}
         side="left"
         eyebrow={null}
-        headline={['Sieh dein Produkt,', 'wie nie zuvor', 'gesehen.']}
+        headline={['Sieh dein Produkt,', 'wie nie zuvor.']}
         body="Scroll weiter und sieh, wie sich das Objektiv in seine Bauteile zerlegt. So präsentieren wir deine Produkte, gestochen scharf und mit einer Tiefe, die im Gedächtnis bleibt."
       />
     </main>

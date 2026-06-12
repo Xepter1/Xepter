@@ -44,7 +44,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden pt-28 pb-24 sm:pt-32">
+    <main className="relative min-h-screen overflow-hidden pt-24 pb-24 sm:pt-28">
       <div className="grid-bg absolute inset-0 z-0" />
       <div
         className="glow"
@@ -73,17 +73,17 @@ export default function ContactPage() {
         {/* Heading */}
         <motion.div {...fade(0.05)} className="max-w-3xl">
           <span className="eyebrow !text-spark">Kontakt</span>
-          <h1 className="mt-5 font-display text-[clamp(2.6rem,7vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
+          <h1 className="mt-5 font-display text-[clamp(2.3rem,5.5vw,4.4rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
             Lass uns einen bleibenden{' '}
             <span className="text-gradient">ersten Eindruck</span> schaffen.
           </h1>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-dim">
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-dim">
             Ob konkretes Projekt oder lose Idee, schreib mir ein paar Zeilen.
             Ich antworte innerhalb von 24 Stunden.
           </p>
         </motion.div>
 
-        <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20 sm:mt-12">
+        <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20 sm:mt-10">
           {/* Left — quote, direct line + socials */}
           <motion.div {...fade(0.15)} className="flex flex-col gap-10">
             <div className="hidden lg:block">
