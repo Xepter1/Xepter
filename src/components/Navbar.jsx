@@ -118,9 +118,7 @@ export default function Navbar() {
             <Link
               to="/kontakt"
               onClick={() => setMenu(false)}
-              className={`btn btn-ghost is-spark ml-3 h-11 px-5 text-[0.9rem] ${
-                onContact ? '!border-spark !text-spark' : ''
-              }`}
+              className="btn btn-spark-outline ml-3 h-11 px-5 text-[0.9rem]"
             >
               Kontakt
             </Link>
