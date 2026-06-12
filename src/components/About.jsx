@@ -80,10 +80,10 @@ export default function About() {
                 }}
               />
               <img
-                src="/xepter-portrait.jpg"
+                src="/ich.jpg"
                 alt="Patrick, Freelance Webentwickler (Xepter)"
-                width={675}
-                height={900}
+                width={884}
+                height={1400}
                 loading="lazy"
                 className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
               />
