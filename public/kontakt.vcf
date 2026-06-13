@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Fraunhofer;Patrick;;;
+FN:Patrick Fraunhofer
+ORG:Xepter
+TITLE:Geschäftsführer
+TEL;TYPE=CELL,VOICE:+4915144227255
+EMAIL;TYPE=INTERNET:mail@xepter.de
+URL:https://xepter.de
+END:VCARD
