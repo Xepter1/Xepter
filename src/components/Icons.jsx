@@ -81,3 +81,11 @@ export const IconInstagram = (p) => (
     <path d="M17.5 6.5v.01" />
   </svg>
 )
+
+export const IconFacebook = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2.5" />
+    <path d="M15 8.5h-2a2 2 0 0 0-2 2V20.5" />
+    <path d="M8.5 13.5h5" />
+  </svg>
+)

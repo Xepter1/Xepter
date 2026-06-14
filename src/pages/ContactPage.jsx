@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { EASE } from '../lib/anim'
 import {
   IconArrowUpRight,
-  IconGithub,
+  IconFacebook,
   IconLinkedin,
   IconInstagram,
   IconMail,
@@ -12,12 +12,11 @@ import {
 /*
  * Kontaktformular = mailto: öffnet das Mailprogramm des Besuchers mit
  * vorausgefüllter Nachricht an mail@xepter.de (kein Backend, kein Drittanbieter).
- * Offen: echte SOCIALS-URLs eintragen (href stehen noch auf '#').
  */
 const SOCIALS = [
-  { icon: IconGithub, label: 'GitHub', href: '#' },
-  { icon: IconLinkedin, label: 'LinkedIn', href: '#' },
-  { icon: IconInstagram, label: 'Instagram', href: '#' },
+  { icon: IconFacebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61590947094348' },
+  { icon: IconInstagram, label: 'Instagram', href: 'https://www.instagram.com/xepter.de' },
+  { icon: IconLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/129663999' },
 ]
 
 const fade = (delay = 0) => ({
@@ -137,6 +136,8 @@ export default function ContactPage() {
                     <a
                       key={s.label}
                       href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       aria-label={s.label}
                       className="flex h-12 w-12 items-center justify-center rounded-full border border-line-2 text-ink-dim transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:text-accent"
                     >
