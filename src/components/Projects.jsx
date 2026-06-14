@@ -28,6 +28,16 @@ const PROJECTS = [
     imgMobile: '/projects/mobile/designbyems.jpg',
     accent: '#22D3EE',
   },
+  {
+    name: 'Tankstelle Stettner',
+    desc: 'Konzeption der Website für einen inhabergeführten Tankstellen-Familienbetrieb in Buchbach – mit tagesaktuellen Kraftstoffpreisen, Öffnungszeiten und allen Services klar auf einen Blick.',
+    tag: 'Lokal',
+    year: '2026',
+    url: 'https://tankstelle-stettner.fraunhofer-lab.de/',
+    img: '/projects/tankstelle-stettner.jpg',
+    imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
+    accent: '#EF4444',
+  },
 ]
 
 function Preview({ project, flip }) {
