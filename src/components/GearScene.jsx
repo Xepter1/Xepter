@@ -14,11 +14,15 @@ import { EASE } from '../lib/anim'
  * Schwarz freigestellt, s. scripts/process_gear_frames.py). Sie compositen über die dunkle
  * Seite per Canvas-Alpha — kein mix-blend-mode (den isoliert der animierte Wrapper, das
  * schwarze Frame bliebe als Kasten). Ein gepinntes (sticky) Viewport mappt den rohen
- * Scroll-Fortschritt 1:1 auf einen Frame-Index (keine Feder → kein Nachziehen/Ruckeln).
+ * Scroll-Fortschritt auf eine FLOAT-Frameposition (keine Feder → kein Nachziehen).
  *
  * Glättung: vor-dekodierte ImageBitmaps (drawImage = billiger Blit, kein WebP-Re-Decode),
- * rAF-Coalescing (max. 1 Draw je Display-Frame), progressives Laden (jeder 3. Frame zuerst,
- * fehlende → nächstgelegener geladener). Mobil: niedrigere Canvas-DPR.
+ * rAF-Coalescing (max. 1 Draw je Display-Frame) und ein Cross-Fade zwischen den zwei
+ * benachbarten Frames (unterer deckt, oberer mit alpha=Bruchteil drüber) — das füllt die
+ * Lücken zwischen den 97 diskreten Frames, sodass die Bewegung nicht „hält und springt".
+ * Im Ruhezustand (140 ms ohne Scroll) rastet sie auf den exakten ganzen Frame ein → scharf.
+ * Progressives Laden (jeder 3. Frame zuerst, fehlende → nächstgelegener geladener).
+ * Mobil: nur jeder 2. Frame dekodiert + niedrigere Canvas-DPR.
  *
  * Props:
  *  dir          Asset-Ordner unter /public (z.B. 'gear' = Objektiv, 'burger').
@@ -78,30 +82,70 @@ export default function GearScene({
     const srcOf = (i) => `/${dir}/${folder}/${i}.webp`
     const bitmaps = new Array(frameCount).fill(null)
     let alive = true
-    let lastDrawn = -1
-    // Frame am Sektions-Anfang (progress 0) je nach Laufrichtung
+    let lastDrawn = -1            // zuletzt gezeichnete FLOAT-Position (nicht nur ganzer Index)
+    // Frame am Sektions-Anfang (progress 0) je nach Laufrichtung — als Float gehalten
     let current = reverse ? frameCount - 1 : 0
     let rafId = 0
+    let snapTimer = 0
+    let lastChangeTs = 0
 
-    const draw = (idx) => {
-      // nearest loaded frame, preferring the requested one
-      let img = bitmaps[idx]
-      if (!img) {
-        for (let off = 1; off < frameCount && !img; off++) {
-          img = bitmaps[idx - off] || bitmaps[idx + off]
-        }
+    // nächstgelegener tatsächlich geladener Frame zu i (mobil ist nur jeder 2.
+    // dekodiert → die Lücke füllt der Nachbar; anfangs ist evtl. noch nichts da → -1)
+    const nearestLoaded = (i) => {
+      const j = Math.max(0, Math.min(frameCount - 1, i))
+      if (bitmaps[j]) return j
+      for (let off = 1; off < frameCount; off++) {
+        if (j - off >= 0 && bitmaps[j - off]) return j - off
+        if (j + off < frameCount && bitmaps[j + off]) return j + off
       }
-      if (!img) return
+      return -1
+    }
+
+    // Zeichnet eine FLOAT-Position als Cross-Fade zwischen den zwei GELADENEN
+    // Frames, die die Position einklammern: der untere deckt voll, der obere wird
+    // mit alpha = Gewicht drübergeblendet. Das Gewicht ist die echte relative Lage
+    // zwischen den beiden geladenen Frames — funktioniert daher auch, wenn mobil nur
+    // jeder 2. Frame dekodiert ist (Klammer 2 Frames breit), ohne je zwei nicht
+    // zusammengehörige Frames zu mischen (das wäre Ghosting). So läuft die Bewegung
+    // kontinuierlich statt in Stufen zu „halten und springen" (= Hauptursache des
+    // Ruckelns), und das ohne zeitliche Verzögerung (Position == roher Scroll-Stand).
+    const draw = (pos) => {
+      const p = pos < 0 ? 0 : pos > frameCount - 1 ? frameCount - 1 : pos
+      const lo = Math.floor(p)
+      // untere Klammer: nächster geladener Frame an/unter lo (sonst der nächste darüber)
+      let a = -1
+      for (let k = lo; k >= 0; k--) { if (bitmaps[k]) { a = k; break } }
+      if (a < 0) { for (let k = lo + 1; k < frameCount; k++) { if (bitmaps[k]) { a = k; break } } }
+      if (a < 0) return
+      // obere Klammer: nächster geladener Frame über a
+      let b = -1
+      for (let k = a + 1; k < frameCount; k++) { if (bitmaps[k]) { b = k; break } }
+
       const { width: cw, height: chgt } = canvas
-      ctx.clearRect(0, 0, cw, chgt)
       // contain-fit
       const s = Math.min(cw / frameW, chgt / frameH)
       const w = frameW * s
       const h = frameH * s
-      ctx.drawImage(img, (cw - w) / 2, (chgt - h) / 2, w, h)
-      lastDrawn = idx
+      const dx = (cw - w) / 2
+      const dy = (chgt - h) / 2
+      ctx.clearRect(0, 0, cw, chgt)
+      ctx.globalAlpha = 1
+      ctx.drawImage(bitmaps[a], dx, dy, w, h)
+      // oberen Frame nur dazublenden, wenn er existiert UND wir spürbar zwischen den
+      // beiden geladenen Frames stehen (spart bei frac≈0 den zweiten Blit)
+      if (b > a) {
+        let frac = (p - a) / (b - a)
+        if (frac > 0.02) {
+          if (frac > 1) frac = 1
+          ctx.globalAlpha = frac
+          ctx.drawImage(bitmaps[b], dx, dy, w, h)
+          ctx.globalAlpha = 1
+        }
+      }
+      lastDrawn = p
       if (counterRef.current) {
-        counterRef.current.textContent = String(idx + 1).padStart(2, '0')
+        const n = Math.min(frameCount, Math.round(p) + 1)
+        counterRef.current.textContent = String(n).padStart(2, '0')
       }
     }
 
@@ -110,8 +154,34 @@ export default function GearScene({
       if (rafId) return
       rafId = requestAnimationFrame(() => {
         rafId = 0
-        if (current !== lastDrawn) draw(current)
+        if (!alive) return
+        draw(current)
       })
+    }
+
+    // Steht der Scroll still (140 ms ohne Änderung), exakt auf den nächstgelegenen
+    // GELADENEN Frame einrasten → das Standbild ist gestochen scharf (kein
+    // halbtransparenter Zwischenframe im Ruhezustand). Während der Bewegung bleibt der
+    // Cross-Fade aktiv. Ein sich selbst nachstellender Timer (statt clear/set bei jedem
+    // Scroll-Event) hält die Debounce-Semantik ohne Allokations-Müll je Scroll-Tick.
+    const SNAP_MS = 140
+    const runSnap = () => {
+      const idle = performance.now() - lastChangeTs
+      if (idle < SNAP_MS) {
+        snapTimer = setTimeout(runSnap, SNAP_MS - idle) // Scroll lief weiter → nachstellen
+        return
+      }
+      snapTimer = 0
+      if (!alive) return
+      const snapped = nearestLoaded(Math.round(current))
+      if (snapped >= 0 && snapped !== lastDrawn) {
+        current = snapped
+        draw(snapped)
+      }
+    }
+    const scheduleSnap = () => {
+      lastChangeTs = performance.now()
+      if (!snapTimer) snapTimer = setTimeout(runSnap, SNAP_MS)
     }
 
     const load = async (i) => {
@@ -173,9 +243,10 @@ export default function GearScene({
     io.observe(wrap)
 
     const unsub = scrollYProgress.on('change', (v) => {
-      const raw = Math.round(v * (frameCount - 1))
+      const raw = v * (frameCount - 1) // FLOAT, nicht runden → Cross-Fade kann interpolieren
       current = Math.max(0, Math.min(frameCount - 1, reverse ? frameCount - 1 - raw : raw))
       scheduleDraw()
+      scheduleSnap()
     })
 
     return () => {
@@ -184,6 +255,7 @@ export default function GearScene({
       ro.disconnect()
       io.disconnect()
       if (rafId) cancelAnimationFrame(rafId)
+      if (snapTimer) clearTimeout(snapTimer)
       bitmaps.forEach((b) => b && b.close && b.close())
     }
   }, [scrollYProgress, reduce, dir, frameCount, frameW, frameH, reverse])
