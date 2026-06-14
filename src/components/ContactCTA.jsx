@@ -16,7 +16,7 @@ export default function ContactCTA() {
           top: '0%',
           transform: 'translateX(-50%)',
           background:
-            'radial-gradient(circle, rgba(138,63,240,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.22), transparent 60%)',
         }}
       />
       <div className="grid-bg absolute inset-0 z-0 opacity-60" />
@@ -28,16 +28,16 @@ export default function ContactCTA() {
         viewport={inView}
         className="relative z-10 mx-auto max-w-3xl px-5 text-center sm:px-8"
       >
-        <span className="eyebrow">Bereit, wenn du es bist</span>
+        <span className="eyebrow !text-spark">Bereit, wenn du es bist</span>
         <h2 className="mt-6 font-display text-[clamp(2.6rem,7vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
           Lass uns einen bleibenden{' '}
           <span className="text-gradient">ersten Eindruck</span> schaffen.
         </h2>
         <p className="mx-auto mt-7 max-w-md text-lg leading-relaxed text-ink-dim">
-          Du hast ein Projekt im Kopf oder einfach eine gute Idee? Erzähl mir
-          davon — ich melde mich zeitnah zurück.
+          Du hast ein Projekt im Kopf? Erzähl mir davon. Ich melde mich
+          innerhalb von 24 Stunden zurück.
         </p>
-        <Link to="/kontakt" className="btn btn-primary mt-10">
+        <Link to="/kontakt" className="btn btn-spark mt-10">
           Kontakt aufnehmen
           <IconArrowUpRight width={18} height={18} />
         </Link>

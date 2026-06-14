@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { fadeUp, inView, EASE } from '../lib/anim'
 import { IconArrowUpRight } from './Icons'
 import SectionMark from './SectionMark'
@@ -9,34 +10,23 @@ import SectionMark from './SectionMark'
 const PROJECTS = [
   {
     name: 'Landshuter Symphonieorchester',
-    desc: 'Webauftritt für ein klassisches Symphonieorchester — Konzertkalender, Programm und digitale Bühne für die Klassik.',
+    desc: 'Konzeption einer Website für ein klassisches Symphonieorchester mit Konzertkalender, Newsübersicht und Galerie. Mit CMS für die selbstständige Pflege.',
     tag: 'Kultur',
-    year: '2024',
+    year: '2026',
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
     img: '/projects/symphonieorchester.jpg',
     imgMobile: '/projects/mobile/symphonieorchester.jpg',
-    accent: '#8A3FF0',
+    accent: '#3B82F6',
   },
   {
     name: 'DesignbyEms',
-    desc: 'Markenauftritt und Portfolio für ein kreatives Designstudio — reduziert, elegant und ganz auf die Arbeit fokussiert.',
+    desc: 'Konzeption der Website für die Grafikdesignerin Emili Gassner, reduziert, elegant und ganz auf ihre Arbeit fokussiert.',
     tag: 'Branding',
-    year: '2024',
-    live: true,
+    year: '2026',
     url: 'https://designbyems.de/',
     img: '/projects/designbyems.jpg',
     imgMobile: '/projects/mobile/designbyems.jpg',
-    accent: '#FBB04C',
-  },
-  {
-    name: 'Tankstelle Stettner',
-    desc: 'Digitaler Auftritt einer regionalen Tankstelle — Services, Standort und Kontakt klar auf den Punkt gebracht.',
-    tag: 'Lokal',
-    year: '2023',
-    url: 'https://datenschutz.fraunhofer-lab.de/',
-    img: '/projects/tankstelle-stettner.jpg',
-    imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
-    accent: '#a86cf5',
+    accent: '#22D3EE',
   },
 ]
 
@@ -72,7 +62,7 @@ function Preview({ project, flip }) {
           <div
             className="flex h-full w-full items-center justify-center"
             style={{
-              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #14111d`,
+              background: `radial-gradient(120% 120% at 30% 10%, ${project.accent}33, transparent 60%), #0c0e14`,
             }}
           >
             <span className="font-display text-3xl font-semibold tracking-tight text-ink/90">
@@ -105,7 +95,7 @@ function Preview({ project, flip }) {
                 <div
                   className="h-full w-full"
                   style={{
-                    background: `linear-gradient(160deg, ${project.accent}33, #14111d)`,
+                    background: `linear-gradient(160deg, ${project.accent}33, #0c0e14)`,
                   }}
                 />
               )}
@@ -172,10 +162,6 @@ function Row({ project, index }) {
               active ? 'scale-x-150 bg-spark' : 'bg-line-2'
             }`}
           />
-          <span>{project.tag}</span>
-          <span aria-hidden="true" className="opacity-40">
-            ·
-          </span>
           {project.live ? (
             <span className="inline-flex items-center gap-1.5 text-spark">
               Live
@@ -218,13 +204,131 @@ function Row({ project, index }) {
   )
 }
 
+// "Open slot" — replaces a real project: the mockups invite the next client
+// instead of showing a screenshot ("Hier könnte deine Website stehen").
+function CtaPreview() {
+  return (
+    <div className="preview-wrap">
+      <div className="browser group-hover:-translate-y-1 transition-transform duration-700 ease-out">
+        <div className="browser-bar">
+          <span className="browser-dot" style={{ background: '#ff5f57' }} />
+          <span className="browser-dot" style={{ background: '#febc2e' }} />
+          <span className="browser-dot" style={{ background: '#28c840' }} />
+          <span className="ml-3 truncate rounded-md bg-white/[0.04] px-3 py-1 font-mono text-[0.72rem] text-ink-faint">
+            deine-website.de
+          </span>
+        </div>
+
+        <div
+          className="relative flex aspect-[16/10] flex-col items-center justify-center overflow-hidden px-6 text-center"
+          style={{
+            background:
+              'radial-gradient(120% 110% at 50% 0%, rgba(255,176,77,0.12), transparent 55%), #0b0d13',
+          }}
+        >
+          <div className="grid-bg absolute inset-0 opacity-40" />
+          <h4 className="relative font-display text-[clamp(1.3rem,3vw,2.3rem)] font-semibold leading-[1.05] tracking-tight text-ink">
+            Das hier könnte
+            <br />
+            deine Website sein.
+          </h4>
+          <span className="relative mt-4 font-mono text-[0.58rem] uppercase tracking-[0.3em] text-ink-faint">
+            designed by Xepter
+          </span>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/40 via-transparent to-transparent" />
+        </div>
+      </div>
+
+      <div className="phone-overlay phone-overlay--right">
+        <div className="phone">
+          <div className="phone-screen">
+            <div
+              className="flex h-full w-full flex-col items-center justify-center px-2 text-center"
+              style={{
+                background:
+                  'radial-gradient(120% 80% at 50% 0%, rgba(255,176,77,0.16), transparent 60%), #0a0a0c',
+              }}
+            >
+              <span className="font-display text-[0.6rem] font-semibold leading-tight text-ink">
+                Das hier könnte deine Website sein.
+              </span>
+              <span className="mt-2 h-1 w-1 rounded-full bg-spark shadow-[0_0_8px_var(--color-spark)]" />
+            </div>
+          </div>
+          <div className="phone-island" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CtaRow() {
+  return (
+    <motion.article
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={inView}
+      className="group grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16"
+    >
+      <Link
+        to="/kontakt"
+        className="block"
+        aria-label="Dein Projekt — Kontakt aufnehmen"
+      >
+        <CtaPreview />
+      </Link>
+
+      <div>
+        <p className="spec mb-4 flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="inline-block h-px w-5 origin-left bg-spark transition-transform duration-300 group-hover:scale-x-150"
+          />
+          <span className="inline-flex items-center gap-1.5">
+            Dein Projekt
+            <span
+              aria-hidden="true"
+              className="live-dot inline-block h-1.5 w-1.5 rounded-full bg-spark"
+            />
+          </span>
+        </p>
+
+        <h3 className="font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-medium leading-[1.05] tracking-[-0.02em]">
+          Jetzt?
+        </h3>
+
+        <p className="mt-5 max-w-md text-lg leading-relaxed text-ink-dim">
+          Hier ist Platz für deine Website, gestaltet und entwickelt mit
+          demselben Anspruch wie die Projekte oben. Lass uns deine zur nächsten
+          machen.
+        </p>
+
+        <Link
+          to="/kontakt"
+          className="group/link mt-7 inline-flex items-center gap-2 text-ink transition-colors hover:text-spark"
+        >
+          <span className="relative font-medium">
+            Projekt starten
+            <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-spark transition-transform duration-500 group-hover/link:scale-x-100" />
+          </span>
+          <IconArrowUpRight
+            width={18}
+            height={18}
+            className="transition-transform duration-500 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+          />
+        </Link>
+      </div>
+    </motion.article>
+  )
+}
+
 export default function Projects() {
   return (
     <section id="projekte" className="relative py-28 sm:py-36">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         {/* Header */}
         <SectionMark
-          word="Arbeit"
           lines={[
             'Projekte, die einen',
             { text: 'Eindruck', accent: true, suffix: ' hinterlassen.' },
@@ -237,6 +341,7 @@ export default function Projects() {
           {PROJECTS.map((p, i) => (
             <Row key={p.name} project={p} index={i} />
           ))}
+          <CtaRow />
         </div>
       </div>
     </section>

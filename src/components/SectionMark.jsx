@@ -15,7 +15,13 @@ import { clipUp, drawX, inView } from '../lib/anim'
  *              underline under `text` and `suffix` stays on the same masked line.
  *   className — extra classes on the wrapper (e.g. spacing).
  */
-export default function SectionMark({ word, lines, className = '' }) {
+export default function SectionMark({
+  word,
+  lines,
+  className = '',
+  wordAccent = false,
+  rule = true,
+}) {
   const reduce = useReducedMotion()
   // Framer's `initial` overrides CSS, so honour reduced-motion in JS:
   // start already in the visible "show" state — nothing animates, nothing hides.
@@ -26,25 +32,33 @@ export default function SectionMark({ word, lines, className = '' }) {
       initial={initial}
       whileInView="show"
       viewport={inView}
-      className={`max-w-[15ch] sm:max-w-2xl ${className}`}
+      className={`max-w-2xl ${className}`}
     >
-      {/* self-drawing hairline */}
-      <motion.span
-        variants={drawX}
-        custom={0}
-        style={{ originX: 0 }}
-        className="mb-6 block h-px w-16 origin-left bg-line-2 sm:w-[88px]"
-      />
+      {/* self-drawing hairline (optional) */}
+      {rule && (
+        <motion.span
+          variants={drawX}
+          custom={0}
+          style={{ originX: 0 }}
+          className="mb-6 block h-px w-16 origin-left bg-line-2 sm:w-[88px]"
+        />
+      )}
 
-      {/* quiet mono kicker word */}
-      <span className="block overflow-hidden">
-        <motion.span variants={clipUp} custom={0.12} className="kicker block">
-          {word}
-        </motion.span>
-      </span>
+      {/* quiet mono kicker word (optional) — wordAccent paints it warm like the Motion kicker */}
+      {word && (
+        <span className="block overflow-hidden">
+          <motion.span
+            variants={clipUp}
+            custom={0.12}
+            className={`kicker block ${wordAccent ? '!text-spark' : ''}`}
+          >
+            {word}
+          </motion.span>
+        </span>
+      )}
 
       {/* elevated headline — clip-reveal per line (same device as the Hero) */}
-      <h2 className="mt-5 font-display text-[clamp(2.4rem,5.5vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
+      <h2 className="mt-5 break-words font-display text-[clamp(2rem,6vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
         {lines.map((line, i) => {
           const isObj = typeof line === 'object' && line !== null
           const text = isObj ? line.text : line

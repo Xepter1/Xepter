@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { EASE } from '../lib/anim'
 import Macbook from './Macbook'
-import { IconArrowRight, IconArrowUpRight } from './Icons'
+import { IconArrowRight } from './Icons'
 
-const LINES = ['Der erste', 'Eindruck', 'entscheidet.']
+const LINES = ['Ich baue', 'Websites,', 'die überzeugen.']
 
 export default function Hero() {
   return (
@@ -22,7 +21,7 @@ export default function Hero() {
           right: '-6%',
           top: '4%',
           background:
-            'radial-gradient(circle, rgba(138,63,240,0.18), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.28), transparent 60%)',
         }}
       />
       <div
@@ -33,21 +32,30 @@ export default function Hero() {
           left: '-8%',
           bottom: '2%',
           background:
-            'radial-gradient(circle, rgba(251,176,76,0.14), transparent 60%)',
+            'radial-gradient(circle, rgba(191,90,242,0.16), transparent 60%)',
         }}
       />
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1800px] grid-cols-1 items-center gap-12 px-6 sm:px-10 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:px-16 xl:px-24">
         {/* Left — copy */}
         <div className="order-2 lg:order-1">
-          <h1 className="font-display text-[clamp(3rem,9vw,6.4rem)] font-semibold leading-[0.92] tracking-[-0.03em]">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+            className="eyebrow mb-5 !text-spark"
+          >
+            Der erste Eindruck zählt.
+          </motion.p>
+
+          <h1 className="font-display text-[clamp(2.8rem,8.2vw,5.8rem)] font-semibold leading-[0.95] tracking-[-0.03em]">
             {LINES.map((t, i) => (
               <span key={t} className="block overflow-hidden pb-[0.06em]">
                 <motion.span
-                  className={`block ${i === 1 ? 'text-gradient' : ''}`}
+                  className={`block ${i === 2 ? 'text-gradient' : ''}`}
                   initial={{ y: '110%' }}
                   animate={{ y: '0%' }}
-                  transition={{ duration: 1, delay: 0.3 + i * 0.12, ease: EASE }}
+                  transition={{ duration: 1, delay: 0.35 + i * 0.12, ease: EASE }}
                 >
                   {t}
                 </motion.span>
@@ -61,8 +69,9 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
             className="mt-8 max-w-md text-lg leading-relaxed text-ink-dim"
           >
-            Ich gestalte und entwickle Websites, die im ersten Moment wirken — und
-            im zweiten überzeugen. Klar, schnell und kompromisslos im Detail.
+            Du bekommst einen Auftritt, der dich professionell zeigt, online
+            leicht gefunden wird und aus Besuchern echte Kunden macht. Sichtbar,
+            schnell und bis ins Detail durchdacht.
           </motion.p>
 
           <motion.div
@@ -71,14 +80,10 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <a href="#projekte" className="btn btn-primary">
+            <a href="#projekte" className="btn btn-spark-outline">
               Projekte ansehen
               <IconArrowRight width={19} height={19} />
             </a>
-            <Link to="/kontakt" className="btn btn-ghost">
-              Kontakt aufnehmen
-              <IconArrowUpRight width={18} height={18} />
-            </Link>
           </motion.div>
         </div>
 

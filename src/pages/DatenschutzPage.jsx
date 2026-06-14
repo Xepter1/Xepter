@@ -1,10 +1,11 @@
 import LegalLayout from '../components/LegalLayout'
 
 /*
- * TODO (Xepter) vor dem Launch:
- * - <mark class="legal-todo"> Platzhalter ersetzen: Name, E-Mail, Hosting-Provider.
- * - Wenn du später Analyse/Tracking, Schriften von Drittservern (aktuell lokal
- *   eingebunden!), Maps, Fonts-CDN o. Ä. nutzt: hier ergänzen.
+ * Name (Patrick Fraunhofer), E-Mail (mail@xepter.de) und Hosting (Hetzner)
+ * sind eingetragen.
+ * - Schriften sind lokal selbst gehostet (siehe src/index.css, /public/fonts);
+ *   es findet keine Übertragung an Google/Fontshare statt.
+ * - Wenn du später Analyse/Tracking, Maps, Fonts-CDN o. Ä. nutzt: hier ergänzen.
  * - Solide DSGVO-Vorlage — im Zweifel mit einem Generator (e-recht24 / Datenschutz-
  *   Generator) gegenchecken.
  */
@@ -13,20 +14,18 @@ export default function DatenschutzPage() {
     <LegalLayout
       eyebrow="Rechtliches"
       title="Datenschutz"
-      intro="Der Schutz deiner persönlichen Daten ist mir wichtig. Hier erfährst du, welche Daten beim Besuch dieser Website verarbeitet werden — und welche Rechte du hast."
+      intro="Der Schutz deiner persönlichen Daten ist mir wichtig. Hier erfährst du, welche Daten beim Besuch dieser Website verarbeitet werden und welche Rechte du hast."
     >
       <h2>1. Verantwortlicher</h2>
       <p>
         Verantwortlich für die Datenverarbeitung auf dieser Website ist:
         <br />
-        <mark className="legal-todo">[Vollständiger Vor- und Nachname]</mark>
+        Patrick Fraunhofer
         <br />
         Am Himmelreich 7, 84166 Adlkofen
         <br />
         E-Mail:{' '}
-        <a href="mailto:hallo@xepter.de">
-          <mark className="legal-todo">hallo@xepter.de</mark>
-        </a>
+        <a href="mailto:mail@xepter.de">mail@xepter.de</a>
       </p>
 
       <h2>2. Zugriffsdaten &amp; Server-Logfiles</h2>
@@ -47,19 +46,18 @@ export default function DatenschutzPage() {
 
       <h2>3. Hosting</h2>
       <p>
-        Diese Website wird bei{' '}
-        <mark className="legal-todo">[Hosting-Provider, z. B. Vercel / Netlify]</mark>{' '}
-        gehostet. Der Anbieter verarbeitet die unter Ziffer 2 genannten Daten in
-        unserem Auftrag zur Bereitstellung der Website. Mit dem Anbieter besteht ein
-        Vertrag zur Auftragsverarbeitung (AVV) gemäß Art. 28 DSGVO. Rechtsgrundlage
-        ist Art. 6 Abs. 1 lit. f DSGVO.
+        Diese Website wird bei der Hetzner Online GmbH, Industriestr. 25, 91710
+        Gunzenhausen, Deutschland, gehostet. Der Anbieter verarbeitet die unter
+        Ziffer 2 genannten Daten in unserem Auftrag zur Bereitstellung der Website.
+        Mit dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung (AVV) gemäß
+        Art. 28 DSGVO. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
       </p>
 
       <h2>4. Kontaktaufnahme</h2>
       <p>
         Wenn du uns über das Kontaktformular oder per E-Mail kontaktierst, werden
         deine Angaben (z. B. Name, E-Mail-Adresse, Nachricht) zur Bearbeitung deiner
-        Anfrage gespeichert. Rechtsgrundlage ist — je nach Anliegen — Art. 6 Abs. 1
+        Anfrage gespeichert. Rechtsgrundlage ist, je nach Anliegen, Art. 6 Abs. 1
         lit. b DSGVO (vorvertragliche Maßnahmen / Vertrag) bzw. Art. 6 Abs. 1 lit. f
         DSGVO (berechtigtes Interesse an der Beantwortung). Diese Daten werden
         gelöscht, sobald sie zur Erreichung des Zwecks nicht mehr erforderlich sind

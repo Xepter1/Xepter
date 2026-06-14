@@ -1,36 +1,110 @@
 @import 'tailwindcss';
 
 /* ============================================================
+   Schriften — lokal selbst gehostet (DSGVO: keine Übertragung
+   an Google/Fontshare). Dateien unter /public/fonts.
+   ============================================================ */
+/* Clash Display (Fontshare) */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Satoshi (Fontshare) */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-900.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+/* JetBrains Mono (Google, Variable Font — eine Datei für 400–500) */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
    XEPTER — Design Tokens (Tailwind v4 @theme)
-   Industrial Luxury · warm aubergine + electric lila / orange
+   Industrial Luxury · deep black + electric cyan-blue
    ============================================================ */
 @theme {
-  /* Surfaces — near-black with a faint aubergine warmth (low saturation = premium, not "purple") */
-  --color-base: #0d0a14;
-  --color-panel: #14111d;
-  --color-card: #1b1726;
-  --color-card-2: #241f30;
+  /* Surfaces */
+  --color-base: #07080c;
+  --color-panel: #0c0e14;
+  --color-card: #111420;
+  --color-card-2: #161a28;
 
-  /* Ink — cream / lavender (the "new white") */
-  --color-ink: #f4effb;
-  --color-ink-dim: #d7c9ee;
-  --color-ink-faint: #a892cb;
+  /* Ink */
+  --color-ink: #f3f6fb;
+  --color-ink-dim: #aab2c2;
+  --color-ink-faint: #6b7384;
 
   /* Lines */
-  --color-line: rgba(255, 255, 255, 0.09);
-  --color-line-2: rgba(255, 255, 255, 0.16);
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-2: rgba(255, 255, 255, 0.14);
 
-  /* Accent — electric lila (primary) */
-  --color-accent: #8a3ff0;
-  --color-accent-2: #5e2bc4;
-  --color-accent-soft: rgba(138, 63, 240, 0.16);
+  /* Accent — electric violet */
+  --color-accent: #bf5af2;
+  --color-accent-2: #8b3df0;
+  --color-accent-soft: rgba(191, 90, 242, 0.14);
 
-  /* Editorial micro-text — AA-safe quiet lavender (~6.4:1 on base) for informational kicker/spec lines */
-  --color-ink-meta: #b3a0d4;
+  /* Editorial micro-text — AA-safe quiet grey (5.84:1 on base) for informational kicker/spec lines */
+  --color-ink-meta: #828b9c;
 
-  /* spark = warm orange — the present-but-poised secondary accent: H2 underline + LIVE dot +
-     active-row tick + select highlights. Lila stays the primary accent on buttons/links. */
-  --color-spark: #fbb04c;
+  /* spark = the warm "action / alive" accent (warm amber, 11:1 on base):
+     primary CTA buttons, nav hover underline, H2 underline, LIVE dot, active-row tick.
+     Violet stays brand/atmosphere; orange carries the action. */
+  --color-spark: #ffb04d;
+  --color-spark-deep: #f59331;
+  --color-spark-soft: rgba(255, 176, 77, 0.14);
 
   /* Type */
   --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, system-ui, sans-serif;
@@ -65,7 +139,7 @@ body {
 
 ::selection {
   background: var(--color-accent);
-  color: var(--color-ink);
+  color: #04121a;
 }
 
 /* Section anchor offset for fixed nav */
@@ -88,12 +162,12 @@ section[id] {
   background: var(--color-base);
 }
 ::-webkit-scrollbar-thumb {
-  background: #3a2a5e;
+  background: #20242f;
   border-radius: 99px;
   border: 3px solid var(--color-base);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4a3870;
+  background: #2c3140;
 }
 
 /* ============================================================
@@ -206,7 +280,7 @@ section[id] {
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(138, 63, 240, 0.4);
+  text-decoration-color: rgba(191, 90, 242, 0.4);
   transition: text-decoration-color 0.3s ease;
 }
 .legal-prose a:hover {
@@ -227,9 +301,20 @@ section[id] {
 }
 
 .glass {
-  background: rgba(13, 10, 20, 0.68);
+  background: rgba(10, 12, 18, 0.6);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+/* Mobile menu panel — near-solid so the page doesn't bleed through, plus a
+   subtle brand glow (violet top-right, a hint of warm orange bottom-left). */
+.mobile-menu {
+  background:
+    radial-gradient(125% 70% at 100% 0%, rgba(139, 61, 240, 0.16), transparent 55%),
+    radial-gradient(115% 70% at 0% 100%, rgba(255, 176, 77, 0.08), transparent 55%),
+    rgba(8, 9, 14, 0.98);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
 }
 
 /* Buttons */
@@ -253,13 +338,13 @@ section[id] {
 }
 
 .btn-primary {
-  color: #fbf7ff;
+  color: #04121a;
   background: linear-gradient(105deg, var(--color-accent-2), var(--color-accent));
-  box-shadow: 0 8px 30px -8px rgba(138, 63, 240, 0.55),
+  box-shadow: 0 8px 30px -8px rgba(191, 90, 242, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 .btn-primary:hover {
-  box-shadow: 0 14px 44px -8px rgba(138, 63, 240, 0.75),
+  box-shadow: 0 14px 44px -8px rgba(191, 90, 242, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
@@ -273,6 +358,64 @@ section[id] {
   background: rgba(255, 255, 255, 0.07);
   border-color: var(--color-accent);
   transform: translateY(-2px);
+}
+
+/* Warm orange (spark) action CTA — filled */
+.btn-spark {
+  color: #1a1205;
+  background: linear-gradient(105deg, var(--color-spark-deep), var(--color-spark));
+  box-shadow: 0 8px 30px -8px rgba(255, 176, 77, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+.btn-spark:hover {
+  box-shadow: 0 14px 44px -8px rgba(255, 176, 77, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Ghost button whose hover/active accent is warm orange instead of violet */
+.btn-ghost.is-spark:hover {
+  border-color: var(--color-spark);
+}
+
+/* Orange-outlined CTA — warm border at rest (the "Kontakt aufnehmen" hover look, made permanent) */
+.btn-spark-outline {
+  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-spark);
+}
+.btn-spark-outline:hover {
+  background: var(--color-spark-soft);
+  transform: translateY(-2px);
+}
+
+/* ── Brand mark (the "X" glyph) + warm-orange hover ignite ───────────── */
+.logo-mark {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+.logo-mark-img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+/* Orange silhouette of the X, masked from the logo's alpha — fades in on
+   hover so every violet shape lights up orange at once (the dot is handled
+   separately in the navbar). */
+.logo-mark-spark {
+  position: absolute;
+  inset: 0;
+  background: var(--color-spark);
+  -webkit-mask: url('/logo.png') center / contain no-repeat;
+  mask: url('/logo.png') center / contain no-repeat;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-expo);
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(255, 176, 77, 0.7));
+}
+.group:hover .logo-mark-spark {
+  opacity: 1;
 }
 
 /* Atmospheric glow blob */
@@ -293,6 +436,15 @@ section[id] {
   opacity: 0.035;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Auf dem Handy aus: ein fixed Vollbild-Overlay mit mix-blend-mode zwingt bei
+   jedem Scroll-Frame ein Full-Screen-Recomposite → Ruckeln beim Canvas-Scrub.
+   Bei 3,5% Deckkraft optisch vernachlässigbar. */
+@media (max-width: 1023px) {
+  .grain {
+    display: none;
+  }
 }
 
 /* Subtle dotted grid background */
@@ -397,7 +549,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     circle at 50% 47%,
-    rgba(138, 63, 240, 0.07),
+    rgba(191, 90, 242, 0.06),
     transparent 26%
   );
 }
@@ -420,7 +572,7 @@ section[id] {
   position: absolute;
   inset: var(--bezel);
   border-radius: 7px;
-  background: radial-gradient(120% 130% at 50% 0%, #161226 0%, #0a0812 55%, #07060d 100%);
+  background: radial-gradient(120% 130% at 50% 0%, #0b1822 0%, #060709 55%, #050608 100%);
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9),
     inset 0 0 60px rgba(0, 0, 0, 0.55);
@@ -436,7 +588,7 @@ section[id] {
   inset: 0;
   background: radial-gradient(
     60% 55% at 50% 42%,
-    rgba(138, 63, 240, 0.18),
+    rgba(191, 90, 242, 0.16),
     transparent 70%
   );
   opacity: 0;
@@ -469,30 +621,52 @@ section[id] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.7em;
+  gap: 0.55em;
   z-index: 2;
-  opacity: 0;
-  transform: translateY(8px) scale(0.96);
-  filter: blur(6px);
-  transition: opacity 0.9s ease 1.45s, transform 1.1s var(--ease-out-expo) 1.45s,
-    filter 0.9s ease 1.45s;
 }
-.is-open .screen-brand {
+/* logo + accent dot on one line (the dot is part of the brand mark) */
+.screen-logo-wrap {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.1em;
+  font-size: clamp(2.9rem, 11.6cqw, 6.1rem); /* drives the dot's em sizing */
+}
+.screen-dot {
+  flex: none;
+  width: 0.15em;
+  height: 0.15em;
+  margin-bottom: 0.14em; /* sits like a period, just above the baseline */
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0.2em var(--color-accent);
+}
+
+/* staggered reveal: brand first, then the line shortly after */
+.screen-logo-wrap,
+.screen-tagline {
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  filter: blur(6px);
+  transition: opacity 0.8s ease, transform 1s var(--ease-out-expo),
+    filter 0.8s ease;
+}
+.is-rendered .screen-logo-wrap,
+.is-rendered .screen-tagline {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
+.is-rendered .screen-tagline {
+  transition-delay: 0.6s; /* appears shortly after "Xepter" */
+}
 .screen-logo {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.7rem, 6.5cqw, 3.4rem);
+  font-size: clamp(2.9rem, 11.6cqw, 6.1rem);
   letter-spacing: -0.02em;
   line-height: 1;
-  background: linear-gradient(100deg, #ffffff 10%, var(--color-accent) 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 38px rgba(138, 63, 240, 0.4);
+  color: var(--color-ink);
+  text-shadow: 0 0 30px rgba(244, 241, 251, 0.18);
 }
 .screen-tag {
   font-family: var(--font-mono);
@@ -500,6 +674,119 @@ section[id] {
   letter-spacing: 0.42em;
   text-indent: 0.42em;
   color: var(--color-ink-faint);
+}
+.screen-tagline {
+  max-width: 90%;
+  margin-top: 0.15em;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 5.3cqw, 2.35rem);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+/* emphasised word — bigger + same lila gradient as the header's "die überzeugen" */
+.screen-em {
+  font-size: 1.14em;
+  font-weight: 600;
+}
+
+/* --- macOS Terminal boot ("the brand is built live") --- */
+.term {
+  position: absolute;
+  inset: 6%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2.4cqw;
+  overflow: hidden;
+  background: rgba(22, 18, 30, 0.9);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 4cqw 9cqw rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  font-family: 'SF Mono', 'Menlo', var(--font-mono);
+  /* fades out when the brand is "rendered" */
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-out-expo);
+}
+.is-rendered .term {
+  opacity: 0;
+  transform: scale(0.98);
+  pointer-events: none;
+}
+
+.term-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.5cqw;
+  height: 6.5cqw;
+  min-height: 13px;
+  padding: 0 2.8cqw;
+  background: linear-gradient(180deg, rgba(64, 58, 74, 0.7), rgba(42, 37, 52, 0.6));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.term-dot {
+  width: 2.3cqw;
+  height: 2.3cqw;
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+}
+.term-dot--r { background: #ff5f57; }
+.term-dot--y { background: #febc2e; }
+.term-dot--g { background: #28c840; }
+.term-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 2.5cqw;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.term-body {
+  flex: 1;
+  padding: 3cqw 3.4cqw;
+  font-size: 3.1cqw;
+  line-height: 1.55;
+  color: #e7e3f0;
+  overflow: hidden;
+}
+.term-line {
+  white-space: pre;
+}
+
+/* syntax / log tokens */
+.tok.prompt { color: #6fe0a3; }
+.tok.cmd { color: #f4f1fb; }
+.tok.arg { color: #9bd1ff; }
+.tok.kw { color: #c792ea; }
+.tok.fn { color: #82aaff; }
+.tok.tag { color: #7fb3ff; }
+.tok.accent { color: var(--color-accent); }
+.tok.punc { color: #b8b2c8; }
+.tok.ok { color: #28c840; }
+.tok.live { color: #28c840; }
+.tok.dim { color: #a9a2bd; }
+
+.term-caret {
+  display: inline-block;
+  width: 1.3cqw;
+  min-width: 4px;
+  height: 3.2cqw;
+  min-height: 9px;
+  margin-left: 0.5cqw;
+  transform: translateY(0.6cqw);
+  background: var(--color-accent);
+  animation: term-blink 1s steps(1) infinite;
+}
+@keyframes term-blink {
+  50% { opacity: 0; }
 }
 
 /* --- Base / keyboard deck (screen-forward minimal) --- */
@@ -582,7 +869,7 @@ section[id] {
   gap: 7px;
   height: 38px;
   padding: 0 14px;
-  background: #14111d;
+  background: #0e1017;
   border-bottom: 1px solid var(--color-line);
 }
 .browser-dot {
@@ -725,7 +1012,7 @@ section[id] {
   aspect-ratio: 1;
   max-width: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #3a2a5e, #0a0614 68%);
+  background: radial-gradient(circle at 38% 32%, #20354a, #04070b 68%);
 }
 
 @media (max-width: 1023px) {
@@ -763,7 +1050,8 @@ section[id] {
     transition: none;
     transform: rotateX(-3deg);
   }
-  .screen-brand {
+  .screen-logo-wrap,
+  .screen-tagline {
     transition: none;
     opacity: 1;
     transform: none;
@@ -783,3 +1071,279 @@ section[id] {
      gated in JS via useReducedMotion() (Framer's `initial` overrides CSS), so they render
      at their final visible state when reduced motion is requested. */
 }
+
+/* ============================================================
+   CMS Showcase — pure-CSS iMac + Safari + Payload admin (dark)
+   "Du verwaltest deine Website selbst." (Leistungen-Sektion)
+   ============================================================ */
+.imac {
+  width: min(100%, 580px);
+  margin: 0 auto;
+}
+.imac-head {
+  position: relative;
+  border-radius: 16px 16px 0 0;
+  padding: 2.3%;
+  background: linear-gradient(160deg, #2b2e35 0%, #16181d 55%, #0d0e12 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.12), 0 40px 70px -30px rgba(0, 0, 0, 0.85);
+}
+.imac-screen {
+  position: relative;
+  aspect-ratio: 16 / 10.2;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #1a1a1e;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9);
+  container-type: inline-size;
+}
+/* glossy glare */
+.imac-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, transparent 42%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+  z-index: 6;
+  pointer-events: none;
+}
+.imac-chin {
+  position: relative;
+  height: clamp(34px, 3.6vw, 54px);
+  border-radius: 0 0 16px 16px;
+  background: linear-gradient(180deg, #23262c 0%, #15171b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 26px 36px -18px rgba(0, 0, 0, 0.7);
+}
+.imac-chin img {
+  height: clamp(12px, 1.3vw, 18px);
+  width: auto;
+  opacity: 0.5;
+}
+.imac-neck {
+  width: 17%;
+  height: 26px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #20232a, #15171c);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+}
+.imac-foot {
+  width: 42%;
+  height: 11px;
+  margin: 0 auto;
+  border-radius: 0 0 12px 12px / 0 0 100% 100%;
+  background: linear-gradient(180deg, #23262c, #121317);
+  box-shadow: 0 22px 30px -16px rgba(0, 0, 0, 0.75);
+}
+
+/* --- Safari window inside the screen --- */
+.safari {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #1c1c20;
+}
+.safari-bar {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  height: 8.6cqw;
+  min-height: 26px;
+  padding: 0 3cqw;
+  background: linear-gradient(180deg, #313338, #26282c);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+.safari-dots {
+  display: flex;
+  gap: 1.4cqw;
+}
+.safari-dot {
+  width: 2.3cqw;
+  height: 2.3cqw;
+  min-width: 7px;
+  min-height: 7px;
+  border-radius: 50%;
+}
+.safari-dot--r { background: #ff5f57; }
+.safari-dot--y { background: #febc2e; }
+.safari-dot--g { background: #28c840; }
+.safari-url {
+  flex: 1;
+  margin: 0 2cqw;
+  height: 5.4cqw;
+  min-height: 17px;
+  border-radius: 99px;
+  background: #1d1f23;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1cqw;
+  font-family: var(--font-mono);
+  font-size: 2.5cqw;
+  color: #b9bcc4;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.safari-url svg { width: 2.6cqw; height: 2.6cqw; opacity: 0.6; }
+
+/* --- Payload admin (dark) --- */
+.pl {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  background: #18181b;
+  color: #e7e7ea;
+  font-family: var(--font-sans);
+}
+.pl-side {
+  width: 30cqw;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding: 2.2cqw 2.2cqw;
+  background: #131316;
+  border-right: 1px solid #2a2a30;
+}
+.pl-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 0 1cqw 1.9cqw;
+  border-bottom: 1px solid #26262c;
+  margin-bottom: 1.4cqw;
+}
+.pl-brand img { height: 4cqw; min-height: 13px; width: auto; }
+.pl-brand span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.7cqw;
+  line-height: 1.05;
+  color: #f2f2f4;
+}
+.pl-group {
+  font-size: 1.95cqw;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #6f6f78;
+  padding: 1.5cqw 1cqw 0.6cqw;
+}
+.pl-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 1.2cqw 1.4cqw;
+  border-radius: 1.5cqw;
+  font-size: 2.5cqw;
+  color: #c4c4cc;
+}
+.pl-nav .dot {
+  width: 1.5cqw;
+  height: 1.5cqw;
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: #56565f;
+  flex: none;
+}
+.pl-nav.is-active {
+  background: #232329;
+  color: #fff;
+}
+.pl-nav.is-active .dot { background: var(--color-accent); }
+.pl-account {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+  padding: 1.5cqw 1cqw 0;
+  border-top: 1px solid #26262c;
+  font-size: 2.4cqw;
+  color: #9a9aa2;
+}
+.pl-avatar {
+  width: 4.6cqw;
+  height: 4.6cqw;
+  min-width: 15px;
+  min-height: 15px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-accent-2), var(--color-accent));
+  flex: none;
+}
+
+.pl-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3.4cqw 3.6cqw;
+  overflow: hidden;
+}
+.pl-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2cqw;
+  margin-bottom: 3cqw;
+}
+.pl-crumb {
+  font-size: 2.2cqw;
+  color: #7c7c85;
+  margin-bottom: 0.8cqw;
+}
+.pl-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 4.4cqw;
+  letter-spacing: -0.01em;
+  color: #f4f4f6;
+}
+.pl-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqw;
+  padding: 1.7cqw 2.6cqw;
+  border-radius: 1.4cqw;
+  background: #f3f3f5;
+  color: #18181b;
+  font-weight: 600;
+  font-size: 2.5cqw;
+  white-space: nowrap;
+}
+.pl-table {
+  border: 1px solid #2a2a30;
+  border-radius: 2cqw;
+  overflow: hidden;
+}
+.pl-row {
+  display: grid;
+  grid-template-columns: 1fr 0.62fr 0.42cqw;
+  grid-template-columns: 1.5fr 1fr 0.7fr;
+  gap: 2cqw;
+  align-items: center;
+  padding: 2.5cqw 3cqw;
+  font-size: 2.6cqw;
+  border-bottom: 1px solid #232329;
+}
+.pl-row:last-child { border-bottom: 0; }
+.pl-row--head {
+  background: #1d1d21;
+  color: #80808a;
+  font-size: 2.1cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pl-row .ptitle { color: #f0f0f2; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-row .pmeta { color: #a6a6ae; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqw;
+  font-size: 2.3cqw;
+  color: #57d98a;
+}
+.pl-badge .bdot { width: 1.5cqw; height: 1.5cqw; min-width: 5px; min-height: 5px; border-radius: 50%; background: #34c171; box-shadow: 0 0 1.6cqw rgba(52,193,113,0.6); }
+.pl-badge--off { color: #6f6f78; }
+.pl-badge--off .bdot { background: #4a4a52; box-shadow: none; }

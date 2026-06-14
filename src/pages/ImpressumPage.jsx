@@ -1,9 +1,9 @@
 import LegalLayout from '../components/LegalLayout'
 
 /*
- * TODO (Xepter) vor dem Launch:
- * - <mark class="legal-todo"> Platzhalter ersetzen: vollständiger Name, E-Mail,
- *   ggf. Telefon. Adresse/PLZ prüfen (84166 Adlkofen angenommen).
+ * Name (Patrick Fraunhofer), Adresse, E-Mail (mail@xepter.de) eingetragen.
+ * Telefon bewusst weggelassen (rechtlich optional). Adresse: Am Himmelreich 7,
+ * 84166 Adlkofen.
  * - Diese Vorlage deckt den Standardfall einer Einzelperson/Freelancer ab.
  *   Bei Gewerbe/USt-IdNr/Kleinunternehmer ggf. ergänzen. Im Zweifel kurz mit
  *   einem Impressum-Generator (z. B. e-recht24) gegenchecken.
@@ -13,7 +13,7 @@ export default function ImpressumPage() {
     <LegalLayout eyebrow="Rechtliches" title="Impressum">
       <h2>Angaben gemäß § 5 DDG</h2>
       <p>
-        <mark className="legal-todo">[Vollständiger Vor- und Nachname]</mark>
+        Patrick Fraunhofer
         <br />
         Am Himmelreich 7
         <br />
@@ -25,20 +25,18 @@ export default function ImpressumPage() {
       <h2>Kontakt</h2>
       <p>
         E-Mail:{' '}
-        <a href="mailto:hallo@xepter.de">
-          <mark className="legal-todo">hallo@xepter.de</mark>
-        </a>
-        <br />
-        <span className="text-ink-faint">
-          (Telefonnummer optional —{' '}
-          <mark className="legal-todo">[Telefon]</mark> ergänzen oder Zeile
-          entfernen)
-        </span>
+        <a href="mailto:mail@xepter.de">mail@xepter.de</a>
+      </p>
+
+      <h2>Umsatzsteuer</h2>
+      <p>
+        Als Kleinunternehmer im Sinne von § 19 UStG wird keine Umsatzsteuer
+        berechnet und folglich auch nicht ausgewiesen.
       </p>
 
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p>
-        <mark className="legal-todo">[Vollständiger Vor- und Nachname]</mark>,
+        Patrick Fraunhofer,
         Anschrift wie oben.
       </p>
 

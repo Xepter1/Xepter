@@ -3,23 +3,20 @@ import { motion } from 'framer-motion'
 import { EASE } from '../lib/anim'
 import {
   IconArrowUpRight,
-  IconGithub,
+  IconFacebook,
   IconLinkedin,
   IconInstagram,
   IconMail,
 } from '../components/Icons'
 
 /*
- * TODO (Xepter): Kontaktdaten + Formular-Endpunkt nachtragen.
- * - SOCIALS: echte URLs eintragen (href).
- * - EMAIL: echte Adresse eintragen.
- * - Formular: an einen Endpunkt hängen (Formspree, Resend, eigene API-Route)
- *   und handleSubmit ersetzen.
+ * Kontaktformular = mailto: öffnet das Mailprogramm des Besuchers mit
+ * vorausgefüllter Nachricht an mail@xepter.de (kein Backend, kein Drittanbieter).
  */
 const SOCIALS = [
-  { icon: IconGithub, label: 'GitHub', href: '#' },
-  { icon: IconLinkedin, label: 'LinkedIn', href: '#' },
-  { icon: IconInstagram, label: 'Instagram', href: '#' },
+  { icon: IconFacebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61590947094348' },
+  { icon: IconInstagram, label: 'Instagram', href: 'https://www.instagram.com/xepter.de' },
+  { icon: IconLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/129663999' },
 ]
 
 const fade = (delay = 0) => ({
@@ -33,12 +30,20 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Platzhalter — noch kein Endpunkt verbunden.
+    const data = new FormData(e.currentTarget)
+    const name = (data.get('name') || '').toString().trim()
+    const subject = (data.get('subject') || '').toString().trim()
+    const msg = (data.get('msg') || '').toString().trim()
+    const body = `Name: ${name}\n\n${msg}`
+    const href = `mailto:mail@xepter.de?subject=${encodeURIComponent(
+      subject || 'Anfrage über xepter.de'
+    )}&body=${encodeURIComponent(body)}`
+    window.location.href = href
     setSent(true)
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden pt-36 pb-28 sm:pt-44">
+    <main className="relative min-h-screen overflow-hidden pt-24 pb-24 sm:pt-28">
       <div className="grid-bg absolute inset-0 z-0" />
       <div
         className="glow"
@@ -48,7 +53,7 @@ export default function ContactPage() {
           right: '-10%',
           top: '-6%',
           background:
-            'radial-gradient(circle, rgba(138,63,240,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.22), transparent 60%)',
         }}
       />
       <div
@@ -59,43 +64,65 @@ export default function ContactPage() {
           left: '-8%',
           bottom: '0%',
           background:
-            'radial-gradient(circle, rgba(251,176,76,0.12), transparent 60%)',
+            'radial-gradient(circle, rgba(191,90,242,0.14), transparent 60%)',
         }}
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         {/* Heading */}
         <motion.div {...fade(0.05)} className="max-w-3xl">
-          <span className="eyebrow">Kontakt</span>
-          <h1 className="mt-5 font-display text-[clamp(2.6rem,7vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
+          <span className="eyebrow !text-spark">Kontakt</span>
+          <h1 className="mt-5 font-display text-[clamp(2.3rem,5.5vw,4.4rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
             Lass uns einen bleibenden{' '}
             <span className="text-gradient">ersten Eindruck</span> schaffen.
           </h1>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-dim">
-            Ob konkretes Projekt oder lose Idee — schreib mir ein paar Zeilen.
-            Ich antworte in der Regel innerhalb von 24 Stunden.
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-dim">
+            Ob konkretes Projekt oder lose Idee, schreib mir ein paar Zeilen.
+            Ich antworte innerhalb von 24 Stunden.
           </p>
         </motion.div>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20">
-          {/* Left — direct + socials */}
+        <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20 sm:mt-10">
+          {/* Left — quote, direct line + socials */}
           <motion.div {...fade(0.15)} className="flex flex-col gap-10">
-            <div>
-              <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
-                Direkter Draht
-              </h2>
+            <div className="hidden lg:block">
+              <p className="max-w-sm text-lg font-medium leading-relaxed text-spark">
+                „Der erste Eindruck entscheidet." Und er beginnt mit deiner
+                ersten Nachricht.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
               <a
-                href="mailto:hallo@xepter.de"
-                className="group mt-4 inline-flex items-center gap-3 font-display text-2xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-3xl"
+                href="mailto:mail@xepter.de"
+                className="group inline-flex items-center gap-3 font-display text-2xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-3xl"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line-2 text-accent transition-colors group-hover:border-accent/50">
                   <IconMail width={20} height={20} />
                 </span>
-                hallo@xepter.de
+                mail@xepter.de
               </a>
-              <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
-                ✶ Platzhalter — echte Adresse folgt
-              </p>
+              <a
+                href="tel:+4915144227255"
+                className="group inline-flex items-center gap-3 font-display text-xl font-medium tracking-tight text-ink transition-colors hover:text-accent sm:text-2xl"
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-line-2 text-accent transition-colors group-hover:border-accent/50">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    width={20}
+                    height={20}
+                    aria-hidden="true"
+                  >
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                </span>
+                0151 44227255
+              </a>
             </div>
 
             <div>
@@ -109,6 +136,8 @@ export default function ContactPage() {
                     <a
                       key={s.label}
                       href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       aria-label={s.label}
                       className="flex h-12 w-12 items-center justify-center rounded-full border border-line-2 text-ink-dim transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:text-accent"
                     >
@@ -117,13 +146,6 @@ export default function ContactPage() {
                   )
                 })}
               </div>
-            </div>
-
-            <div className="mt-auto hidden lg:block">
-              <p className="max-w-xs text-sm leading-relaxed text-ink-faint">
-                „Der erste Eindruck entscheidet." — und beginnt oft mit einer
-                ersten Nachricht.
-              </p>
             </div>
           </motion.div>
 
@@ -134,10 +156,7 @@ export default function ContactPage() {
           >
             {!sent ? (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
-                  <Field id="email" label="E-Mail" type="email" placeholder="du@beispiel.de" autoComplete="email" />
-                </div>
+                <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
                 <Field id="subject" label="Betreff" type="text" placeholder="Worum geht es?" />
                 <div className="flex flex-col gap-2">
                   <label htmlFor="msg" className="text-sm font-medium text-ink-dim">
@@ -157,7 +176,7 @@ export default function ContactPage() {
                   <IconArrowUpRight width={18} height={18} />
                 </button>
                 <p className="text-center font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
-                  ✶ Formular wird in Kürze scharf geschaltet
+                  Öffnet dein E-Mail-Programm mit vorausgefüllter Nachricht
                 </p>
               </form>
             ) : (
@@ -170,10 +189,11 @@ export default function ContactPage() {
                 <span className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent-soft text-accent">
                   <IconMail width={26} height={26} />
                 </span>
-                <h3 className="mt-6 font-display text-2xl font-medium">Fast geschafft!</h3>
+                <h3 className="mt-6 font-display text-2xl font-medium">Mailprogramm geöffnet</h3>
                 <p className="mt-3 max-w-xs text-ink-dim">
-                  Der Versand wird bald aktiviert. Bis dahin: Danke fürs
-                  Vorbeischauen — wir hören uns!
+                  Deine Nachricht liegt vorausgefüllt in deinem E-Mail-Programm.
+                  Klick dort auf Senden. Falls sich nichts geöffnet hat, schreib
+                  direkt an mail@xepter.de.
                 </p>
                 <button
                   onClick={() => setSent(false)}

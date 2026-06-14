@@ -13,7 +13,7 @@ export default function About() {
           left: '-10%',
           top: '20%',
           background:
-            'radial-gradient(circle, rgba(138,63,240,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.16), transparent 60%)',
         }}
       />
 
@@ -22,7 +22,9 @@ export default function About() {
           {/* Left — narrative */}
           <div>
             <SectionMark
-              word="Person"
+              word="Über mich"
+              wordAccent
+              rule={false}
               lines={['Ingenieurs­denken trifft auf', 'gestalterischen Anspruch.']}
             />
 
@@ -36,20 +38,20 @@ export default function About() {
               <p>
                 Ich bin <span className="text-ink">Patrick</span>, 27, und
                 studiere Wirtschaftsingenieurwesen. Seit ich ein Kind bin,
-                programmiere ich leidenschaftlich gerne: aus Neugier, aus
-                Spieltrieb und aus dem Anspruch, Dinge spürbar besser zu machen.
+                programmiere ich leidenschaftlich gerne.
               </p>
               <p>
                 Die letzten vier Jahre habe ich als{' '}
                 <span className="text-ink">Ausbilder für Informatiker</span> bei
                 der <span className="text-ink">DRÄXLMAIER Group</span>{' '}
-                gearbeitet — und dabei gelernt, dass sauberer Code und klare
-                Vermittlung Hand in Hand gehen. Ingenieurs­denken, technische
-                Tiefe und ein feines Gespür für Ästhetik fließen heute in jedes
-                Projekt, das meinen Namen trägt.
+                gearbeitet und dabei gelernt, dass sauberer Code und klare
+                Vermittlung Hand in Hand gehen. Durch meine Erfahrungen aus dem
+                Studium verbinde ich Ingenieurwissenschaften mit Informatikskills
+                und einem feinen Gespür für Ästhetik, das in jedes Projekt
+                fließt, das meinen Namen trägt.
               </p>
-              <p className="text-ink">
-                Das Ergebnis: Websites, die nicht nur gut aussehen, sondern
+              <p className="font-medium text-spark">
+                So entstehen Websites, die nicht nur gut aussehen, sondern
                 durchdacht funktionieren.
               </p>
             </motion.div>
@@ -64,7 +66,7 @@ export default function About() {
           >
             <motion.div
               variants={fadeUp}
-              className="group relative overflow-hidden rounded-3xl border border-line-2 bg-card"
+              className="group relative mx-auto max-w-[260px] overflow-hidden rounded-3xl border border-line-2 bg-card sm:max-w-[300px] lg:mx-0 lg:max-w-none"
             >
               <div
                 className="glow z-10"
@@ -74,24 +76,21 @@ export default function About() {
                   right: '-20%',
                   top: '-30%',
                   background:
-                    'radial-gradient(circle, rgba(138,63,240,0.25), transparent 65%)',
+                    'radial-gradient(circle, rgba(191,90,242,0.25), transparent 65%)',
                 }}
               />
               <img
-                src="/xepter-portrait.jpg"
-                alt="Patrick — Freelance Webentwickler (Xepter)"
-                width={675}
-                height={900}
+                src="/ich.jpg"
+                alt="Patrick, Freelance Webentwickler (Xepter)"
+                width={884}
+                height={1400}
                 loading="lazy"
                 className="aspect-[3/4] w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base via-base/15 to-transparent" />
               <div className="absolute bottom-0 left-0 z-10 p-6">
                 <p className="font-display text-2xl font-semibold leading-none text-ink">
-                  Xepter
-                </p>
-                <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
-                  Webentwicklung &amp; Design
+                  Patrick
                 </p>
               </div>
             </motion.div>

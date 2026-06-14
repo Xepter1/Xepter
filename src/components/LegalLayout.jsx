@@ -19,7 +19,7 @@ export default function LegalLayout({ eyebrow, title, intro, children }) {
           right: '-12%',
           top: '-8%',
           background:
-            'radial-gradient(circle, rgba(138,63,240,0.16), transparent 60%)',
+            'radial-gradient(circle, rgba(139,61,240,0.16), transparent 60%)',
         }}
       />
 

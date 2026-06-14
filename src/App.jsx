@@ -3,12 +3,16 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from 'react-router-dom'
 import { motion, useScroll, useSpring, MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
+import AussergewoehnlichesPage from './pages/AussergewoehnlichesPage'
+import SelbstVerwaltenPage from './pages/SelbstVerwaltenPage'
+import UeberMichPage from './pages/UeberMichPage'
 import ContactPage from './pages/ContactPage'
 import ImpressumPage from './pages/ImpressumPage'
 import DatenschutzPage from './pages/DatenschutzPage'
@@ -60,6 +64,11 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/aussergewoehnliches" element={<AussergewoehnlichesPage />} />
+          <Route path="/selbst-verwalten" element={<SelbstVerwaltenPage />} />
+          {/* alte Route umleiten (war live) */}
+          <Route path="/leistungen" element={<Navigate to="/aussergewoehnliches" replace />} />
+          <Route path="/ueber-mich" element={<UeberMichPage />} />
           <Route path="/kontakt" element={<ContactPage />} />
           <Route path="/impressum" element={<ImpressumPage />} />
           <Route path="/datenschutz" element={<DatenschutzPage />} />
