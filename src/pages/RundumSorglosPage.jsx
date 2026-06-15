@@ -68,11 +68,11 @@ function MotifBackups() {
 
 function MotifDomain() {
   return (
-    <svg width="116" height="76" viewBox="0 0 116 76" aria-hidden="true">
-      <rect x="6" y="24" width="104" height="28" rx="14" fill="#15111d" stroke="#7c3aed" strokeOpacity="0.45" />
+    <svg width="150" height="76" viewBox="0 0 150 76" aria-hidden="true">
+      <rect x="6" y="24" width="138" height="28" rx="14" fill="#15111d" stroke="#7c3aed" strokeOpacity="0.45" />
       <path d="M22 38 a4 4 0 0 1 8 0" fill="none" stroke="#34d17b" strokeWidth="2" />
       <rect x="21" y="37.5" width="10" height="7" rx="1.6" fill="#34d17b" />
-      <text x="40" y="42.5" fontFamily="ui-monospace, monospace" fontSize="12.5" fill="#e0abff">deinefirma.de</text>
+      <text x="40" y="42.5" fontFamily="ui-monospace, monospace" fontSize="11.5" fill="#e0abff">deinefirma.de</text>
     </svg>
   )
 }
@@ -158,9 +158,10 @@ export default function RundumSorglosPage() {
             <SectionMark
               word="Rundum-sorglos"
               wordAccent
+              rule={false}
               lines={[
-                'Deine Website —',
-                { text: 'verschlossen', accent: true, suffix: '.' },
+                'Maximale Sicherheit',
+                { text: 'für dich', accent: true, suffix: '.' },
               ]}
             />
 
@@ -198,7 +199,7 @@ export default function RundumSorglosPage() {
               word="Dein Server"
               wordAccent
               rule={false}
-              lines={['Steht in Nürnberg.', { text: 'Läuft', accent: true, suffix: '.' }]}
+              lines={['Meine Server', 'stehen in', { text: 'Nürnberg', accent: true, suffix: '.' }]}
             />
             <motion.div
               variants={stagger}
@@ -223,22 +224,14 @@ export default function RundumSorglosPage() {
             <ServerScene />
           </div>
         </div>
-      </section>
 
-      {/* Sicherheit — Vertrauens-Punkte mit eigenen Mini-Grafiken */}
-      <section className="relative z-10 mx-auto mt-28 max-w-7xl px-5 sm:mt-36 sm:px-8">
-        <SectionMark
-          word="Sicherheit"
-          wordAccent
-          rule={false}
-          lines={['Sicher ist', { text: 'sicher', accent: true, suffix: '.' }]}
-        />
+        {/* Die drei Sicherheits-Punkte direkt unter dem Server */}
         <motion.div
           variants={stagger}
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6"
+          className="mt-16 grid grid-cols-1 gap-5 sm:mt-20 sm:grid-cols-3 sm:gap-6"
         >
           {SICHERHEIT.map((p) => (
             <PillarCard key={p.title} {...p} />
@@ -249,10 +242,10 @@ export default function RundumSorglosPage() {
       {/* Domain & E-Mail */}
       <section className="relative z-10 mx-auto mt-28 max-w-7xl px-5 pb-4 sm:mt-36 sm:px-8">
         <SectionMark
-          word="Domain & E-Mail"
+          word="Inklusive"
           wordAccent
           rule={false}
-          lines={['Und der Rest?', { text: 'Mach ich', accent: true, suffix: '.' }]}
+          lines={['Eigene Domain', { text: 'und E-Mail', accent: true, suffix: '.' }]}
         />
         <motion.div
           variants={stagger}
