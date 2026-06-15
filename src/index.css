@@ -1073,8 +1073,8 @@ section[id] {
 
 /* Datenleitungen — wandernde Licht-Streaks entlang feiner Linien */
 .dataflow {
-  stroke-dasharray: 28 148;
-  animation: dataFlow 3.2s linear infinite;
+  stroke-dasharray: 26 150;
+  animation: dataFlow 2.1s linear infinite;
 }
 @keyframes dataFlow { to { stroke-dashoffset: -352; } }
 

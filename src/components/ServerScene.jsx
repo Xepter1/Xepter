@@ -21,12 +21,13 @@ const BARS = [
   [143, 9], [149, 7], [155, 12], [161, 6], [167, 8],
 ]
 
-// Datenleitungen (Bézier-Pfade) + Pulse-Delays
+// Datenleitungen (Bézier-Pfade) + Pulse-Delays — spannen breiter als der Server,
+// damit sie seitlich sichtbar in ihn hinein-/herauslaufen.
 const FLOWS = [
-  { d: 'M-20 120 C 90 90, 150 150, 440 130', delay: '0s' },
-  { d: 'M-20 200 C 120 190, 160 220, 440 205', delay: '1.1s' },
-  { d: 'M-20 280 C 90 300, 170 250, 440 285', delay: '0.5s' },
-  { d: 'M-20 330 C 130 340, 150 300, 440 330', delay: '1.8s' },
+  { d: 'M-30 78 C 110 56, 150 104, 450 86', delay: '0s' },
+  { d: 'M-30 150 C 120 140, 170 168, 450 152', delay: '0.9s' },
+  { d: 'M-30 212 C 100 232, 180 186, 450 214', delay: '0.45s' },
+  { d: 'M-30 258 C 140 268, 150 224, 450 256', delay: '1.5s' },
 ]
 
 export default function ServerScene() {
@@ -34,28 +35,36 @@ export default function ServerScene() {
     <div className="relative mx-auto w-full max-w-[420px]">
       {/* Datenfluss-Hintergrund */}
       <svg
-        viewBox="0 0 420 420"
+        viewBox="0 0 420 300"
         className="absolute inset-0 h-full w-full"
-        preserveAspectRatio="xMidYMid meet"
+        preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
         <defs>
+          {/* Glasfaser: an den Enden ausgeblendet */}
           <linearGradient id="dfFade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#a571f5" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#a571f5" stopOpacity="0.75" />
-            <stop offset="1" stopColor="#a571f5" stopOpacity="0" />
+            <stop offset="0" stopColor="#b98cf7" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#b98cf7" stopOpacity="0.95" />
+            <stop offset="1" stopColor="#b98cf7" stopOpacity="0" />
           </linearGradient>
+          {/* leuchtender Schweif der Datenpakete */}
+          <filter id="dfGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#c9a4f7" floodOpacity="0.9" />
+          </filter>
         </defs>
         {FLOWS.map((f, i) => (
           <g key={i}>
-            <path d={f.d} fill="none" stroke="url(#dfFade)" strokeOpacity="0.3" strokeWidth="1.5" />
+            {/* ruhende Faser */}
+            <path d={f.d} fill="none" stroke="url(#dfFade)" strokeOpacity="0.22" strokeWidth="1.4" />
+            {/* durchsausendes Datenpaket */}
             <path
               className="dataflow"
               d={f.d}
               fill="none"
               stroke="url(#dfFade)"
-              strokeWidth="3.2"
+              strokeWidth="3"
               strokeLinecap="round"
+              filter="url(#dfGlow)"
               style={{ animationDelay: f.delay }}
             />
           </g>
@@ -65,7 +74,7 @@ export default function ServerScene() {
       {/* Server */}
       <svg
         viewBox="0 0 360 364"
-        className="srv-float relative z-10 mx-auto block w-full max-w-[300px]"
+        className="relative z-10 mx-auto block w-full max-w-[300px]"
         role="img"
         aria-label="Ein Server in Nürnberg, der die Website rund um die Uhr betreibt"
       >
@@ -131,7 +140,7 @@ export default function ServerScene() {
           deinefirma.de
         </text>
         <circle className="srv-online" cx="117" cy="76" r="3.6" fill="#34d17b" filter="url(#srvG)" />
-        <text x="128" y="80" fontFamily="ui-monospace, monospace" fontSize="10.5" fill="#9a8fb0">
+        <text x="128" y="80" fontFamily="ui-monospace, monospace" fontSize="10.5" fill="#c3b8d6">
           online · Nürnberg, DE
         </text>
         <g fill="#9a5cf0">
