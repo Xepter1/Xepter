@@ -1,9 +1,9 @@
 services:
   xepter:
     build: .
-    image: xepter-portfolio-lab
-    container_name: xepter-portfolio-lab
+    image: xepter-portfolio
+    container_name: xepter-portfolio
     restart: unless-stopped
     ports:
-      # host:container — Lab läuft auf 8089 (Prod belegt 8088)
-      - "8089:80"
+      # host:container — linke Zahl bei Bedarf ändern, falls Port belegt ist
+      - "8088:80"
