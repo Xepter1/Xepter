@@ -79,9 +79,27 @@ export default function GearScene({
     const bitmaps = new Array(frameCount).fill(null)
     let alive = true
     let lastDrawn = -1
-    // Frame am Sektions-Anfang (progress 0) je nach Laufrichtung
-    let current = reverse ? frameCount - 1 : 0
     let rafId = 0
+
+    // Roh-Fortschritt 0..1 -> echter Frame-Index. Math.round = es wird IMMER ein
+    // scharfes Originalbild gezeigt (kein Blending/Ghosting), Laufrichtung & Clamping
+    // wie gehabt.
+    const toIndex = (p) => {
+      const raw = Math.round(p * (frameCount - 1))
+      return Math.max(0, Math.min(frameCount - 1, reverse ? frameCount - 1 - raw : raw))
+    }
+
+    // Geglätteter Scrub: eine durchgehende rAF-Schleife zieht `displayed` weich dem
+    // Scroll-Ziel hinterher und zeichnet pro Display-Frame höchstens ein echtes Bild.
+    // Das entkoppelt die Anzeige von der stoßweisen Event-Auslieferung (Touch- und
+    // Touchpad-Schwung liefern Scroll-Events unregelmäßig, nicht sauber pro Frame) und
+    // vom harten Math.round-Rasten beim langsamen Ziehen.
+    const TAU = 0.05 // s — Zeitkonstante: kleiner = enger am Finger, größer = mehr Glide
+    const EPS = 0.5 / (frameCount - 1) // halber Frame in Fortschritts-Einheiten
+    let displayed = scrollYProgress.get()
+    let current = toIndex(displayed)
+    let lastT = 0
+    let running = false
 
     const draw = (idx) => {
       // nearest loaded frame, preferring the requested one
@@ -105,13 +123,41 @@ export default function GearScene({
       }
     }
 
-    // coalesce draws to one per display frame
-    const scheduleDraw = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
+    // Eine Schleife pro Display-Frame: liest den aktuellen Scroll-Stand, zieht `displayed`
+    // weich nach, zeichnet bei Frame-Wechsel und legt sich schlafen, sobald das Ziel
+    // erreicht ist (kein Dauer-rAF -> keine unnötige Akku-Last).
+    const tick = (now) => {
+      if (!running) return
+      if (!lastT) lastT = now - 16 // erster dt ~ ein Frame statt 0
+      let dt = (now - lastT) / 1000
+      lastT = now
+      if (dt > 0.1) dt = 0.1 // nach Tab-Wechsel/Pause kein Riesensprung
+
+      const target = scrollYProgress.get() // frischer Scroll-Stand, ganz ohne Event
+      const alpha = 1 - Math.exp(-dt / TAU) // frame-raten-unabhängige Glättung (60/120 Hz gleich)
+      displayed += (target - displayed) * alpha
+
+      const atTarget = Math.abs(target - displayed) < EPS
+      if (atTarget) displayed = target
+
+      current = toIndex(displayed)
+      if (current !== lastDrawn) draw(current)
+
+      // Parken, wenn nichts mehr zu animieren ist und der echte Ziel-Frame steht.
+      // on('change') weckt die Schleife beim nächsten Scrollen wieder.
+      if (atTarget && current === toIndex(target)) {
+        running = false
         rafId = 0
-        if (current !== lastDrawn) draw(current)
-      })
+        return
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+
+    const startLoop = () => {
+      if (running) return
+      running = true
+      lastT = 0
+      rafId = requestAnimationFrame(tick)
     }
 
     const load = async (i) => {
@@ -172,14 +218,13 @@ export default function GearScene({
     )
     io.observe(wrap)
 
-    const unsub = scrollYProgress.on('change', (v) => {
-      const raw = Math.round(v * (frameCount - 1))
-      current = Math.max(0, Math.min(frameCount - 1, reverse ? frameCount - 1 - raw : raw))
-      scheduleDraw()
-    })
+    // Jede Scroll-Bewegung weckt die Schleife; sie läuft weiter, bis displayed das Ziel
+    // erreicht hat (und damit auch die Nachlauf-Phase nach dem Loslassen abdeckt).
+    const unsub = scrollYProgress.on('change', startLoop)
 
     return () => {
       alive = false
+      running = false
       unsub()
       ro.disconnect()
       io.disconnect()
