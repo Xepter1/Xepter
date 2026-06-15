@@ -1034,9 +1034,55 @@ section[id] {
 }
 
 /* ============================================================
+   Server-Szene (Rundum-sorglos) — Status-LEDs, Traffic, Datenfluss
+   ============================================================ */
+.srv-float {
+  animation: srvFloat 7s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes srvFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* Status-LEDs: ruhiges Dauerleuchten mit gelegentlichem kurzen Blinzeln */
+.srv-led { animation: srvLed 4.5s steps(1, end) infinite; }
+@keyframes srvLed {
+  0%, 91%, 100% { opacity: 1; }
+  95% { opacity: 0.25; }
+}
+
+/* "online"-Punkt atmet langsam (wie .live-dot) */
+.srv-online { animation: srvBreathe 2.4s ease-in-out infinite; }
+@keyframes srvBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* Traffic-Balken im Display */
+.srv-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: srvBar 1.8s ease-in-out infinite;
+}
+@keyframes srvBar {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+
+/* Datenleitungen — wandernde Licht-Streaks entlang feiner Linien */
+.dataflow {
+  stroke-dasharray: 28 148;
+  animation: dataFlow 3.2s linear infinite;
+}
+@keyframes dataFlow { to { stroke-dashoffset: -352; } }
+
+/* ============================================================
    Reduced motion
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
+  .srv-float, .srv-led, .srv-online, .srv-bar, .dataflow { animation: none; }
   html {
     scroll-behavior: auto;
   }
