@@ -89,3 +89,39 @@ export const IconFacebook = (p) => (
     <path d="M8.5 13.5h5" />
   </svg>
 )
+
+export const IconServer = (p) => (
+  <svg {...base} {...p}>
+    <rect x="3" y="4" width="18" height="7" rx="2" />
+    <rect x="3" y="13" width="18" height="7" rx="2" />
+    <path d="M7 7.5h.01M7 16.5h.01" />
+  </svg>
+)
+
+export const IconGlobe = (p) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18M12 3c2.6 2.6 2.6 15.4 0 18M12 3c-2.6 2.6-2.6 15.4 0 18" />
+  </svg>
+)
+
+export const IconShieldCheck = (p) => (
+  <svg {...base} {...p}>
+    <path d="M12 3 5 6v5c0 4.5 3 7.6 7 9 4-1.4 7-4.5 7-9V6l-7-3Z" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+)
+
+export const IconRefresh = (p) => (
+  <svg {...base} {...p}>
+    <path d="M21 8A9 9 0 0 0 6 5.3L3 8M3 3v5h5" />
+    <path d="M3 16a9 9 0 0 0 15 2.7L21 16M21 21v-5h-5" />
+  </svg>
+)
+
+export const IconLock = (p) => (
+  <svg {...base} {...p}>
+    <rect x="5" y="11" width="14" height="9" rx="2" />
+    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+)

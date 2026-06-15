@@ -21,6 +21,61 @@ function Win({ glow, children }) {
   )
 }
 
+// Statisches Mini-Schloss (geschlossen) — Vorschau auf die Rundum-sorglos-/Sicherheits-
+// Szene. Gleiche Form wie SecurityLock, nur ohne Animation.
+function LockMini() {
+  return (
+    <svg
+      viewBox="0 0 200 248"
+      role="img"
+      aria-label="Geschlossenes Schloss"
+      className="h-[80%] w-auto [filter:drop-shadow(0_10px_28px_rgba(139,61,240,0.3))]"
+    >
+      <defs>
+        <linearGradient id="lockMiniGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#8B3DF0" />
+          <stop offset="1" stopColor="#BF5AF2" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M74 124 L74 96 A26 26 0 0 1 126 96 L126 124"
+        fill="none"
+        stroke="url(#lockMiniGrad)"
+        strokeWidth="15"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <rect x="44" y="116" width="112" height="104" rx="26" fill="#0b0d13" />
+      <rect
+        x="44"
+        y="116"
+        width="112"
+        height="104"
+        rx="26"
+        fill="none"
+        stroke="url(#lockMiniGrad)"
+        strokeWidth="5"
+      />
+      <path
+        d="M80.5 147 L100 169.5 L119.5 147"
+        fill="none"
+        stroke="url(#lockMiniGrad)"
+        strokeWidth="9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M80.5 192 L100 169.5 L119.5 192"
+        fill="none"
+        stroke="url(#lockMiniGrad)"
+        strokeWidth="9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 // Kompaktes CMS-Admin-Mockup (abstrahiert, im Stil des CmsShowcase).
 function CmsMini() {
   return (
@@ -88,6 +143,17 @@ const CARDS = [
     },
     media: <CmsMini />,
   },
+  {
+    to: '/rundum-sorglos',
+    eyebrow: 'Rundum-sorglos',
+    title: 'Willst du dich um nichts kümmern müssen?',
+    glow: {
+      right: '-12%',
+      bottom: '-25%',
+      background: 'radial-gradient(circle, rgba(139,61,240,0.26), transparent 60%)',
+    },
+    media: <LockMini />,
+  },
 ]
 
 function Arrow() {
@@ -123,7 +189,7 @@ export default function HomeTeasers() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8"
+          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
         >
           {CARDS.map((c) => (
             <motion.div key={c.to} variants={fadeUp}>

@@ -11,6 +11,7 @@ const NAV = [
   { label: 'Projekte', id: 'projekte' },
   { label: 'Außergewöhnliches', to: '/aussergewoehnliches' },
   { label: 'Selbst verwalten', to: '/selbst-verwalten' },
+  { label: 'Rundum-sorglos', to: '/rundum-sorglos' },
   { label: 'Über mich', to: '/ueber-mich' },
 ]
 
@@ -88,8 +89,8 @@ export default function Navbar() {
             <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_12px_var(--color-accent)] transition-all duration-500 group-hover:scale-150 group-hover:bg-spark group-hover:shadow-[0_0_16px_var(--color-spark)]" />
           </Link>
 
-          {/* Desktop links (erst ab lg, weil 4 längere Labels bei md quetschen) */}
-          <div className="hidden items-center gap-1 lg:flex">
+          {/* Desktop links (erst ab xl, weil 5 längere Labels bei lg quetschen) */}
+          <div className="hidden items-center gap-1 xl:flex">
             {NAV.map((l) =>
               l.to ? (
                 <Link
@@ -127,7 +128,7 @@ export default function Navbar() {
           {/* Mobile toggle */}
           <button
             onClick={() => setMenu((m) => !m)}
-            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-line-2 lg:hidden"
+            className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-line-2 xl:hidden"
             aria-label={menu ? 'Menü schließen' : 'Menü öffnen'}
             aria-expanded={menu}
           >
@@ -160,7 +161,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 flex flex-col justify-center px-8 lg:hidden mobile-menu"
+            className="fixed inset-0 z-40 flex flex-col justify-center px-8 xl:hidden mobile-menu"
           >
             <div className="flex flex-col gap-2">
               {NAV.map((l, i) =>
