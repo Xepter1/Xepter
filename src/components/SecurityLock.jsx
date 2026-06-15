@@ -4,10 +4,13 @@ import { motion, useAnimate, useInView, useReducedMotion } from 'framer-motion'
 /**
  * SecurityLock — ein Vorhängeschloss mit dem echten Xepter-Logo als Emblem.
  *
- * Reines SVG mit dem Marken-Lila — kein Frame-Export. Der Korpus (dunkle Kachel im
- * Favicon-Stil) und das Logo stehen von Anfang an; das Einzige, was sich bewegt, ist
- * der Bügel: er fällt herein und rastet sanft per Feder ein („klick"). Kein Neon-Glow,
+ * Reines SVG mit dem Marken-Lila — kein Frame-Export. Der Korpus (dunkle, dezent
+ * gerundete Kachel) und das Logo stehen von Anfang an; das Einzige, was sich bewegt,
+ * ist der Bügel: er fällt herein und rastet per Feder ein („klick"). Kein Neon-Glow,
  * kein End-Blitz — nur ein weicher, dunkler Schatten für Tiefe.
+ *
+ * Die viewBox lässt oben genug Luft, damit der angehobene (offene) Bügel nicht
+ * abgeschnitten wird.
  *
  * Spielt automatisch beim Reinscrollen (einmal), Klick spielt erneut ab.
  * Reduced-Motion: rendert direkt das geschlossene Schloss.
@@ -17,7 +20,7 @@ import { motion, useAnimate, useInView, useReducedMotion } from 'framer-motion'
  */
 function XepterMark() {
   return (
-    <g transform="translate(124,206) scale(0.75) translate(-56.86,-64.42)">
+    <g transform="translate(124,208) scale(0.74) translate(-56.86,-64.42)">
       <path
         d="M38.39,70.69h26.77l6.68,5.08-36.56,53.07H0s38.39-58.15,38.39-58.15Z"
         fill="#e0abff"
@@ -46,7 +49,7 @@ export default function SecurityLock({ className = '' }) {
 
   const play = useCallback(() => {
     animate([
-      ['.sl-shackle', { y: -26 }, { duration: 0 }],
+      ['.sl-shackle', { y: -24 }, { duration: 0 }],
       ['.sl-body', { scale: 1 }, { duration: 0 }],
       ['.sl-shackle', { y: 0 }, { type: 'spring', stiffness: 300, damping: 17, at: 0.45 }],
       ['.sl-body', { scale: [1, 0.986, 1] }, { duration: 0.34, ease: 'easeOut', at: 0.95 }],
@@ -72,7 +75,7 @@ export default function SecurityLock({ className = '' }) {
     >
       <svg
         ref={scope}
-        viewBox="0 62 240 250"
+        viewBox="0 34 240 288"
         role="img"
         aria-label="Ein Schloss mit dem Xepter-Logo, dessen Bügel sich schließt"
         className="mx-auto block w-full max-w-[300px]"
@@ -94,12 +97,12 @@ export default function SecurityLock({ className = '' }) {
         {/* Bügel — liegt hinter dem Korpus, damit die Beine verschwinden */}
         <motion.path
           className="sl-shackle"
-          d="M95,152 L95,108 A29,29 0 0 1 153,108 L153,152"
+          d="M97,150 L97,104 A27,27 0 0 1 151,104 L151,150"
           fill="none"
           stroke="url(#slShackle)"
-          strokeWidth="15"
+          strokeWidth="18"
           strokeLinecap="round"
-          initial={{ y: reduce ? 0 : -26 }}
+          initial={{ y: reduce ? 0 : -24 }}
         />
 
         {/* Korpus + Logo — rasten beim Schließen mit einem dezenten „thunk" ein */}
@@ -110,27 +113,20 @@ export default function SecurityLock({ className = '' }) {
         >
           <g filter="url(#slShadow)">
             <rect
-              x="50"
-              y="142"
-              width="148"
-              height="128"
-              rx="40"
+              x="52"
+              y="138"
+              width="144"
+              height="140"
+              rx="26"
               fill="url(#slBody)"
               stroke="#7c3aed"
-              strokeOpacity="0.55"
+              strokeOpacity="0.5"
               strokeWidth="1.5"
             />
-            <rect x="50" y="142" width="148" height="2.4" rx="1.2" fill="#ffffff" opacity="0.07" />
           </g>
           <XepterMark />
         </motion.g>
       </svg>
-
-      {!reduce && (
-        <span className="mt-6 block text-center font-mono text-[0.7rem] uppercase tracking-[0.3em] text-ink-faint transition-colors duration-300 group-hover:text-spark">
-          Klick zum erneut Abspielen
-        </span>
-      )}
     </button>
   )
 }

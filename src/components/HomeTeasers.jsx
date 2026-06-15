@@ -26,10 +26,10 @@ function Win({ glow, children }) {
 function LockMini() {
   return (
     <svg
-      viewBox="0 62 240 250"
+      viewBox="0 34 240 288"
       role="img"
       aria-label="Schloss mit Xepter-Logo"
-      className="h-[88%] w-auto"
+      className="h-[94%] w-auto"
     >
       <defs>
         <linearGradient id="lmBody" x1="0" y1="0" x2="0" y2="1">
@@ -45,17 +45,16 @@ function LockMini() {
         </filter>
       </defs>
       <path
-        d="M95,152 L95,108 A29,29 0 0 1 153,108 L153,152"
+        d="M97,150 L97,104 A27,27 0 0 1 151,104 L151,150"
         fill="none"
         stroke="url(#lmShackle)"
-        strokeWidth="15"
+        strokeWidth="18"
         strokeLinecap="round"
       />
       <g filter="url(#lmShadow)">
-        <rect x="50" y="142" width="148" height="128" rx="40" fill="url(#lmBody)" stroke="#7c3aed" strokeOpacity="0.55" strokeWidth="1.5" />
-        <rect x="50" y="142" width="148" height="2.4" rx="1.2" fill="#ffffff" opacity="0.07" />
+        <rect x="52" y="138" width="144" height="140" rx="26" fill="url(#lmBody)" stroke="#7c3aed" strokeOpacity="0.5" strokeWidth="1.5" />
       </g>
-      <g transform="translate(124,206) scale(0.75) translate(-56.86,-64.42)">
+      <g transform="translate(124,208) scale(0.74) translate(-56.86,-64.42)">
         <path d="M38.39,70.69h26.77l6.68,5.08-36.56,53.07H0s38.39-58.15,38.39-58.15Z" fill="#e0abff" />
         <path d="M38.25,4.76l18.61,29.78L78.44,0h35.28l-38.39,58.15h-36.94L0,0h29.66c3.49,0,6.74,1.8,8.59,4.76Z" fill="#e0abff" />
         <polygon points="65.16 70.69 79.68 128.83 93.08 113.12 112.8 107.04 65.16 70.69" fill="#7a2bd6" />
