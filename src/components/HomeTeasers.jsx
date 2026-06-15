@@ -21,6 +21,49 @@ function Win({ glow, children }) {
   )
 }
 
+// Statisches Mini-Schloss (geschlossen) — Vorschau auf die Rundum-sorglos-Szene.
+// Gleicher Look wie SecurityLock (dunkle Kachel + echtes Logo), nur ohne Animation.
+function LockMini() {
+  return (
+    <svg
+      viewBox="0 34 240 288"
+      role="img"
+      aria-label="Schloss mit Xepter-Logo"
+      className="h-[94%] w-auto"
+    >
+      <defs>
+        <linearGradient id="lmBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#1a1426" />
+          <stop offset="1" stopColor="#0a0810" />
+        </linearGradient>
+        <linearGradient id="lmShackle" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#caa6f7" />
+          <stop offset="1" stopColor="#7c3aed" />
+        </linearGradient>
+        <filter id="lmShadow" x="-40%" y="-30%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="14" stdDeviation="13" floodColor="#000000" floodOpacity="0.55" />
+        </filter>
+      </defs>
+      <path
+        d="M97,150 L97,104 A27,27 0 0 1 151,104 L151,150"
+        fill="none"
+        stroke="url(#lmShackle)"
+        strokeWidth="18"
+        strokeLinecap="round"
+      />
+      <g filter="url(#lmShadow)">
+        <rect x="52" y="138" width="144" height="140" rx="26" fill="url(#lmBody)" stroke="#7c3aed" strokeOpacity="0.5" strokeWidth="1.5" />
+      </g>
+      <g transform="translate(124,208) scale(0.74) translate(-56.86,-64.42)">
+        <path d="M38.39,70.69h26.77l6.68,5.08-36.56,53.07H0s38.39-58.15,38.39-58.15Z" fill="#e0abff" />
+        <path d="M38.25,4.76l18.61,29.78L78.44,0h35.28l-38.39,58.15h-36.94L0,0h29.66c3.49,0,6.74,1.8,8.59,4.76Z" fill="#e0abff" />
+        <polygon points="65.16 70.69 79.68 128.83 93.08 113.12 112.8 107.04 65.16 70.69" fill="#7a2bd6" />
+        <polygon points="79.73 51.49 36.79 55.73 38.39 58.15 75.33 58.15 79.73 51.49" fill="#7a2bd6" />
+      </g>
+    </svg>
+  )
+}
+
 // Kompaktes CMS-Admin-Mockup (abstrahiert, im Stil des CmsShowcase).
 function CmsMini() {
   return (
@@ -88,6 +131,17 @@ const CARDS = [
     },
     media: <CmsMini />,
   },
+  {
+    to: '/rundum-sorglos',
+    eyebrow: 'Rundum-sorglos',
+    title: 'Willst du dich um nichts kümmern müssen?',
+    glow: {
+      right: '-12%',
+      bottom: '-25%',
+      background: 'radial-gradient(circle, rgba(139,61,240,0.26), transparent 60%)',
+    },
+    media: <LockMini />,
+  },
 ]
 
 function Arrow() {
@@ -123,7 +177,7 @@ export default function HomeTeasers() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8"
+          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
         >
           {CARDS.map((c) => (
             <motion.div key={c.to} variants={fadeUp}>

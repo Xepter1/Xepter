@@ -63,6 +63,12 @@ export default function Footer() {
               Selbst verwalten
             </Link>
             <Link
+              to="/rundum-sorglos"
+              className="text-sm text-ink-faint transition-colors hover:text-ink"
+            >
+              Rundum-sorglos
+            </Link>
+            <Link
               to="/ueber-mich"
               className="text-sm text-ink-faint transition-colors hover:text-ink"
             >
