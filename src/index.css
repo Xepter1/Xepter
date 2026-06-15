@@ -1078,11 +1078,22 @@ section[id] {
 }
 @keyframes dataFlow { to { stroke-dashoffset: -352; } }
 
+/* Knoten-„Ping" (Radar-Ring, der nach außen läuft und verblasst) */
+.node-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nodePing 3s ease-out infinite;
+}
+@keyframes nodePing {
+  0% { transform: scale(0.4); opacity: 0.55; }
+  80%, 100% { transform: scale(1.7); opacity: 0; }
+}
+
 /* ============================================================
    Reduced motion
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .srv-float, .srv-led, .srv-online, .srv-bar, .dataflow { animation: none; }
+  .srv-float, .srv-led, .srv-online, .srv-bar, .dataflow, .node-ping { animation: none; }
   html {
     scroll-behavior: auto;
   }

@@ -3,6 +3,7 @@ import { fadeUp, stagger, inView } from '../lib/anim'
 import SectionMark from '../components/SectionMark'
 import SecurityLock from '../components/SecurityLock'
 import ServerScene from '../components/ServerScene'
+import InfraScene from '../components/InfraScene'
 import ContactCTA from '../components/ContactCTA'
 
 /* ── Eigene Mini-Grafiken pro Karte (kein Standard-Icon) ───────────────── */
@@ -189,40 +190,42 @@ export default function RundumSorglosPage() {
         </div>
       </section>
 
-      {/* Dein Server — das Signature-Visual */}
+      {/* Dein Server — die Infrastruktur-Bühne */}
       <section className="relative z-10 mx-auto mt-28 max-w-7xl px-5 sm:mt-36 sm:px-8">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          {/* Mobil: Text zuerst, Server darunter. Desktop: Server links, Text rechts. */}
-          <div className="order-1 lg:order-2">
-            <SectionMark
-              word="Dein Server"
-              wordAccent
-              rule={false}
-              lines={['Steht in Nürnberg.', { text: 'Läuft', accent: true, suffix: '.' }]}
-            />
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={inView}
-              className="mt-9"
-            >
-              <motion.p
-                variants={fadeUp}
-                className="max-w-md text-lg leading-relaxed text-ink-dim"
-              >
-                Deine Website lebt auf einem Server in einem deutschen
-                Rechenzentrum — <span className="text-ink">rund um die Uhr</span>{' '}
-                überwacht und betreut. Du merkst davon nichts. Genau so soll es
-                sein.
-              </motion.p>
-            </motion.div>
-          </div>
+        <SectionMark
+          word="Dein Server"
+          wordAccent
+          rule={false}
+          lines={['Steht in Nürnberg.', { text: 'Läuft', accent: true, suffix: '.' }]}
+        />
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+          className="mt-9 max-w-xl text-lg leading-relaxed text-ink-dim"
+        >
+          Deine Website lebt auf einem Server in einem deutschen Rechenzentrum —{' '}
+          <span className="text-ink">rund um die Uhr</span> überwacht und betreut.
+          Anfragen rein, Antworten raus, alles im grünen Bereich. Du merkst davon
+          nichts. Genau so soll es sein.
+        </motion.p>
 
-          <div className="order-2 lg:order-1">
+        {/* Desktop: volle Infrastruktur-Bühne · Mobil: kompakter Server */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+          className="mt-14"
+        >
+          <div className="hidden lg:block">
+            <InfraScene />
+          </div>
+          <div className="lg:hidden">
             <ServerScene />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Sicherheit — Vertrauens-Punkte mit eigenen Mini-Grafiken */}
