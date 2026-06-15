@@ -21,13 +21,17 @@ const BARS = [
   [143, 9], [149, 7], [155, 12], [161, 6], [167, 8],
 ]
 
-// Datenleitungen (Bézier-Pfade) + Pulse-Delays — spannen breiter als der Server,
-// damit sie seitlich sichtbar in ihn hinein-/herauslaufen.
-const FLOWS = [
-  { d: 'M-30 78 C 110 56, 150 104, 450 86', delay: '0s' },
-  { d: 'M-30 150 C 120 140, 170 168, 450 152', delay: '0.9s' },
-  { d: 'M-30 212 C 100 232, 180 186, 450 214', delay: '0.45s' },
-  { d: 'M-30 258 C 140 268, 150 224, 450 256', delay: '1.5s' },
+// Datenleitungen: links laufen Anfragen LILA in den Server, rechts laufen
+// Antworten GRÜN heraus. Pfade enden/starten hinter dem Server-Korpus.
+const FLOWS_IN = [
+  { d: 'M-30 80 C 50 60, 100 100, 150 96', delay: '0s' },
+  { d: 'M-30 150 C 50 146, 100 152, 150 150', delay: '0.8s' },
+  { d: 'M-30 220 C 45 236, 100 202, 150 206', delay: '0.4s' },
+]
+const FLOWS_OUT = [
+  { d: 'M270 96 C 320 100, 370 60, 450 78', delay: '0.5s' },
+  { d: 'M270 150 C 330 150, 390 150, 450 150', delay: '1.3s' },
+  { d: 'M270 206 C 320 200, 380 240, 450 222', delay: '0.2s' },
 ]
 
 export default function ServerScene() {
@@ -41,30 +45,52 @@ export default function ServerScene() {
         aria-hidden="true"
       >
         <defs>
-          {/* Glasfaser: an den Enden ausgeblendet */}
-          <linearGradient id="dfFade" x1="0" y1="0" x2="1" y2="0">
+          {/* Glasfaser, an den Enden ausgeblendet — lila (rein) & grün (raus) */}
+          <linearGradient id="dfLila" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stopColor="#b98cf7" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#b98cf7" stopOpacity="0.95" />
+            <stop offset="0.55" stopColor="#b98cf7" stopOpacity="0.95" />
             <stop offset="1" stopColor="#b98cf7" stopOpacity="0" />
           </linearGradient>
-          {/* leuchtender Schweif der Datenpakete */}
-          <filter id="dfGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <linearGradient id="dfGreen" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#34d17b" stopOpacity="0" />
+            <stop offset="0.45" stopColor="#34d17b" stopOpacity="0.95" />
+            <stop offset="1" stopColor="#34d17b" stopOpacity="0" />
+          </linearGradient>
+          <filter id="dfGlowV" x="-60%" y="-60%" width="220%" height="220%">
             <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#c9a4f7" floodOpacity="0.9" />
           </filter>
+          <filter id="dfGlowG" x="-60%" y="-60%" width="220%" height="220%">
+            <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor="#7dffb0" floodOpacity="0.9" />
+          </filter>
         </defs>
-        {FLOWS.map((f, i) => (
-          <g key={i}>
-            {/* ruhende Faser */}
-            <path d={f.d} fill="none" stroke="url(#dfFade)" strokeOpacity="0.22" strokeWidth="1.4" />
-            {/* durchsausendes Datenpaket */}
+        {/* lila: Anfragen laufen links in den Server */}
+        {FLOWS_IN.map((f, i) => (
+          <g key={`in${i}`}>
+            <path d={f.d} fill="none" stroke="url(#dfLila)" strokeOpacity="0.22" strokeWidth="1.4" />
             <path
               className="dataflow"
               d={f.d}
               fill="none"
-              stroke="url(#dfFade)"
+              stroke="url(#dfLila)"
               strokeWidth="3"
               strokeLinecap="round"
-              filter="url(#dfGlow)"
+              filter="url(#dfGlowV)"
+              style={{ animationDelay: f.delay }}
+            />
+          </g>
+        ))}
+        {/* grün: Antworten laufen rechts aus dem Server */}
+        {FLOWS_OUT.map((f, i) => (
+          <g key={`out${i}`}>
+            <path d={f.d} fill="none" stroke="url(#dfGreen)" strokeOpacity="0.22" strokeWidth="1.4" />
+            <path
+              className="dataflow"
+              d={f.d}
+              fill="none"
+              stroke="url(#dfGreen)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              filter="url(#dfGlowG)"
               style={{ animationDelay: f.delay }}
             />
           </g>
@@ -141,7 +167,7 @@ export default function ServerScene() {
         </text>
         <circle className="srv-online" cx="117" cy="76" r="3.6" fill="#34d17b" filter="url(#srvG)" />
         <text x="128" y="80" fontFamily="ui-monospace, monospace" fontSize="10.5" fill="#c3b8d6">
-          online · Nürnberg, DE
+          online · Nürnberg
         </text>
         <g fill="#9a5cf0">
           {BARS.map(([x, h], i) => (
