@@ -13,7 +13,6 @@ import Home from './pages/Home'
 import AussergewoehnlichesPage from './pages/AussergewoehnlichesPage'
 import SelbstVerwaltenPage from './pages/SelbstVerwaltenPage'
 import RundumSorglosPage from './pages/RundumSorglosPage'
-import SicherheitPage from './pages/SicherheitPage'
 import UeberMichPage from './pages/UeberMichPage'
 import ContactPage from './pages/ContactPage'
 import ImpressumPage from './pages/ImpressumPage'
@@ -69,7 +68,8 @@ export default function App() {
           <Route path="/aussergewoehnliches" element={<AussergewoehnlichesPage />} />
           <Route path="/selbst-verwalten" element={<SelbstVerwaltenPage />} />
           <Route path="/rundum-sorglos" element={<RundumSorglosPage />} />
-          <Route path="/sicherheit" element={<SicherheitPage />} />
+          {/* Sicherheit ist jetzt Teil von Rundum-sorglos (war kurz eine eigene Seite) */}
+          <Route path="/sicherheit" element={<Navigate to="/rundum-sorglos" replace />} />
           {/* alte Route umleiten (war live) */}
           <Route path="/leistungen" element={<Navigate to="/aussergewoehnliches" replace />} />
           <Route path="/ueber-mich" element={<UeberMichPage />} />

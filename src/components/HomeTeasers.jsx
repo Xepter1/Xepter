@@ -21,57 +21,46 @@ function Win({ glow, children }) {
   )
 }
 
-// Statisches Mini-Schloss (geschlossen) — Vorschau auf die Rundum-sorglos-/Sicherheits-
-// Szene. Gleiche Form wie SecurityLock, nur ohne Animation.
+// Statisches Mini-Schloss (geschlossen) — Vorschau auf die Rundum-sorglos-Szene.
+// Gleicher Look wie SecurityLock (dunkle Kachel + echtes Logo), nur ohne Animation.
 function LockMini() {
   return (
     <svg
-      viewBox="0 0 200 248"
+      viewBox="0 62 240 250"
       role="img"
-      aria-label="Geschlossenes Schloss"
-      className="h-[80%] w-auto [filter:drop-shadow(0_10px_28px_rgba(139,61,240,0.3))]"
+      aria-label="Schloss mit Xepter-Logo"
+      className="h-[88%] w-auto"
     >
       <defs>
-        <linearGradient id="lockMiniGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#8B3DF0" />
-          <stop offset="1" stopColor="#BF5AF2" />
+        <linearGradient id="lmBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#1a1426" />
+          <stop offset="1" stopColor="#0a0810" />
         </linearGradient>
+        <linearGradient id="lmShackle" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#caa6f7" />
+          <stop offset="1" stopColor="#7c3aed" />
+        </linearGradient>
+        <filter id="lmShadow" x="-40%" y="-30%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="14" stdDeviation="13" floodColor="#000000" floodOpacity="0.55" />
+        </filter>
       </defs>
       <path
-        d="M74 124 L74 96 A26 26 0 0 1 126 96 L126 124"
+        d="M95,152 L95,108 A29,29 0 0 1 153,108 L153,152"
         fill="none"
-        stroke="url(#lockMiniGrad)"
+        stroke="url(#lmShackle)"
         strokeWidth="15"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
-      <rect x="44" y="116" width="112" height="104" rx="26" fill="#0b0d13" />
-      <rect
-        x="44"
-        y="116"
-        width="112"
-        height="104"
-        rx="26"
-        fill="none"
-        stroke="url(#lockMiniGrad)"
-        strokeWidth="5"
-      />
-      <path
-        d="M80.5 147 L100 169.5 L119.5 147"
-        fill="none"
-        stroke="url(#lockMiniGrad)"
-        strokeWidth="9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M80.5 192 L100 169.5 L119.5 192"
-        fill="none"
-        stroke="url(#lockMiniGrad)"
-        strokeWidth="9"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <g filter="url(#lmShadow)">
+        <rect x="50" y="142" width="148" height="128" rx="40" fill="url(#lmBody)" stroke="#7c3aed" strokeOpacity="0.55" strokeWidth="1.5" />
+        <rect x="50" y="142" width="148" height="2.4" rx="1.2" fill="#ffffff" opacity="0.07" />
+      </g>
+      <g transform="translate(124,206) scale(0.75) translate(-56.86,-64.42)">
+        <path d="M38.39,70.69h26.77l6.68,5.08-36.56,53.07H0s38.39-58.15,38.39-58.15Z" fill="#e0abff" />
+        <path d="M38.25,4.76l18.61,29.78L78.44,0h35.28l-38.39,58.15h-36.94L0,0h29.66c3.49,0,6.74,1.8,8.59,4.76Z" fill="#e0abff" />
+        <polygon points="65.16 70.69 79.68 128.83 93.08 113.12 112.8 107.04 65.16 70.69" fill="#7a2bd6" />
+        <polygon points="79.73 51.49 36.79 55.73 38.39 58.15 75.33 58.15 79.73 51.49" fill="#7a2bd6" />
+      </g>
     </svg>
   )
 }

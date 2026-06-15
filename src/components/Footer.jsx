@@ -69,12 +69,6 @@ export default function Footer() {
               Rundum-sorglos
             </Link>
             <Link
-              to="/sicherheit"
-              className="text-sm text-ink-faint transition-colors hover:text-ink"
-            >
-              Sicherheit
-            </Link>
-            <Link
               to="/ueber-mich"
               className="text-sm text-ink-faint transition-colors hover:text-ink"
             >
