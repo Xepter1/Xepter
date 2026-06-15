@@ -78,7 +78,7 @@ export default function SecurityLock({ className = '' }) {
         viewBox="0 34 240 288"
         role="img"
         aria-label="Ein Schloss mit dem Xepter-Logo, dessen Bügel sich schließt"
-        className="mx-auto block w-full max-w-[300px]"
+        className="mx-auto block w-full max-w-[190px] sm:max-w-[240px] lg:max-w-[300px]"
       >
         <defs>
           <linearGradient id="slBody" x1="0" y1="0" x2="0" y2="1">

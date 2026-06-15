@@ -75,8 +75,9 @@ export default function RundumSorglosPage() {
 
       {/* Hero — Sicherheit ganz am Anfang, mit dem Schloss als Herzstück */}
       <section className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div className="order-2 lg:order-1">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          {/* Mobil: Text zuerst, Schloss darunter. Desktop: Text links, Schloss rechts. */}
+          <div className="order-1 lg:order-1">
             <SectionMark
               word="Rundum-sorglos"
               wordAccent
@@ -105,7 +106,7 @@ export default function RundumSorglosPage() {
             </motion.div>
           </div>
 
-          <div className="order-1 lg:order-2">
+          <div className="order-2 lg:order-2">
             <SecurityLock />
           </div>
         </div>
