@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import Projects from '../components/Projects'
 import Testimonials from '../components/Testimonials'
 import HomeTeasers from '../components/HomeTeasers'
+import Faq from '../components/Faq'
 import ContactCTA from '../components/ContactCTA'
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
       <Projects />
       <HomeTeasers />
       <Testimonials />
+      <Faq />
       <ContactCTA />
     </main>
   )
