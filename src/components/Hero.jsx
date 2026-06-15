@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { EASE } from '../lib/anim'
 import Macbook from './Macbook'
 import { IconArrowRight } from './Icons'
@@ -80,9 +81,12 @@ export default function Hero() {
             transition={{ duration: 0.9, delay: 0.95, ease: EASE }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <a href="#projekte" className="btn btn-spark-outline">
-              Projekte ansehen
+            <Link to="/kontakt" className="btn btn-spark-outline">
+              Kostenloses Erstgespräch
               <IconArrowRight width={19} height={19} />
+            </Link>
+            <a href="#projekte" className="btn btn-ghost">
+              Projekte ansehen
             </a>
           </motion.div>
         </div>

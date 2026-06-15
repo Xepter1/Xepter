@@ -2,6 +2,23 @@ import { motion } from 'framer-motion'
 import { fadeUp, stagger, inView } from '../lib/anim'
 import SectionMark from './SectionMark'
 
+// Konkret statt schmalzig: was der Kunde tatsächlich bekommt — ein fester
+// Ansprechpartner, der vom Erstgespräch bis nach dem Launch dranbleibt.
+const VALUE = [
+  {
+    title: 'Ein fester Ansprechpartner.',
+    body: 'Vom ersten Gespräch bis nach dem Launch redest du immer mit mir, nicht mit einem Support-Team.',
+  },
+  {
+    title: 'Unterstützung, die bleibt.',
+    body: 'Fragen, Updates oder kleine Änderungen? Ein kurzer Anruf genügt.',
+  },
+  {
+    title: 'Verlässliche Antwort.',
+    body: 'Ich melde mich innerhalb von 24 Stunden zurück.',
+  },
+]
+
 export default function About() {
   return (
     <section id="ueber" className="relative overflow-hidden py-28 sm:py-36">
@@ -54,6 +71,33 @@ export default function About() {
                 So entstehen Websites, die nicht nur gut aussehen, sondern
                 durchdacht funktionieren.
               </p>
+            </motion.div>
+
+            {/* Was du bekommst — konkrete Vertrauenspunkte, ruhige Listen-Optik */}
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={inView}
+              className="mt-10 border-t border-line pt-8"
+            >
+              <motion.p variants={fadeUp} className="eyebrow !text-spark mb-6">
+                Was du bekommst
+              </motion.p>
+              <motion.ul variants={fadeUp} className="space-y-4">
+                {VALUE.map((v) => (
+                  <li key={v.title} className="flex items-start gap-3.5">
+                    <span
+                      aria-hidden="true"
+                      className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-spark shadow-[0_0_8px_var(--color-spark)]"
+                    />
+                    <span className="leading-relaxed text-ink-dim">
+                      <span className="font-medium text-ink">{v.title}</span>{' '}
+                      {v.body}
+                    </span>
+                  </li>
+                ))}
+              </motion.ul>
             </motion.div>
           </div>
 

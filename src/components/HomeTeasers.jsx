@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { fadeUp, stagger, inView } from '../lib/anim'
@@ -6,13 +7,45 @@ import SectionMark from './SectionMark'
 // Kleines Browser-/App-Fenster (Ampel-Punkte oben, Inhalt darunter), gemeinsamer
 // Rahmen für beide Teaser, damit sie als Paar wirken.
 function Win({ glow, children }) {
+  const ref = useRef(null)
+  // macOS-Ampel: Desktop leuchtet beim Hover. Touch-Geräte (kein Hover) lassen die
+  // Punkte aufleuchten, sobald die Kachel beim Scrollen die Bildschirmmitte erreicht.
+  const [lit, setLit] = useState(false)
+  useEffect(() => {
+    if (window.matchMedia('(hover: hover)').matches) return undefined
+    const el = ref.current
+    if (!el) return undefined
+    const io = new IntersectionObserver(([e]) => setLit(e.isIntersecting), {
+      rootMargin: '-35% 0px -35% 0px',
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <div className="relative overflow-hidden rounded-xl border border-line-2 bg-panel transition-all duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-hover:border-accent/40 group-hover:shadow-[0_24px_60px_-20px_rgba(139,61,240,0.35)]">
+    <div
+      ref={ref}
+      className="relative overflow-hidden rounded-xl border border-line-2 bg-panel transition-all duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1.5 group-hover:border-accent/40 group-hover:shadow-[0_24px_60px_-20px_rgba(139,61,240,0.35)]"
+    >
       <div className="glow" style={{ width: 320, height: 320, ...glow }} />
       <div className="relative flex items-center gap-1.5 border-b border-line px-3.5 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        {/* grau im Ruhezustand; leuchten links→rechts versetzt auf — per Hover (Desktop)
+            oder beim Reinscrollen in die Mitte (Handy, via `lit`). */}
+        <span
+          className={`h-2.5 w-2.5 rounded-full transition-all duration-300 group-hover:bg-[#ff5f57] group-hover:shadow-[0_0_8px_#ff5f5799] ${
+            lit ? 'bg-[#ff5f57] shadow-[0_0_8px_#ff5f5799]' : 'bg-white/15'
+          }`}
+        />
+        <span
+          className={`h-2.5 w-2.5 rounded-full transition-all delay-[70ms] duration-300 group-hover:bg-[#febc2e] group-hover:shadow-[0_0_8px_#febc2e99] ${
+            lit ? 'bg-[#febc2e] shadow-[0_0_8px_#febc2e99]' : 'bg-white/15'
+          }`}
+        />
+        <span
+          className={`h-2.5 w-2.5 rounded-full transition-all delay-[140ms] duration-300 group-hover:bg-[#28c840] group-hover:shadow-[0_0_8px_#28c84099] ${
+            lit ? 'bg-[#28c840] shadow-[0_0_8px_#28c84099]' : 'bg-white/15'
+          }`}
+        />
       </div>
       <div className="relative flex h-52 items-center justify-center overflow-hidden p-4 sm:h-60">
         {children}
@@ -103,7 +136,7 @@ const CARDS = [
   {
     to: '/aussergewoehnliches',
     eyebrow: 'Motion',
-    title: 'Willst du außergewöhnliche Animationen?',
+    title: 'Du willst aufwendige Animationen?',
     glow: {
       right: '-12%',
       top: '-25%',
@@ -123,7 +156,7 @@ const CARDS = [
   {
     to: '/selbst-verwalten',
     eyebrow: 'Dein CMS',
-    title: 'Willst du deine Website selbst pflegen?',
+    title: 'Du willst deine Website selbst pflegen?',
     glow: {
       left: '-12%',
       bottom: '-25%',
@@ -134,7 +167,7 @@ const CARDS = [
   {
     to: '/rundum-sorglos',
     eyebrow: 'Rundum-sorglos',
-    title: 'Willst du dich um nichts kümmern müssen?',
+    title: 'Du willst dich um nichts kümmern?',
     glow: {
       right: '-12%',
       bottom: '-25%',
@@ -168,7 +201,7 @@ export default function HomeTeasers() {
     <section className="relative overflow-hidden py-24 sm:py-28">
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <SectionMark
-          word="Entdecken"
+          rule={false}
           lines={['Sieh selbst,', { text: 'was möglich', accent: true, suffix: ' ist.' }]}
         />
 

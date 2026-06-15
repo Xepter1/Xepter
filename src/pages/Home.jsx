@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import Hero from '../components/Hero'
 import Projects from '../components/Projects'
+import Testimonials from '../components/Testimonials'
 import HomeTeasers from '../components/HomeTeasers'
 import ContactCTA from '../components/ContactCTA'
 
@@ -28,6 +29,7 @@ export default function Home() {
       <Hero />
       <Projects />
       <HomeTeasers />
+      <Testimonials />
       <ContactCTA />
     </main>
   )

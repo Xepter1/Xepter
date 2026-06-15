@@ -38,9 +38,16 @@ export default function ContactCTA() {
           innerhalb von 24 Stunden zurück.
         </p>
         <Link to="/kontakt" className="btn btn-spark mt-10">
-          Kontakt aufnehmen
+          Kostenloses Erstgespräch
           <IconArrowUpRight width={18} height={18} />
         </Link>
+        <p className="mt-5 flex items-center justify-center gap-2.5 text-sm text-ink-faint">
+          <span
+            aria-hidden="true"
+            className="h-1.5 w-1.5 rounded-full bg-spark shadow-[0_0_8px_var(--color-spark)]"
+          />
+          Unverbindlich &amp; kostenlos.
+        </p>
       </motion.div>
     </section>
   )

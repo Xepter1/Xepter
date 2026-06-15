@@ -14,6 +14,7 @@ const PROJECTS = [
     tag: 'Kultur',
     year: '2026',
     url: 'https://symphonieorchester.fraunhofer-lab.de/',
+    displayHost: 'symphonieorchester-landshut.de',
     img: '/projects/symphonieorchester.jpg',
     imgMobile: '/projects/mobile/symphonieorchester.jpg',
     accent: '#3B82F6',
@@ -34,6 +35,7 @@ const PROJECTS = [
     tag: 'Lokal',
     year: '2026',
     url: 'https://tankstelle-stettner.fraunhofer-lab.de/',
+    displayHost: 'tankstelle-stettner.de',
     img: '/projects/tankstelle-stettner.jpg',
     imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
     accent: '#EF4444',
@@ -43,7 +45,7 @@ const PROJECTS = [
 function Preview({ project, flip }) {
   const [failed, setFailed] = useState(false)
   const [mFailed, setMFailed] = useState(false)
-  const host = new URL(project.url).host
+  const host = project.displayHost || new URL(project.url).host
 
   return (
     <div className="preview-wrap">

@@ -80,6 +80,13 @@ export default function ContactPage() {
             Ob konkretes Projekt oder lose Idee, schreib mir ein paar Zeilen.
             Ich antworte innerhalb von 24 Stunden.
           </p>
+          <div className="mt-7 inline-flex items-center gap-2.5 rounded-full border border-spark/40 bg-spark-soft px-4 py-2 text-sm font-medium text-ink">
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full bg-spark shadow-[0_0_8px_var(--color-spark)]"
+            />
+            Das Erstgespräch ist kostenlos &amp; unverbindlich
+          </div>
         </motion.div>
 
         <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-20 sm:mt-10">
