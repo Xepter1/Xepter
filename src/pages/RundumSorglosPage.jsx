@@ -5,102 +5,16 @@ import SecurityLock from '../components/SecurityLock'
 import ServerScene from '../components/ServerScene'
 import ContactCTA from '../components/ContactCTA'
 
-/* ── Eigene Mini-Grafiken pro Karte (kein Standard-Icon) ───────────────── */
-
-function MotifRechenzentrum() {
-  return (
-    <svg width="92" height="76" viewBox="0 0 92 76" aria-hidden="true">
-      <defs>
-        <linearGradient id="mdc" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#221d30" />
-          <stop offset="1" stopColor="#100d18" />
-        </linearGradient>
-      </defs>
-      <rect x="10" y="6" width="56" height="64" rx="9" fill="url(#mdc)" stroke="#7c3aed" strokeOpacity="0.4" />
-      {[15, 32, 49].map((y, i) => (
-        <g key={y}>
-          <rect x="18" y={y} width="40" height="11" rx="3" fill="#161320" />
-          <rect x="22" y={y + 3.5} width="4" height="4" rx="1" fill="#3a3350" />
-          <circle cx="52" cy={y + 5.5} r="2.4" fill={i === 2 ? '#ffb04d' : '#34d17b'} />
-        </g>
-      ))}
-      <rect x="58" y="48" width="26" height="18" rx="5" fill="#15111d" stroke="#7c3aed" strokeOpacity="0.5" />
-      <text x="71" y="60.5" textAnchor="middle" fontFamily="var(--font-display)" fontWeight="700" fontSize="11" fill="#e0abff">DE</text>
-    </svg>
-  )
-}
-
-function MotifDsgvo() {
-  return (
-    <svg width="92" height="76" viewBox="0 0 92 76" aria-hidden="true">
-      <defs>
-        <linearGradient id="msh" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#9a5cf0" />
-          <stop offset="1" stopColor="#6d28d9" />
-        </linearGradient>
-      </defs>
-      <path d="M46 6 L70 16 V36 C70 52 60 64 46 70 C32 64 22 52 22 36 V16 Z" fill="url(#msh)" opacity="0.16" stroke="#9a5cf0" strokeOpacity="0.55" strokeWidth="1.5" />
-      <path d="M37 38 L43 45 L56 30" fill="none" stroke="#e0abff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function MotifBackups() {
-  return (
-    <svg width="92" height="76" viewBox="0 0 92 76" aria-hidden="true">
-      <defs>
-        <linearGradient id="mdisk" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2a2440" />
-          <stop offset="1" stopColor="#15111f" />
-        </linearGradient>
-      </defs>
-      <ellipse cx="40" cy="52" rx="22" ry="7" fill="#15111f" />
-      <path d="M18 38 V52 A22 7 0 0 0 62 52 V38 Z" fill="url(#mdisk)" />
-      <ellipse cx="40" cy="38" rx="22" ry="7" fill="#352d50" stroke="#7c3aed" strokeOpacity="0.4" />
-      <path d="M18 26 V38 A22 7 0 0 0 62 38 V26 Z" fill="url(#mdisk)" />
-      <ellipse cx="40" cy="26" rx="22" ry="7" fill="#352d50" stroke="#7c3aed" strokeOpacity="0.4" />
-      <circle cx="40" cy="26" r="2.6" fill="#34d17b" />
-      <path d="M62 20 A26 14 0 1 1 60 16" fill="none" stroke="#e0abff" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M60 9 L62 17 L54 17.5 Z" fill="#e0abff" />
-    </svg>
-  )
-}
-
-function MotifDomain() {
-  return (
-    <svg width="150" height="76" viewBox="0 0 150 76" aria-hidden="true">
-      <rect x="6" y="24" width="138" height="28" rx="14" fill="#15111d" stroke="#7c3aed" strokeOpacity="0.45" />
-      <path d="M22 38 a4 4 0 0 1 8 0" fill="none" stroke="#34d17b" strokeWidth="2" />
-      <rect x="21" y="37.5" width="10" height="7" rx="1.6" fill="#34d17b" />
-      <text x="40" y="42.5" fontFamily="ui-monospace, monospace" fontSize="11.5" fill="#e0abff">deinefirma.de</text>
-    </svg>
-  )
-}
-
-function MotifEmail() {
-  return (
-    <svg width="92" height="76" viewBox="0 0 92 76" aria-hidden="true">
-      <rect x="14" y="14" width="64" height="44" rx="8" fill="#15111d" stroke="#7c3aed" strokeOpacity="0.45" />
-      <path d="M18 20 L46 40 L74 20" fill="none" stroke="#9a5cf0" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="46" cy="50" r="9" fill="#0c0a12" stroke="#e0abff" strokeOpacity="0.7" />
-      <text x="46" y="54" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="11" fill="#e0abff">@</text>
-    </svg>
-  )
-}
-
 const SICHERHEIT = [
   {
-    Motif: MotifRechenzentrum,
     title: 'Deutsches Rechenzentrum',
-    body: 'Deine Daten liegen auf einem Server in Nürnberg — nicht in den USA. Deutsches Datenschutzrecht, kurze Wege, volle Kontrolle.',
+    body: 'Deine Daten liegen auf einem Server in Nürnberg, nicht in den USA. Deutsches Datenschutzrecht, kurze Wege, volle Kontrolle.',
   },
   {
-    Motif: MotifDsgvo,
     title: 'DSGVO-konform',
     body: 'SSL-Verschlüsselung, lokal eingebundene Schriften, kein Tracking. Deshalb braucht deine Seite nicht mal ein Cookie-Banner.',
   },
   {
-    Motif: MotifBackups,
     title: 'Tägliche Backups',
     body: 'Jeden Tag eine automatische Sicherung. Falls doch mal etwas schiefgeht, ist deine Seite in Minuten wiederhergestellt.',
   },
@@ -108,30 +22,31 @@ const SICHERHEIT = [
 
 const TECHNIK = [
   {
-    Motif: MotifDomain,
     title: 'Deine Domain',
     body: 'Ich sichere deine Wunsch-Adresse, richte sie ein und verwalte sie. Kein Anbieter-Konto, keine DNS-Einstellungen, um die du dich kümmern musst.',
   },
   {
-    Motif: MotifEmail,
     title: 'Deine eigene E-Mail',
-    body: 'Professionelle Adressen auf deiner eigenen Domain — name@deinefirma.de, sauber eingerichtet. Schluss mit @gmail oder @gmx.',
+    body: 'Professionelle Adressen auf deiner eigenen Domain: name@deinefirma.de, sauber eingerichtet. Schluss mit @gmail oder @gmx.',
   },
 ]
 
-function PillarCard({ Motif, title, body }) {
+/* Redaktionelle Zeile statt Kachel: Titel links, Text rechts, dünne Trennlinien
+   (über das umschließende divide-y). Nur ein dezenter Akzentpunkt, kein Icon. */
+function PillarRow({ title, body }) {
   return (
     <motion.div
       variants={fadeUp}
-      className="rounded-2xl border border-line bg-panel p-7 transition-colors duration-500 hover:border-accent/40"
+      className="grid grid-cols-1 gap-3 py-8 sm:grid-cols-[minmax(0,19rem)_1fr] sm:gap-12 sm:py-9"
     >
-      <div className="flex h-[76px] items-end">
-        <Motif />
-      </div>
-      <h3 className="mt-5 font-display text-xl font-semibold tracking-tight text-ink">
+      <h3 className="flex items-start gap-3 font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+        <span
+          className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent sm:mt-3"
+          aria-hidden="true"
+        />
         {title}
       </h3>
-      <p className="mt-3 leading-relaxed text-ink-dim">{body}</p>
+      <p className="leading-relaxed text-ink-dim sm:text-lg">{body}</p>
     </motion.div>
   )
 }
@@ -176,7 +91,7 @@ export default function RundumSorglosPage() {
                 variants={fadeUp}
                 className="max-w-md text-lg leading-relaxed text-ink-dim"
               >
-                Domain, E-Mail, Technik, Sicherheit — der ganze Kram, der dich
+                Domain, E-Mail, Technik, Sicherheit. Der ganze Kram, der dich
                 eigentlich nur aufhält. Ich kümmere mich darum, du hast{' '}
                 <span className="text-ink">einen Ansprechpartner</span> und den
                 Kopf frei fürs Wesentliche.
@@ -213,7 +128,7 @@ export default function RundumSorglosPage() {
                 className="max-w-md text-lg leading-relaxed text-ink-dim"
               >
                 Deine Website lebt auf einem Server in einem deutschen
-                Rechenzentrum — <span className="text-ink">rund um die Uhr</span>{' '}
+                Rechenzentrum, <span className="text-ink">rund um die Uhr</span>{' '}
                 überwacht und betreut. Du merkst davon nichts. Genau so soll es
                 sein.
               </motion.p>
@@ -231,10 +146,10 @@ export default function RundumSorglosPage() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-16 grid grid-cols-1 gap-5 sm:mt-20 sm:grid-cols-3 sm:gap-6"
+          className="mt-16 divide-y divide-line border-y border-line sm:mt-20"
         >
           {SICHERHEIT.map((p) => (
-            <PillarCard key={p.title} {...p} />
+            <PillarRow key={p.title} {...p} />
           ))}
         </motion.div>
       </section>
@@ -252,10 +167,10 @@ export default function RundumSorglosPage() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6"
+          className="mt-12 divide-y divide-line border-y border-line"
         >
           {TECHNIK.map((p) => (
-            <PillarCard key={p.title} {...p} />
+            <PillarRow key={p.title} {...p} />
           ))}
         </motion.div>
       </section>
