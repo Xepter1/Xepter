@@ -28,6 +28,16 @@ const PROJECTS = [
     imgMobile: '/projects/mobile/designbyems.jpg',
     accent: '#22D3EE',
   },
+  {
+    name: 'Tankstelle Stettner',
+    desc: 'Konzeption der Website für einen inhabergeführten Tankstellen-Familienbetrieb in Buchbach – mit tagesaktuellen Kraftstoffpreisen, Öffnungszeiten und allen Services klar auf einen Blick.',
+    tag: 'Lokal',
+    year: '2026',
+    url: 'https://tankstelle-stettner.fraunhofer-lab.de/',
+    img: '/projects/tankstelle-stettner.jpg',
+    imgMobile: '/projects/mobile/tankstelle-stettner.jpg',
+    accent: '#EF4444',
+  },
 ]
 
 function Preview({ project, flip }) {
@@ -206,7 +216,7 @@ function Row({ project, index }) {
 
 // "Open slot" — replaces a real project: the mockups invite the next client
 // instead of showing a screenshot ("Hier könnte deine Website stehen").
-function CtaPreview() {
+function CtaPreview({ flip }) {
   return (
     <div className="preview-wrap">
       <div className="browser group-hover:-translate-y-1 transition-transform duration-700 ease-out">
@@ -239,7 +249,11 @@ function CtaPreview() {
         </div>
       </div>
 
-      <div className="phone-overlay phone-overlay--right">
+      <div
+        className={`phone-overlay ${
+          flip ? 'phone-overlay--left' : 'phone-overlay--right'
+        }`}
+      >
         <div className="phone">
           <div className="phone-screen">
             <div
@@ -262,7 +276,7 @@ function CtaPreview() {
   )
 }
 
-function CtaRow() {
+function CtaRow({ flip }) {
   return (
     <motion.article
       variants={fadeUp}
@@ -273,13 +287,13 @@ function CtaRow() {
     >
       <Link
         to="/kontakt"
-        className="block"
+        className={`block ${flip ? 'lg:order-2' : ''}`}
         aria-label="Dein Projekt — Kontakt aufnehmen"
       >
-        <CtaPreview />
+        <CtaPreview flip={flip} />
       </Link>
 
-      <div>
+      <div className={flip ? 'lg:order-1' : ''}>
         <p className="spec mb-4 flex items-center gap-3">
           <span
             aria-hidden="true"
@@ -341,7 +355,7 @@ export default function Projects() {
           {PROJECTS.map((p, i) => (
             <Row key={p.name} project={p} index={i} />
           ))}
-          <CtaRow />
+          <CtaRow flip={PROJECTS.length % 2 === 1} />
         </div>
       </div>
     </section>
