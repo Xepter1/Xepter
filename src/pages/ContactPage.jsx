@@ -231,8 +231,8 @@ export default function ContactPage() {
               <img
                 src="/beratung.jpg"
                 alt="Patrick von Xepter im Beratungsgespräch mit einem Kunden"
-                width={1036}
-                height={1100}
+                width={1080}
+                height={1529}
                 loading="lazy"
                 className="aspect-[5/4] w-full object-cover object-[center_38%] transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
               />

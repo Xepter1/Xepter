@@ -59,8 +59,8 @@ export default function StationCard({ eyebrow, title, body, icon, image, imageAl
             <img
               src={image}
               alt={imageAlt}
-              width={1036}
-              height={1100}
+              width={1080}
+              height={1529}
               loading="lazy"
               className="aspect-[5/4] w-full object-cover object-[center_38%]"
             />
