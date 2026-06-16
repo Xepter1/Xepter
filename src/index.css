@@ -427,21 +427,6 @@ section[id] {
   z-index: 0;
 }
 
-/* Fließende Mittellinie der Reise-Straße (JourneyRoad) */
-@keyframes road-flow {
-  to {
-    stroke-dashoffset: -280;
-  }
-}
-.road-dash {
-  animation: road-flow 7s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .road-dash {
-    animation: none;
-  }
-}
-
 /* Film grain overlay */
 .grain {
   position: fixed;
