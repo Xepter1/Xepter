@@ -18,28 +18,38 @@ import StationCard from './StationCard'
  * sich nur bei Stationswechsel (5x).
  */
 
+// Strichbreiten: asphalt/edge/Mittellinie behalten vector-effect:non-scaling-stroke
+// (Breite = Screen-Px, fix). Die GEZEICHNETEN Pfade (halo/overlay/core) tragen KEIN
+// non-scaling-stroke mehr — sonst misst der Browser den strokeDashoffset in Screen-Px
+// statt in viewBox-Einheiten und der Strich läuft dem Lichtpunkt voraus (siehe apply()).
+// Ohne non-scaling skaliert ihre Breite mit dem SVG, daher hier in viewBox-Einheiten
+// angegeben (~px / Maßstab, Desktop ~0.576, Mobile ~0.73), damit die Optik gleich bleibt.
 const ROAD = {
   desktop: {
     w: 1000,
     h: 8000,
     d: 'M 500 120 C 830 586, 830 1206, 500 1672 C 170 2138, 170 2758, 500 3224 C 830 3690, 830 4310, 500 4776 C 170 5242, 170 5862, 500 6328 C 830 6794, 830 7414, 500 7880',
     asphalt: 24,
-    overlay: 7,
-    halo: 17,
-    core: 2.4,
+    overlay: 12,
+    halo: 29.5,
+    core: 4.2,
   },
   mobile: {
     w: 480,
     h: 8400,
     d: 'M 240 120 C 390 610, 390 1262, 240 1752 C 90 2242, 90 2894, 240 3384 C 390 3874, 390 4526, 240 5016 C 90 5506, 90 6158, 240 6648 C 390 7138, 390 7790, 240 8280',
     asphalt: 20,
-    overlay: 6,
-    halo: 14,
-    core: 2,
+    overlay: 8,
+    halo: 19,
+    core: 2.7,
   },
 }
 
 const THRESH = [0.1, 0.3, 0.5, 0.7, 0.9]
+// Vorlauf: Stationen leuchten schon auf, wenn das Licht noch diesen Bruchteil VOR
+// dem Stationsanker ist -> die Station wird aktiv, während sie noch weiter unten im
+// Bild ist (statt erst nahe am oberen Rand). Größerer Wert = früher/weiter unten.
+const ACTIVATE_LEAD = 0.06
 
 export default function JourneyRoad({ stations }) {
   const reduce = useReducedMotion()
@@ -67,9 +77,17 @@ export default function JourneyRoad({ stations }) {
   const [anchors, setAnchors] = useState([]) // {x,y,side} in viewBox coords
   const [activeIndex, setActiveIndex] = useState(reduce ? stations.length - 1 : -1)
 
+  // Das Licht soll beim Scrollen auf ~konstanter Bildschirmhöhe "fahren" (obere
+  // Mitte), nicht von oben nach unten durchs Bild wandern. Mit ['start start',
+  // 'end end'] war der Lichtpunkt an den vollen Section-Scroll gekoppelt: zu Beginn
+  // klebte er am oberen Rand (Straße wirkte voraus, "Licht hinkt hinterher"), gegen
+  // Ende rutschte er unter den unteren Rand -> die gezeichnete Straße füllte den
+  // ganzen Schirm, der Verlauf voraus war nicht mehr zu sehen ("lila Linie überholt").
+  // Gleicher Viewport-Anker (35 % von oben) für Start UND Ende hält das Licht nahezu
+  // ortsfest: gereiste Straße oben, Straße voraus unten bleiben immer sichtbar.
   const { scrollYProgress } = useScroll({
     target: wrapRef,
-    offset: ['start start', 'end end'],
+    offset: ['start 0.35', 'end 0.35'],
   })
 
   // Pfad messen -> Punkt-LUT + Stationsanker (einmal je Layout, nicht pro Frame).
@@ -139,25 +157,36 @@ export default function JourneyRoad({ stations }) {
       if (ref.current) ref.current.setAttribute('transform', `translate(${x} ${y})`)
     }
     const apply = (d) => {
-      const len = measuredLen()
-      if (len) {
-        const arr = `${len} ${len}`
-        const off = String((1 - d) * len)
-        for (const ref of [haloRef, overlayRef, coreRef]) {
-          if (ref.current) {
-            ref.current.style.strokeDasharray = arr
-            ref.current.style.strokeDashoffset = off
-          }
+      // Strich-Fortschritt über pathLength="1": die Dash-Mathematik rechnet in
+      // NORMIERTER Länge (0..1) = derselbe Bruchteil d, mit dem das Licht via
+      // getPointAtLength positioniert wird. Strich (Offset 1-d) und Licht teilen
+      // sich d -> die Linie entsteht exakt dort, wo das Licht war. WICHTIG: die
+      // gezeichneten Pfade dürfen KEIN vector-effect:non-scaling-stroke tragen,
+      // sonst würde der Dashoffset in Screen-Px statt viewBox-Einheiten gemessen
+      // und der Strich liefe dem Licht voraus (~1.74x bei 0.58x Downscale).
+      const off = String(1 - d)
+      for (const ref of [haloRef, overlayRef, coreRef]) {
+        if (ref.current) {
+          ref.current.style.strokeDasharray = '1 1'
+          ref.current.style.strokeDashoffset = off
         }
       }
       setT(markerRef, d)
       setT(trail1Ref, d - 0.006)
       setT(trail2Ref, d - 0.013)
+      // Licht löst sich am Ziel sanft auf (passend zur weich ausgeblendeten Straße),
+      // statt als harter Punkt im Dunkeln zu enden. Reduced-motion: sichtbar lassen.
+      if (!reduce) {
+        const tail = 1 - Math.max(0, Math.min(1, (d - 0.93) / 0.06))
+        if (markerRef.current) markerRef.current.style.opacity = String(tail)
+        if (trail1Ref.current) trail1Ref.current.style.opacity = String(0.4 * tail)
+        if (trail2Ref.current) trail2Ref.current.style.opacity = String(0.22 * tail)
+      }
       if (fogRef.current) {
         fogRef.current.style.opacity = String(Math.max(0, Math.min(1, (d - 0.82) / 0.16)))
       }
       let idx = -1
-      for (let i = 0; i < THRESH.length; i++) if (d >= THRESH[i]) idx = i
+      for (let i = 0; i < THRESH.length; i++) if (d >= THRESH[i] - ACTIVATE_LEAD) idx = i
       setActiveIndex((prev) => (prev === idx ? prev : idx))
     }
 
@@ -217,8 +246,9 @@ export default function JourneyRoad({ stations }) {
   }, [reduce, rd, scrollYProgress, stations.length])
 
   // Anfangszustand der "gereisten" Straße: nichts gezeichnet (apply() setzt dann
-  // dasharray/offset aus der gemessenen Länge). Bei reduced-motion direkt voll.
-  const initDraw = reduce ? {} : { strokeDasharray: '0 99999' }
+  // den Dashoffset). Über pathLength="1" ist die volle Länge = 1 -> Offset 1 = leer.
+  // Bei reduced-motion direkt voll.
+  const initDraw = reduce ? {} : { strokeDasharray: '1 1', strokeDashoffset: 1 }
 
   return (
     <section
@@ -227,16 +257,20 @@ export default function JourneyRoad({ stations }) {
       aria-label="Der Ablauf als Reise entlang einer Straße"
     >
       {/* Sonnenaufgang am Ziel — über die VOLLE Breite (nicht in der schmalen
-          Straßen-Spalte, sonst wirkt es wie ein rechteckiges Band). Nur Opacity
-          animiert, weiche Radials ohne harte Kanten. */}
+          Straßen-Spalte, sonst wirkt es wie ein rechteckiges Band). Der Glow saß
+          früher am unteren Rand am hellsten und wurde von der Section-Kante hart
+          abgeschnitten (gerade Linie Warm->Schwarz). Daher: Verlauf etwas nach oben
+          gezogen + maskImage blendet den unteren Rand weich auf transparent aus. */}
       <div
         ref={fogRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[52%]"
         style={{
           opacity: reduce ? 1 : 0,
           background:
-            'radial-gradient(38% 50% at 50% 100%, rgba(255,176,77,0.22), transparent 70%), radial-gradient(62% 62% at 50% 100%, rgba(191,90,242,0.10), transparent 66%)',
+            'radial-gradient(50% 58% at 50% 74%, rgba(255,176,77,0.20), transparent 72%), radial-gradient(72% 68% at 50% 70%, rgba(191,90,242,0.10), transparent 70%)',
+          maskImage: 'linear-gradient(to top, transparent 0%, #000 24%, #000 100%)',
+          WebkitMaskImage: 'linear-gradient(to top, transparent 0%, #000 24%, #000 100%)',
         }}
       />
 
@@ -261,8 +295,23 @@ export default function JourneyRoad({ stations }) {
               <stop offset="0.4" stopColor="#ffb04d" stopOpacity="0.35" />
               <stop offset="1" stopColor="#ffb04d" stopOpacity="0" />
             </radialGradient>
+            {/* Die Straße löst sich am Ziel weich auf (statt harter Kappe ins Schwarz).
+                Ausblendung beginnt UNTER der letzten Station (~0.91 der Höhe) und ist
+                vor dem Pfad-Ende (0.985) komplett transparent -> kein harter Rand. */}
+            <linearGradient id="roadFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2={rd.h}>
+              <stop offset="0" stopColor="#fff" />
+              <stop offset="0.91" stopColor="#fff" />
+              <stop offset="0.97" stopColor="#000" />
+            </linearGradient>
+            <mask id="roadMask">
+              <rect width={rd.w} height={rd.h} fill="url(#roadFade)" />
+            </mask>
           </defs>
 
+          {/* gesamte Straße (Asphalt + gereister Glow) wird am unteren Ende
+              ausgeblendet, damit sie in den Sonnenaufgang-Glow übergeht statt
+              hart abzubrechen. Stationsknoten + reisendes Licht bleiben außerhalb. */}
+          <g mask="url(#roadMask)">
           {/* 1. Asphalt-Basis (misst auch den Pfad) */}
           <path
             ref={pathRef}
@@ -303,36 +352,41 @@ export default function JourneyRoad({ stations }) {
           />
 
           {/* gereiste Straße: Halo + Verlauf + heller Kern, teilen den Dashoffset */}
+          {/* KEIN vector-effect:non-scaling-stroke hier — sonst würde der
+              strokeDashoffset in Screen-Px statt viewBox-Einheiten gemessen und der
+              Strich liefe dem Lichtpunkt voraus. Breiten stehen daher in viewBox-
+              Einheiten (siehe ROAD). */}
           <path
             ref={haloRef}
             d={rd.d}
+            pathLength="1"
             fill="none"
             stroke="var(--color-spark)"
             strokeWidth={rd.halo}
             strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
             style={{ ...initDraw, opacity: 0.16 }}
           />
           <path
             ref={overlayRef}
             d={rd.d}
+            pathLength="1"
             fill="none"
             stroke="url(#roadWarm)"
             strokeWidth={rd.overlay}
             strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
             style={initDraw}
           />
           <path
             ref={coreRef}
             d={rd.d}
+            pathLength="1"
             fill="none"
             stroke="#fff"
             strokeWidth={rd.core}
             strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
             style={{ ...initDraw, opacity: 0.85 }}
           />
+          </g>
 
           {/* Stationsknoten auf der Straße */}
           {anchors.map((a, i) => (
@@ -356,7 +410,10 @@ export default function JourneyRoad({ stations }) {
           <circle ref={trail2Ref} r="5" fill="var(--color-spark)" style={{ opacity: reduce ? 0 : 0.22 }} />
           <circle ref={trail1Ref} r="7.5" fill="var(--color-spark)" style={{ opacity: reduce ? 0 : 0.4 }} />
           <g ref={markerRef}>
-            <circle r="42" fill="url(#markerGlow)" />
+            {/* mehrschichtiges Glühen: der Kopf schmilzt weich in den Asphalt voraus,
+                statt als harte helle Kappe abzubrechen ("Licht hart abgeschnitten") */}
+            <circle r="120" fill="url(#markerGlow)" style={{ opacity: 0.3 }} />
+            <circle r="56" fill="url(#markerGlow)" />
             <circle r="9.5" fill="var(--color-spark)" />
             <circle r="3.6" fill="#fff" />
           </g>
@@ -382,7 +439,7 @@ export default function JourneyRoad({ stations }) {
             return (
               <div
                 key={i}
-                className="pointer-events-auto absolute w-[clamp(15rem,23vw,20rem)]"
+                className="pointer-events-auto absolute w-[clamp(16.5rem,26vw,22.5rem)]"
                 style={style}
               >
                 <StationCard

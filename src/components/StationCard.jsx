@@ -36,7 +36,7 @@ export default function StationCard({ eyebrow, title, body, icon, lit, reduce })
         }}
       />
 
-      <div className="relative flex items-center gap-1.5 border-b border-line px-3.5 py-2.5">
+      <div className="relative flex items-center gap-1.5 border-b border-line px-4 py-3">
         <span className={`${DOT} ${lit ? 'bg-[#ff5f57] shadow-[0_0_8px_#ff5f5799]' : 'bg-white/15'}`} />
         <span className={`${DOT} delay-[70ms] ${lit ? 'bg-[#febc2e] shadow-[0_0_8px_#febc2e99]' : 'bg-white/15'}`} />
         <span className={`${DOT} delay-[140ms] ${lit ? 'bg-[#28c840] shadow-[0_0_8px_#28c84099]' : 'bg-white/15'}`} />
@@ -45,7 +45,7 @@ export default function StationCard({ eyebrow, title, body, icon, lit, reduce })
         </span>
       </div>
 
-      <div className="relative p-6">
+      <div className="relative p-7">
         <div className={`mb-4 transition-colors duration-500 ${lit ? 'text-spark' : 'text-ink-dim'}`}>
           {icon}
         </div>
