@@ -21,6 +21,14 @@ const TESTIMONIALS = [
     url: 'https://designbyems.de/',
     initials: 'EG',
   },
+  {
+    lead: 'Top Webdesign!',
+    body: 'Meine neue Seite ist nicht nur optisch ein echter Hingucker, sondern läuft auch technisch einwandfrei und ist super schnell. Die Kommunikation war entspannt und zuverlässig. Ich bin rundum zufrieden und würde jederzeit wieder mit Patrick arbeiten.',
+    name: 'Adolf Stettner',
+    role: 'Inhaber · Tankstelle Stettner',
+    url: 'https://tankstelle-stettner.fraunhofer-lab.de/',
+    initials: 'AS',
+  },
 ]
 
 function Avatar({ src, initials, name }) {
