@@ -93,6 +93,81 @@ function esc(s) {
   return String(s).replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))
 }
 
+// Patricks E-Mail-Signatur (1:1 aus Signatur_fix.command). Bilder werden von
+// https://xepter.de/email/ geladen (öffentlich ausgeliefert).
+const SIGNATURE_HTML = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#140033;">
+  <tr>
+    <td valign="middle" style="padding:0 20px 0 0;">
+      <img src="https://xepter.de/email/logo.png?v=5" width="156" height="57" alt="Xepter" style="display:block;border:0;outline:none;text-decoration:none;width:156px;height:57px;">
+    </td>
+    <td style="padding:0;width:2px;background:#7a2bd6;font-size:0;line-height:0;">&nbsp;</td>
+    <td valign="middle" style="padding:0 0 0 20px;">
+      <div style="font-size:17px;font-weight:bold;line-height:1.25;color:#140033;letter-spacing:-0.2px;">Patrick&nbsp;Fraunhofer</div>
+      <div style="font-size:12px;font-weight:bold;line-height:1.4;color:#7a2bd6;letter-spacing:1.5px;text-transform:uppercase;padding-top:1px;">Webdesigner</div>
+      <div style="height:9px;line-height:9px;font-size:0;">&nbsp;</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+        <tr>
+          <td style="padding:1px 8px 1px 0;font-size:10px;font-weight:bold;letter-spacing:1px;color:#a98cd6;text-transform:uppercase;">Tel</td>
+          <td style="padding:1px 0;font-size:13px;color:#140033;"><a href="tel:+4915144227255" style="color:#140033;text-decoration:none;">0151&nbsp;44227255</a></td>
+        </tr>
+        <tr>
+          <td style="padding:1px 8px 1px 0;font-size:10px;font-weight:bold;letter-spacing:1px;color:#a98cd6;text-transform:uppercase;">Mail</td>
+          <td style="padding:1px 0;font-size:13px;"><a href="mailto:mail@xepter.de" style="color:#7a2bd6;text-decoration:none;font-weight:bold;">mail@xepter.de</a></td>
+        </tr>
+        <tr>
+          <td style="padding:1px 8px 1px 0;font-size:10px;font-weight:bold;letter-spacing:1px;color:#a98cd6;text-transform:uppercase;">Web</td>
+          <td style="padding:1px 0;font-size:13px;"><a href="https://xepter.de" style="color:#7a2bd6;text-decoration:none;font-weight:bold;">xepter.de</a></td>
+        </tr>
+      </table>
+      <div style="height:11px;line-height:11px;font-size:0;">&nbsp;</div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+        <tr>
+          <td style="padding:0 7px 0 0;"><a href="https://www.facebook.com/profile.php?id=61590947094348" style="text-decoration:none;"><img src="https://xepter.de/email/facebook.png?v=5" width="26" height="26" alt="Facebook" style="display:block;border:0;outline:none;text-decoration:none;width:26px;height:26px;"></a></td>
+          <td style="padding:0 7px 0 0;"><a href="https://www.instagram.com/xepter.de" style="text-decoration:none;"><img src="https://xepter.de/email/instagram.png?v=5" width="26" height="26" alt="Instagram" style="display:block;border:0;outline:none;text-decoration:none;width:26px;height:26px;"></a></td>
+          <td><a href="https://www.linkedin.com/company/129663999" style="text-decoration:none;"><img src="https://xepter.de/email/linkedin.png?v=5" width="26" height="26" alt="LinkedIn" style="display:block;border:0;outline:none;text-decoration:none;width:26px;height:26px;"></a></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" style="padding:13px 0 0 0;">
+      <div style="border-top:1px solid #e0abff;padding-top:9px;font-size:13px;font-style:italic;color:#7a2bd6;font-weight:bold;letter-spacing:0.2px;">Weil der erste Eindruck z&auml;hlt.</div>
+    </td>
+  </tr>
+</table>`
+
+function buildAutoReplyHtml(name, message) {
+  return `<!doctype html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#ffffff;">
+<div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#140033;font-size:15px;line-height:1.6;max-width:580px;margin:0 auto;padding:24px;">
+  <p style="margin:0 0 14px;">Hallo ${esc(name)},</p>
+  <p style="margin:0 0 14px;">vielen Dank f&uuml;r deine Nachricht &mdash; sie ist bei mir angekommen. Ich melde mich <strong>innerhalb von 24&nbsp;Stunden</strong> pers&ouml;nlich bei dir.</p>
+  <p style="margin:0 0 6px;color:#6b6480;font-size:13px;">Das hast du mir geschrieben:</p>
+  <blockquote style="margin:0 0 20px;padding:10px 14px;border-left:3px solid #7a2bd6;background:#f6f1fb;color:#3a3350;font-size:14px;white-space:pre-wrap;">${esc(message)}</blockquote>
+  <p style="margin:0 0 24px;">Bis gleich,<br>Patrick</p>
+  ${SIGNATURE_HTML}
+</div>
+</body></html>`
+}
+
+function buildAutoReplyText(name, message) {
+  return `Hallo ${name},
+
+vielen Dank für deine Nachricht — sie ist bei mir angekommen.
+Ich melde mich innerhalb von 24 Stunden persönlich bei dir.
+
+Das hast du mir geschrieben:
+${message}
+
+Bis gleich,
+Patrick
+
+—
+Patrick Fraunhofer · Webdesigner
+Tel 0151 44227255 · mail@xepter.de · https://xepter.de
+Weil der erste Eindruck zählt.`
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost')
   const origin = req.headers.origin
@@ -171,6 +246,7 @@ const server = http.createServer((req, res) => {
       `<p style="font-family:sans-serif;white-space:pre-wrap">${esc(message)}</p>`
 
     try {
+      // 1) Die wichtige Mail: Anfrage an Patrick. Scheitert die → 502.
       await transporter.sendMail({
         from: MAIL_FROM,
         to: MAIL_TO,
@@ -179,6 +255,22 @@ const server = http.createServer((req, res) => {
         text,
         html,
       })
+
+      // 2) Best-Effort: Eingangsbestätigung an den Absender. Ein Fehler hier darf
+      //    die erfolgreiche Anfrage an Patrick NICHT zunichtemachen → nur loggen.
+      try {
+        await transporter.sendMail({
+          from: MAIL_FROM,
+          to: email,
+          replyTo: MAIL_TO,
+          subject: 'Deine Anfrage ist angekommen — Xepter',
+          text: buildAutoReplyText(name, message),
+          html: buildAutoReplyHtml(name, message),
+        })
+      } catch (err) {
+        console.error('[contact] auto-reply failed:', err?.message || err)
+      }
+
       return sendJson(res, 200, { ok: true }, cors)
     } catch (err) {
       console.error('[contact] sendMail failed:', err?.message || err)
