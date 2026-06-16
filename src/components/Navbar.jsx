@@ -8,6 +8,7 @@ import Wordmark from './Wordmark'
 // id  → home-page section (smooth-scroll anchor)
 // to  → its own route (page)
 const NAV = [
+  { label: 'Ablauf', to: '/ablauf' },
   { label: 'Projekte', id: 'projekte' },
   { label: 'Außergewöhnliches', to: '/aussergewoehnliches' },
   { label: 'Selbst verwalten', to: '/selbst-verwalten' },

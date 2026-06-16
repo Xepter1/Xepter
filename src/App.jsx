@@ -10,6 +10,7 @@ import { motion, useScroll, useSpring, MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
+import AblaufPage from './pages/AblaufPage'
 import AussergewoehnlichesPage from './pages/AussergewoehnlichesPage'
 import SelbstVerwaltenPage from './pages/SelbstVerwaltenPage'
 import RundumSorglosPage from './pages/RundumSorglosPage'
@@ -65,6 +66,7 @@ export default function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/ablauf" element={<AblaufPage />} />
           <Route path="/aussergewoehnliches" element={<AussergewoehnlichesPage />} />
           <Route path="/selbst-verwalten" element={<SelbstVerwaltenPage />} />
           <Route path="/rundum-sorglos" element={<RundumSorglosPage />} />
