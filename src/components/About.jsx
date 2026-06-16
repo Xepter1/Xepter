@@ -58,7 +58,7 @@ export default function About() {
                 programmiere ich leidenschaftlich gerne.
               </p>
               <p>
-                Die letzten vier Jahre habe ich als{' '}
+                In den letzten Jahren habe ich unter anderem als{' '}
                 <span className="text-ink">Ausbilder für Informatiker</span> bei
                 der <span className="text-ink">DRÄXLMAIER Group</span>{' '}
                 gearbeitet und dabei gelernt, dass sauberer Code und klare
