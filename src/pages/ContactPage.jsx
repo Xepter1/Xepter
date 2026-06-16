@@ -170,6 +170,33 @@ export default function ContactPage() {
                 })}
               </div>
             </div>
+
+            {/* Echtes Foto vom Erstgespräch — gibt dem Kontakt ein Gesicht. */}
+            <figure className="group relative overflow-hidden rounded-3xl border border-line-2 bg-card">
+              <div
+                className="glow z-10"
+                style={{
+                  width: 240,
+                  height: 240,
+                  right: '-18%',
+                  top: '-28%',
+                  background:
+                    'radial-gradient(circle, rgba(191,90,242,0.22), transparent 65%)',
+                }}
+              />
+              <img
+                src="/beratung.jpg"
+                alt="Patrick von Xepter im Beratungsgespräch mit einem Kunden"
+                width={1036}
+                height={1100}
+                loading="lazy"
+                className="aspect-[5/4] w-full object-cover object-[center_38%] transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base via-base/15 to-transparent" />
+              <figcaption className="absolute bottom-0 left-0 z-10 p-5 text-sm leading-snug text-ink-dim">
+                Beim Erstgespräch, meistens bei einem Kaffee.
+              </figcaption>
+            </figure>
           </motion.div>
 
           {/* Right — form */}

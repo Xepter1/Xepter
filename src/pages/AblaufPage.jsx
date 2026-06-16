@@ -64,6 +64,8 @@ const STATIONS = [
     title: 'Kostenloses Erstgespräch',
     body: 'Wir lernen uns kennen, ganz unverbindlich. Du erzählst mir von deiner Idee, ich sage dir ehrlich, was geht. Kostet nichts und verpflichtet zu nichts.',
     icon: <IcoChat />,
+    image: '/beratung.jpg',
+    imageAlt: 'Patrick von Xepter im Beratungsgespräch mit einem Kunden',
   },
   {
     title: 'Konzept und Design',

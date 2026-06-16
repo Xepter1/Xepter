@@ -56,6 +56,23 @@ const THRESH = [0.1, 0.3, 0.5, 0.7, 0.9]
 // Bild ist (statt erst nahe am oberen Rand). Größerer Wert = früher/weiter unten.
 const ACTIVATE_LEAD = 0.06
 
+// Safari/WebKit erkennen. Grund: Safari (auch am Mac, fine pointer) drosselt während
+// einer Scroll-Geste den Main-Thread -> das per-Frame-JS, das den Lichtpunkt positioniert,
+// läuft mit ~1 fps und "hüpft" (während der Scroll selbst flüssig bleibt). Deshalb zeigen
+// wir Safari bewusst dieselbe ruhige STATISCHE Reise wie Touch-Geräte (gezeichneter Asphalt
+// + aufgeleuchtete Stationen, kein bewegtes Licht). Chrome/Blink behält die volle Animation,
+// die dort flüssig läuft. navigator.vendor 'Apple Computer, Inc.' ist Safari-exklusiv
+// (Chrome am Mac meldet 'Google Inc.'); der UA-Ausschluss fängt Chrome/Edge auf iOS ab.
+const isSafari = () => {
+  if (typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent || ''
+  return (
+    navigator.vendor === 'Apple Computer, Inc.' &&
+    /Safari/.test(ua) &&
+    !/Chrome|Chromium|CriOS|Edg|EdgiOS|OPiOS|FxiOS|OPR/.test(ua)
+  )
+}
+
 export default function JourneyRoad({ stations }) {
   const reduce = useReducedMotion()
   const [isMobile, setIsMobile] = useState(false)
@@ -85,7 +102,9 @@ export default function JourneyRoad({ stations }) {
     mq.addEventListener('change', on)
     return () => mq.removeEventListener('change', on)
   }, [])
-  const lightless = reduce || coarse
+  // Safari einmalig erkennen (UA ändert sich nicht) -> wie Touch/reduced-motion: statisch.
+  const [safari] = useState(isSafari)
+  const lightless = reduce || coarse || safari
 
   const wrapRef = useRef(null)
   const pathRef = useRef(null)
@@ -498,6 +517,8 @@ export default function JourneyRoad({ stations }) {
                   title={st.title}
                   body={st.body}
                   icon={st.icon}
+                  image={st.image}
+                  imageAlt={st.imageAlt}
                   lit={lightless ? true : activeIndex >= i}
                   reduce={reduce}
                 />

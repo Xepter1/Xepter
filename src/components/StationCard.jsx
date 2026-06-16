@@ -11,7 +11,7 @@ import { fadeUp, inView } from '../lib/anim'
  */
 const DOT = 'h-2.5 w-2.5 rounded-full transition-all duration-300'
 
-export default function StationCard({ eyebrow, title, body, icon, lit, reduce }) {
+export default function StationCard({ eyebrow, title, body, icon, image, imageAlt, lit, reduce }) {
   return (
     <motion.article
       variants={fadeUp}
@@ -53,6 +53,21 @@ export default function StationCard({ eyebrow, title, body, icon, lit, reduce })
           {title}
         </h3>
         <p className="mt-2.5 leading-relaxed text-ink-dim">{body}</p>
+
+        {image && (
+          <div className="relative mt-5 overflow-hidden rounded-lg border border-line-2">
+            <img
+              src={image}
+              alt={imageAlt}
+              width={1036}
+              height={1100}
+              loading="lazy"
+              className="aspect-[5/4] w-full object-cover object-[center_38%]"
+            />
+            {/* dezent abdunkeln, damit das Foto in den dunklen Reise-Look passt */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base/45 via-transparent to-transparent" />
+          </div>
+        )}
       </div>
     </motion.article>
   )
