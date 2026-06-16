@@ -72,8 +72,13 @@ src/
     Icons.jsx              # Inline-SVG-Icons (Stroke 1.6)
     SectionMark.jsx        # Editorial Section-Kicker + Headline + Spark-Underline (Framer)
     LegalLayout.jsx        # Gemeinsames Layout für Impressum/Datenschutz
+    Testimonials.jsx       # Kundenstimmen (Startseite) — editorial Zitat-Karten (s. §7d)
+    Faq.jsx                # FAQ-Sektion (Startseite, Accordion)
+    JourneyRoad.jsx        # Ablauf-Seite: kurvige Straße + reisendes Licht — Desktop animiert / Touch statisch (s. §7c)
+    StationCard.jsx        # Fenster-Karte (macOS-Stil) für eine Ablauf-Station (s. §7c)
   pages/
-    Home.jsx               # Hero → Projects → HomeTeasers → ContactCTA (+ idle-prefetch Burger-Frames)
+    Home.jsx               # Hero → Projects → HomeTeasers → Testimonials → Faq → ContactCTA (+ idle-prefetch Burger-Frames)
+    AblaufPage.jsx         # /ablauf — „So arbeiten wir zusammen": 5 Stationen + <JourneyRoad/> + ContactCTA (s. §7c)
     AussergewoehnlichesPage.jsx  # /aussergewoehnliches — 2x <GearScene/> (Burger + Objektiv)
     SelbstVerwaltenPage.jsx      # /selbst-verwalten — rendert <Leistungen/> (CMS-Showcase)
     UeberMichPage.jsx      # /ueber-mich — rendert <About/>
@@ -295,11 +300,80 @@ im Quellvideo (kein reines Schwarz unten) per `watermark`-Box als ganzen Bodenst
 
 ---
 
+## 7c. Ablauf-Seite „Die Reise" — `/ablauf` (`JourneyRoad.jsx` + `StationCard.jsx`)
+
+Eigene Seite **„So arbeiten wir zusammen"**: eine **kurvige Straße**, an der man beim
+Scrollen entlangfährt. Ein **reisendes Licht** (Komet) zieht die Straße nach, **5 Stationen**
+(Fenster-Karten im macOS-Stil) leuchten beim Vorbeiziehen auf. `AblaufPage.jsx` hält die 5
+Stationen (Erstgespräch → Konzept & Design → Umsetzung → Go Live → Support) + Icons und
+rendert `<JourneyRoad/>` + `<ContactCTA/>`.
+
+**EIN SVG-Pfad ist die Single Source of Truth** (Desktop/Mobile je eigener `d` im `ROAD`-Objekt):
+gezeichnete Straße (3 Pfade Halo/Verlauf/Kern, via `stroke-dashoffset` enthüllt) · Lichtpunkt
+(`getPointAtLength` auf demselben Pfad) · Stationsanker (`getPointAtLength` an `THRESH=[.1,.3,.5,.7,.9]`).
+
+### ⚠️ Der große Fallstrick: Desktop animiert, **Touch = KEIN Licht** (`lightless`)
+Licht + fortschreitende Straße sind **scroll-gebundenes per-Frame-JS** (rAF liest
+`scrollYProgress`, setzt Transform/Dashoffset). **iOS/WebKit (auch Chrome am iPhone IST WebKit!)
+drosselt während einer Scroll-Geste den Main-Thread**: die Seite scrollt mit 120 Hz auf dem
+Compositor, das JS-getriebene Licht aktualisiert nur ~1 fps → es **„hüpft"**. Das ist **KEIN
+Leistungsproblem** (eine 256-Punkt-LUT statt `getPointAtLength`/Frame half NICHT — das JS *läuft*
+während des Scrollens schlicht nicht). **F12-Handyansicht am PC täuscht** (emuliert nur die Größe,
+nicht das iOS-Scroll-Verhalten → sieht dort flüssig aus).
+→ **Lösung:** Auf **Touch** (`matchMedia('(pointer: coarse)')`) und bei reduced-motion gilt
+`lightless = reduce || coarse`: **kein bewegtes Licht** (Marker/Schweif/Fog gar nicht im DOM,
+**keine rAF-Schleife**, LUT-Aufbau übersprungen). Stattdessen **ruhige statische Reise**: dunkler
+Asphalt (die leuchtende Straße bleibt leer via `initDraw`), Stationen alle aktiv. Null per-Frame-JS
+→ flüssig. **Desktop (fine pointer)** behält die volle, dort flüssige Animation.
+*(CSS Scroll-Driven Animations wären die smoothe Mobil-Alternative, brauchen aber Safari 26 / iOS 26
+— daher bewusst der robuste „kein Licht"-Fallback statt Versionsabhängigkeit. User-Entscheidung.)*
+
+### ⚠️ non-scaling-stroke-Bug (kostete 3 Anläufe)
+Die **gezeichneten** Pfade (Halo/Verlauf/Kern) dürfen **KEIN `vector-effect="non-scaling-stroke"`**
+tragen. Sonst misst der Browser `stroke-dashoffset` in **Screen-Pixeln**, während
+`getTotalLength`/`getPointAtLength` (Lichtposition) in **viewBox-Einheiten** rechnen → bei ~0.58×
+Downscale lief der Strich **~1.74× zu schnell und überholte das Licht**. `pathLength="1"` allein
+behebt es NICHT (wird unter non-scaling ignoriert). **Fix:** non-scaling weg + `pathLength="1"`
+(Dash rechnet normiert 0..1 = derselbe Bruchteil wie das Licht) + Strichbreiten in **viewBox-
+Einheiten** (im `ROAD`-Objekt, da sie ohne non-scaling mitskalieren). Asphalt/Mittellinie dürfen
+non-scaling behalten (kein Dash-Fortschritt).
+
+### Weitere Details
+- **Framing:** `useScroll({ offset: ['start 0.35','end 0.35'] })` → das Licht „fährt" auf
+  ~konstanter Bildschirmhöhe (obere Mitte), driftet nicht von oben nach unten durchs Bild.
+- **LUT (nur Desktop):** 256 vorberechnete Pfadpunkte (einmal im Mess-Effekt) → im rAF nur lineare
+  Interpolation statt `getPointAtLength`/Frame.
+- **Weiche Enden:** Straßenende blendet via **SVG-Maske** (`#roadMask`, Verlauf) weich aus statt
+  harter Kappe; das Licht löst sich am Ziel über die Tail-Opacity (`d`→1) auf.
+- **„Sonnenaufgang"-Glow** (`fogRef`): **nur Desktop** (blendet am Ende sanft ein). Auf Touch NICHT
+  gerendert — lief dort dauerhaft voll und flutete den unteren Hintergrund.
+- **Stationen leuchten früher auf** (`ACTIVATE_LEAD=0.06`): aktiv, während die Station noch etwas
+  weiter unten im Bild ist (statt erst nahe am oberen Rand).
+
+### Verifikation (Preview-Limit, s. §10)
+Preview kann **nicht scrollen** und **kein iOS testen**. Genutzt: **SVG → `data:`-URL → `<canvas>` →
+`getImageData`**, um den gezeichneten Bruchteil pixelgenau gegen `getPointAtLength` zu messen (so
+wurde der non-scaling-Bug bewiesen) · den Touch-Pfad per **`matchMedia`-Patch** (`pointer: coarse`
+erzwingen) im DOM geprüft. **Echte Handy-Performance muss am Gerät bestätigt werden.**
+
+---
+
+## 7d. Kundenstimmen — `Testimonials.jsx` (Startseite)
+
+Editorial-Karten (großes Zitat-Ornament, `lead` + `body`, Avatar = Initialen oder optionales
+`avatar`-Bild, Name optional als Link). Stimmen im **`TESTIMONIALS`-Array** — Layout wächst mit:
+1 Stimme = zentriert (`max-w-3xl`), **ab 2 zweispaltig ab `lg`**. Karten **gleich hoch + Namens-Zeile
+unten bündig**: `figure` ist `flex h-full flex-col`, `figcaption` `mt-auto` (sonst enden
+unterschiedlich lange Texte auf verschiedener Höhe). Aktuell: **Emili Gaßner** (DesignbyEms) und
+**Adolf Stettner** (Inhaber · Tankstelle Stettner, verlinkt aufs Projekt).
+
+---
+
 ## 8. Routing & Navigation
 
-- **Routen:** `/` (Home) · `/aussergewoehnliches` · `/selbst-verwalten` · `/ueber-mich` · `/kontakt` ·
-  `/impressum` · `/datenschutz`. **`/leistungen` → Redirect auf `/aussergewoehnliches`** (`<Navigate replace>`,
-  war live).
+- **Routen:** `/` (Home) · `/ablauf` (Reise-Seite, s. §7c) · `/aussergewoehnliches` · `/selbst-verwalten` ·
+  `/ueber-mich` · `/kontakt` · `/impressum` · `/datenschutz`. **`/leistungen` → Redirect auf
+  `/aussergewoehnliches`** (`<Navigate replace>`, war live). Navbar hat einen **„Ablauf"-Eintrag** (`{to:'/ablauf'}`).
 - **Home**: **Hero → Projects → HomeTeasers → ContactCTA**. HomeTeasers = zwei „Fenster"-Karten
   (Burger-Explosion → `/aussergewoehnliches`, CMS-Admin-Mockup → `/selbst-verwalten`), die direkt auf
   der Startseite zu den beiden Unterseiten locken. Alle Unterseiten sind eigene Routen.
@@ -342,6 +416,14 @@ im Quellvideo (kein reines Schwarz unten) per `watermark`-Box als ganzen Bodenst
   rendert „hidden", der Scroll friert ein und das `<canvas>` bekommt keine Layout-Größe (bleibt 1×1).
   Verifikation stattdessen: das **Compositing** prüfen, indem man einen Frame als `<img>` über `#07080c`
   injiziert und screenshottet; den **Scrub-Flow** muss der User im echten Browser bestätigen.
+- **⚠️ Scroll-gebundenes per-Frame-JS ruckelt auf iOS/Touch — nicht auf Desktop.** iOS/WebKit (auch
+  Chrome am iPhone) drosselt den Main-Thread während der Scroll-Geste; der Scroll selbst läuft auf dem
+  Compositor (120 Hz). Folge: alles, was JS pro Frame aus `scrollYProgress` positioniert (JourneyRoad-
+  Licht, §7c), aktualisiert nur ~1 fps und „hüpft". **Billiger machen hilft nicht** (das JS läuft nicht,
+  statt zu langsam zu sein). **Desktop + F12-Handyansicht täuschen** (volle Main-Thread-Leistung). Lösung:
+  auf Touch solche Effekte **weglassen/statisch** (s. JourneyRoad `lightless`) oder CSS Scroll-Driven
+  Animations (Safari erst ab 26). **GearScene (§7b) ist davon NICHT betroffen** — Canvas-Scrub im
+  400vh-Sticky, dort ist die Scroll-Strecke selbst die Animation (kein „Element folgt dem Scroll").
 - **Container-Queries:** Terminal (`.term*`) und iMac-Admin (`.imac*/.pl*`) skalieren über `cqw` relativ zum
   jeweiligen Screen-Container (`container-type: inline-size`). Größen daher in `cqw`, nicht `px/rem`.
 - **Prozent-Höhen ohne definierte Elternhöhe** vermeiden (führte beim iMac-`chin` dazu, dass das Logo in

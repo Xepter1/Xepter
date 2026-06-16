@@ -74,7 +74,7 @@ function Testimonial({ t }) {
   )
 
   return (
-    <motion.figure variants={fadeUp} className="relative">
+    <motion.figure variants={fadeUp} className="relative flex h-full flex-col">
       {/* übergroßes Anführungszeichen als ruhiges Ornament */}
       <span
         aria-hidden="true"
@@ -83,14 +83,14 @@ function Testimonial({ t }) {
         &ldquo;
       </span>
 
-      <blockquote className="mt-2">
+      <blockquote className="mt-2 mb-7">
         <p className="font-display text-2xl font-medium leading-snug tracking-tight text-ink sm:text-[1.7rem]">
           {t.lead}
         </p>
         <p className="mt-4 text-lg leading-relaxed text-ink-dim">{t.body}</p>
       </blockquote>
 
-      <figcaption className="mt-7 flex items-center gap-4 border-t border-line pt-6">
+      <figcaption className="mt-auto flex items-center gap-4 border-t border-line pt-6">
         <Avatar src={t.avatar} initials={t.initials} name={t.name} />
         <span className="leading-tight">
           {Name}
