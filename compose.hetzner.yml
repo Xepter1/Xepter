@@ -15,6 +15,33 @@ services:
       caddy_1: www.xepter.de
       caddy_1.redir: "https://xepter.de{uri}"
 
+  # Kontaktformular-Dienst (eigener Container, eigene Domain form.xepter.de).
+  # Nimmt POSTs vom Formular entgegen und mailt per SMTP an dein Postfach.
+  # SMTP-Zugangsdaten kommen NICHT ins Git → als Stack-Environment in Portainer
+  # setzen: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (MAIL_FROM/MAIL_TO optional).
+  form:
+    build:
+      context: ./contact-server
+      dockerfile: Dockerfile
+    image: xepter-contact:latest
+    container_name: xepter-contact
+    restart: unless-stopped
+    # Defaults mit :- (NICHT :?) → der Stack fährt IMMER hoch, auch wenn SMTP noch
+    # nicht gesetzt ist. Ohne SMTP läuft nur das Formular nicht (Backend gibt sauber
+    # 502 zurück) — xepter.de bleibt online. SMTP-Werte in Portainer-Stack-Env setzen.
+    environment:
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-465}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      MAIL_FROM: "${MAIL_FROM:-}"
+      MAIL_TO: "${MAIL_TO:-}"
+      ALLOW_ORIGIN: "${ALLOW_ORIGIN:-https://xepter.de,https://www.xepter.de}"
+    networks: [caddy]
+    labels:
+      caddy: form.xepter.de
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+
 networks:
   caddy:
     external: true
