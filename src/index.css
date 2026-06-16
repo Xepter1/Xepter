@@ -306,6 +306,14 @@ section[id] {
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
 
+/* Formularfeld im Fehlerzustand: rotes „Aufleuchten". `!important` ist nötig, weil ein
+   globales `* { border-color: var(--color-line) }` (Tailwind-Preflight) die Rahmenfarbe
+   sonst übersteuert. #ff5f57 = projektweites Rot (macOS-Schließen-Punkt, s. StationCard). */
+.field-error {
+  border-color: #ff5f57 !important;
+  box-shadow: 0 0 0 3px rgba(255, 95, 87, 0.16);
+}
+
 /* Mobile menu panel — near-solid so the page doesn't bleed through, plus a
    subtle brand glow (violet top-right, a hint of warm orange bottom-left). */
 .mobile-menu {

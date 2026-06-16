@@ -17,6 +17,11 @@ import {
 const CONTACT_ENDPOINT =
   import.meta.env.VITE_CONTACT_ENDPOINT || 'https://form.xepter.de/api/kontakt'
 
+// Fehler-Optik der Felder steckt in `.field-error` (index.css) — rotes Aufleuchten via
+// !important (überstimmt die globale `*`-Rahmenfarbe). Hier nur die Textfarbe der
+// Hinweismeldung (helleres Rot, gut lesbar auf Dunkel).
+const ERR_TEXT = '#ff8a85'
+
 const SOCIALS = [
   { icon: IconFacebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61590947094348' },
   { icon: IconInstagram, label: 'Instagram', href: 'https://www.instagram.com/xepter.de' },
@@ -30,12 +35,38 @@ const fade = (delay = 0) => ({
 })
 
 export default function ContactPage() {
-  // idle | sending | sent | error
+  // idle | sending | sent | error  (error = ECHTER Sende-Fehler, NICHT Eingabefehler)
   const [status, setStatus] = useState('idle')
+  // Feldbezogene Validierungsfehler, Schlüssel = Feld-id ('name' | 'email' | 'msg').
+  // Eine ungültige E-Mail markiert jetzt das FELD rot (statt wie ein kaputter Dienst
+  // auszusehen) — es wird gar nicht erst abgeschickt.
+  const [errors, setErrors] = useState({})
+
+  const clearError = (id) =>
+    setErrors((prev) => {
+      if (!prev[id]) return prev
+      const next = { ...prev }
+      delete next[id]
+      return next
+    })
+
+  // Pflichtfelder + E-Mail-Format prüfen. Bewusst tolerantes E-Mail-Muster: fängt
+  // Tippfehler (fehlendes @, Domain oder Punkt), lehnt aber keine exotisch-gültigen
+  // Adressen ab.
+  const validate = (p) => {
+    const e = {}
+    if (!p.name) e.name = 'Bitte gib deinen Namen ein.'
+    if (!p.email) e.email = 'Bitte gib deine E-Mail-Adresse ein.'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email))
+      e.email = 'Diese E-Mail-Adresse sieht nicht gültig aus — bitte prüf sie kurz.'
+    if (!p.message) e.msg = 'Bitte schreib mir ein paar Zeilen.'
+    return e
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const data = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const data = new FormData(form)
     const payload = {
       name: (data.get('name') || '').toString().trim(),
       email: (data.get('email') || '').toString().trim(),
@@ -44,6 +75,19 @@ export default function ContactPage() {
       message: (data.get('msg') || '').toString().trim(),
       firma: (data.get('firma') || '').toString(), // Honeypot (Bots füllen es)
     }
+
+    // Erst prüfen: ungültige Eingaben markieren die Felder rot und brechen ab — KEIN
+    // „hat nicht geklappt"-Fehler (der ist ausschließlich für echte Sende-Probleme).
+    const fieldErrors = validate(payload)
+    if (Object.keys(fieldErrors).length > 0) {
+      setErrors(fieldErrors)
+      setStatus('idle')
+      const firstId = ['name', 'email', 'msg'].find((id) => fieldErrors[id])
+      form.querySelector(`#${firstId}`)?.focus()
+      return
+    }
+
+    setErrors({})
     setStatus('sending')
     try {
       const res = await fetch(CONTACT_ENDPOINT, {
@@ -228,13 +272,23 @@ export default function ContactPage() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
-                <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
+                <Field
+                  id="name"
+                  label="Name"
+                  type="text"
+                  placeholder="Dein Name"
+                  autoComplete="name"
+                  error={errors.name}
+                  onClear={() => clearError('name')}
+                />
                 <Field
                   id="email"
                   label="E-Mail"
                   type="email"
                   placeholder="name@beispiel.de"
                   autoComplete="email"
+                  error={errors.email}
+                  onClear={() => clearError('email')}
                 />
                 <Field
                   id="phone"
@@ -260,9 +314,27 @@ export default function ContactPage() {
                     name="msg"
                     rows={5}
                     required
+                    onInput={() => clearError('msg')}
+                    aria-invalid={errors.msg ? 'true' : undefined}
+                    aria-describedby={errors.msg ? 'msg-error' : undefined}
                     placeholder="Erzähl mir von deinem Projekt …"
-                    className="resize-none rounded-xl border border-line-2 bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none"
+                    className={`resize-none rounded-xl border bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:outline-none ${
+                      errors.msg ? 'field-error' : 'border-line-2 focus:border-accent'
+                    }`}
                   />
+                  {errors.msg && (
+                    <motion.p
+                      id="msg-error"
+                      role="alert"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="text-sm"
+                      style={{ color: ERR_TEXT }}
+                    >
+                      {errors.msg}
+                    </motion.p>
+                  )}
                 </div>
 
                 {/* Honeypot: für Menschen unsichtbar, Bots füllen es aus */}
@@ -307,7 +379,7 @@ export default function ContactPage() {
   )
 }
 
-function Field({ id, label, type, placeholder, autoComplete, required = true }) {
+function Field({ id, label, type, placeholder, autoComplete, required = true, error, onClear }) {
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="text-sm font-medium text-ink-dim">
@@ -321,8 +393,26 @@ function Field({ id, label, type, placeholder, autoComplete, required = true }) 
         required={required}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        className="rounded-xl border border-line-2 bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none"
+        onInput={onClear}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`rounded-xl border bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:outline-none ${
+          error ? 'field-error' : 'border-line-2 focus:border-accent'
+        }`}
       />
+      {error && (
+        <motion.p
+          id={`${id}-error`}
+          role="alert"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="text-sm"
+          style={{ color: ERR_TEXT }}
+        >
+          {error}
+        </motion.p>
+      )}
     </div>
   )
 }
