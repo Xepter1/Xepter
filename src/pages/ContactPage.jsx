@@ -10,9 +10,13 @@ import {
 } from '../components/Icons'
 
 /*
- * Kontaktformular = mailto: öffnet das Mailprogramm des Besuchers mit
- * vorausgefüllter Nachricht an mail@xepter.de (kein Backend, kein Drittanbieter).
+ * Kontaktformular → POST an den selbst gehosteten Dienst (form.xepter.de), der
+ * die Anfrage per SMTP an mail@xepter.de mailt. Kein Drittanbieter, keine
+ * mailto-Abhängigkeit. Endpunkt via VITE_CONTACT_ENDPOINT überschreibbar.
  */
+const CONTACT_ENDPOINT =
+  import.meta.env.VITE_CONTACT_ENDPOINT || 'https://form.xepter.de/api/kontakt'
+
 const SOCIALS = [
   { icon: IconFacebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61590947094348' },
   { icon: IconInstagram, label: 'Instagram', href: 'https://www.instagram.com/xepter.de' },
@@ -26,20 +30,32 @@ const fade = (delay = 0) => ({
 })
 
 export default function ContactPage() {
-  const [sent, setSent] = useState(false)
+  // idle | sending | sent | error
+  const [status, setStatus] = useState('idle')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
-    const name = (data.get('name') || '').toString().trim()
-    const subject = (data.get('subject') || '').toString().trim()
-    const msg = (data.get('msg') || '').toString().trim()
-    const body = `Name: ${name}\n\n${msg}`
-    const href = `mailto:mail@xepter.de?subject=${encodeURIComponent(
-      subject || 'Anfrage über xepter.de'
-    )}&body=${encodeURIComponent(body)}`
-    window.location.href = href
-    setSent(true)
+    const payload = {
+      name: (data.get('name') || '').toString().trim(),
+      email: (data.get('email') || '').toString().trim(),
+      phone: (data.get('phone') || '').toString().trim(),
+      subject: (data.get('subject') || '').toString().trim(),
+      message: (data.get('msg') || '').toString().trim(),
+      firma: (data.get('firma') || '').toString(), // Honeypot (Bots füllen es)
+    }
+    setStatus('sending')
+    try {
+      const res = await fetch(CONTACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error(`status ${res.status}`)
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -161,10 +177,53 @@ export default function ContactPage() {
             {...fade(0.25)}
             className="rounded-3xl border border-line-2 bg-card/50 p-7 sm:p-10"
           >
-            {!sent ? (
+            {status === 'sent' ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex min-h-[380px] flex-col items-center justify-center text-center"
+              >
+                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent-soft text-accent">
+                  <IconMail width={26} height={26} />
+                </span>
+                <h3 className="mt-6 font-display text-2xl font-medium">Nachricht gesendet</h3>
+                <p className="mt-3 max-w-xs text-ink-dim">
+                  Danke! Deine Anfrage ist bei mir angekommen. Ich melde mich
+                  innerhalb von 24 Stunden.
+                </p>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="btn btn-ghost mt-7 h-11 px-5 text-sm"
+                >
+                  Noch eine Nachricht
+                </button>
+              </motion.div>
+            ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
                 <Field id="name" label="Name" type="text" placeholder="Dein Name" autoComplete="name" />
-                <Field id="subject" label="Betreff" type="text" placeholder="Worum geht es?" />
+                <Field
+                  id="email"
+                  label="E-Mail"
+                  type="email"
+                  placeholder="name@beispiel.de"
+                  autoComplete="email"
+                />
+                <Field
+                  id="phone"
+                  label="Telefon"
+                  type="tel"
+                  placeholder="Für einen schnellen Rückruf"
+                  autoComplete="tel"
+                  required={false}
+                />
+                <Field
+                  id="subject"
+                  label="Betreff"
+                  type="text"
+                  placeholder="Worum geht es?"
+                  required={false}
+                />
                 <div className="flex flex-col gap-2">
                   <label htmlFor="msg" className="text-sm font-medium text-ink-dim">
                     Nachricht
@@ -178,37 +237,41 @@ export default function ContactPage() {
                     className="resize-none rounded-xl border border-line-2 bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none"
                   />
                 </div>
-                <button type="submit" className="btn btn-primary mt-1 w-full justify-center">
-                  Nachricht senden
-                  <IconArrowUpRight width={18} height={18} />
+
+                {/* Honeypot: für Menschen unsichtbar, Bots füllen es aus */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden"
+                >
+                  <label>
+                    Firma
+                    <input type="text" name="firma" tabIndex={-1} autoComplete="off" />
+                  </label>
+                </div>
+
+                {status === 'error' && (
+                  <p className="rounded-xl border border-spark/40 bg-spark-soft px-4 py-3 text-sm text-ink">
+                    Das hat leider nicht geklappt. Bitte versuch es noch einmal —
+                    oder schreib direkt an{' '}
+                    <a href="mailto:mail@xepter.de" className="font-medium text-spark underline">
+                      mail@xepter.de
+                    </a>
+                    .
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="btn btn-primary mt-1 w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {status === 'sending' ? 'Wird gesendet …' : 'Nachricht senden'}
+                  {status !== 'sending' && <IconArrowUpRight width={18} height={18} />}
                 </button>
                 <p className="text-center font-mono text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
-                  Öffnet dein E-Mail-Programm mit vorausgefüllter Nachricht
+                  Geht direkt an mein Postfach · Antwort innerhalb von 24 h
                 </p>
               </form>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="flex min-h-[380px] flex-col items-center justify-center text-center"
-              >
-                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent-soft text-accent">
-                  <IconMail width={26} height={26} />
-                </span>
-                <h3 className="mt-6 font-display text-2xl font-medium">Mailprogramm geöffnet</h3>
-                <p className="mt-3 max-w-xs text-ink-dim">
-                  Deine Nachricht liegt vorausgefüllt in deinem E-Mail-Programm.
-                  Klick dort auf Senden. Falls sich nichts geöffnet hat, schreib
-                  direkt an mail@xepter.de.
-                </p>
-                <button
-                  onClick={() => setSent(false)}
-                  className="btn btn-ghost mt-7 h-11 px-5 text-sm"
-                >
-                  Zurück
-                </button>
-              </motion.div>
             )}
           </motion.div>
         </div>
@@ -217,17 +280,18 @@ export default function ContactPage() {
   )
 }
 
-function Field({ id, label, type, placeholder, autoComplete }) {
+function Field({ id, label, type, placeholder, autoComplete, required = true }) {
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="text-sm font-medium text-ink-dim">
         {label}
+        {!required && <span className="ml-1 text-ink-faint">(optional)</span>}
       </label>
       <input
         id={id}
         name={id}
         type={type}
-        required
+        required={required}
         placeholder={placeholder}
         autoComplete={autoComplete}
         className="rounded-xl border border-line-2 bg-base/60 px-4 py-3 text-ink placeholder:text-ink-faint transition-colors focus:border-accent focus:outline-none"
