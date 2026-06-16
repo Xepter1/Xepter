@@ -39,13 +39,19 @@ const MAX_BODY = 20 * 1024 // 20 KB reichen für ein Kontaktformular dicke
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Ein wiederverwendbarer SMTP-Transport (Connection-Pool).
+// Hinweis: Hetzner Cloud blockiert ausgehend oft Port 465 → 587 (STARTTLS) nutzen.
+const SMTP_SECURE = SMTP_PORT === 465 // 465 = implizites TLS, 587 = STARTTLS
 const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
+  host: SMTP_HOST.replace(/\.$/, ''), // evtl. versehentlichen FQDN-Punkt entfernen
   port: SMTP_PORT,
-  secure: SMTP_PORT === 465, // 465 = implizites TLS, 587 = STARTTLS
+  secure: SMTP_SECURE,
+  requireTLS: !SMTP_SECURE, // bei 587 STARTTLS erzwingen (kein Klartext-Login)
   auth: { user: SMTP_USER, pass: SMTP_PASS },
   pool: true,
   maxConnections: 2,
+  connectionTimeout: 10000, // nicht ewig hängen bleiben …
+  greetingTimeout: 10000,
+  socketTimeout: 15000, // … sondern zügig einen 502 zurückgeben
 })
 
 // --- simple In-Memory-Rate-Limit pro IP (5 Anfragen / 10 Min) ---
