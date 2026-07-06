@@ -105,6 +105,7 @@ export default function AblaufPage() {
 
       <section className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
         <SectionMark
+          as="h1"
           word="Der Weg"
           wordAccent
           rule={false}

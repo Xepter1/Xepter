@@ -20,6 +20,7 @@ export default function AussergewoehnlichesPage() {
       {/* 2. Kamera-Objektiv — Bild links, Text rechts. Zerlegt sich beim Runterscrollen. */}
       <GearScene
         dir="gear"
+        as="h2"
         frameCount={97}
         frameW={1500}
         frameH={902}

@@ -47,6 +47,7 @@ export default function Leistungen() {
           {/* Left — copy */}
           <div className="order-2 lg:order-1">
             <SectionMark
+              as="h1"
               word="Dein CMS"
               wordAccent
               rule={false}

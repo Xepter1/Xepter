@@ -39,6 +39,7 @@ export default function About() {
           {/* Left — narrative */}
           <div>
             <SectionMark
+              as="h1"
               word="Über mich"
               wordAccent
               rule={false}

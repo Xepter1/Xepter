@@ -71,6 +71,7 @@ export default function RundumSorglosPage() {
           {/* Mobil: Text zuerst, Schloss darunter. Desktop: Text links, Schloss rechts. */}
           <div className="order-1 lg:order-1">
             <SectionMark
+              as="h1"
               word="Rundum-sorglos"
               wordAccent
               rule={false}

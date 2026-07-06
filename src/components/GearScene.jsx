@@ -38,6 +38,7 @@ export default function GearScene({
   eyebrow = 'Motion',
   headline = ['Sie wollen', 'aufwendige', 'Animationen?'],
   body = 'Dann scroll langsam weiter. Das Objektiv zerlegt sich in seine Einzelteile und setzt sich rückwärts wieder zusammen. Direkt im Browser, butterweich, ohne Plugins.',
+  as: Heading = 'h1',
 }) {
   const wrapRef = useRef(null)
   const canvasRef = useRef(null)
@@ -240,9 +241,9 @@ export default function GearScene({
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-2">
           <div className={imgLeft ? 'lg:order-2' : ''}>
             {eyebrow && <p className="eyebrow !text-spark mb-5">{eyebrow}</p>}
-            <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
+            <Heading className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
               {headline.join(' ')}
-            </h1>
+            </Heading>
             <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-dim">
               {body}
             </p>
@@ -327,7 +328,7 @@ export default function GearScene({
                 {eyebrow}
               </motion.p>
             )}
-            <h1 className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
+            <Heading className="font-display text-[clamp(2.2rem,6vw,4.4rem)] font-semibold leading-[1.02] tracking-[-0.03em]">
               {headline.map((t, i) => (
                 <span key={t} className="block overflow-hidden pb-[0.06em]">
                   <motion.span
@@ -340,7 +341,7 @@ export default function GearScene({
                   </motion.span>
                 </span>
               ))}
-            </h1>
+            </Heading>
             <motion.p
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}

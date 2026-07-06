@@ -21,6 +21,7 @@ export default function SectionMark({
   className = '',
   wordAccent = false,
   rule = true,
+  as: Heading = 'h2',
 }) {
   const reduce = useReducedMotion()
   // Framer's `initial` overrides CSS, so honour reduced-motion in JS:
@@ -57,8 +58,9 @@ export default function SectionMark({
         </span>
       )}
 
-      {/* elevated headline — clip-reveal per line (same device as the Hero) */}
-      <h2 className="mt-5 break-words font-display text-[clamp(2rem,6vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
+      {/* elevated headline — clip-reveal per line (same device as the Hero).
+          Tag via `as` (default h2); the top heading of a page passes as="h1". */}
+      <Heading className="mt-5 break-words font-display text-[clamp(2rem,6vw,4rem)] font-medium leading-[1.0] tracking-[-0.035em]">
         {lines.map((line, i) => {
           const isObj = typeof line === 'object' && line !== null
           const text = isObj ? line.text : line
@@ -86,7 +88,7 @@ export default function SectionMark({
             </span>
           )
         })}
-      </h2>
+      </Heading>
     </motion.div>
   )
 }
