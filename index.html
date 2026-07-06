@@ -12,6 +12,54 @@
     />
     <title>Xepter — Der erste Eindruck entscheidet.</title>
 
+    <!-- Social-Sharing (Open Graph / Twitter): statisch, damit auch Scraper
+         ohne JS-Ausführung (WhatsApp, LinkedIn, iMessage) eine Vorschau zeigen -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Xepter" />
+    <meta property="og:title" content="Xepter — Der erste Eindruck entscheidet." />
+    <meta
+      property="og:description"
+      content="Webentwicklung & Webdesign aus dem Raum Landshut — Websites, die im ersten Moment wirken und im zweiten überzeugen."
+    />
+    <meta property="og:url" content="https://xepter.de/" />
+    <meta property="og:image" content="https://xepter.de/ich.jpg" />
+    <meta property="og:image:width" content="884" />
+    <meta property="og:image:height" content="1400" />
+    <meta property="og:locale" content="de_DE" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://xepter.de/ich.jpg" />
+
+    <!-- LocalBusiness (schema.org): sagt Google direkt, wer/wo/was —
+         lokale Signale für den Raum Landshut -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "@id": "https://xepter.de/#business",
+        "name": "Xepter",
+        "description": "Webentwicklung und Webdesign aus dem Raum Landshut. Individuelle Websites für kleine Unternehmen, Selbstständige und Vereine — persönlich betreut.",
+        "url": "https://xepter.de/",
+        "image": "https://xepter.de/ich.jpg",
+        "logo": "https://xepter.de/logo.png",
+        "email": "mail@xepter.de",
+        "founder": { "@type": "Person", "name": "Patrick Fraunhofer" },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Am Himmelreich 7",
+          "postalCode": "84166",
+          "addressLocality": "Adlkofen",
+          "addressRegion": "Bayern",
+          "addressCountry": "DE"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Landshut" },
+          { "@type": "AdministrativeArea", "name": "Niederbayern" }
+        ],
+        "knowsAbout": ["Webdesign", "Webentwicklung", "Website erstellen lassen", "Homepage-Erstellung"],
+        "slogan": "Der erste Eindruck entscheidet."
+      }
+    </script>
+
     <!-- Fonts: lokal selbst gehostet (siehe src/index.css, /public/fonts) -->
   </head>
   <body>

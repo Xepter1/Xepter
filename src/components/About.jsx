@@ -125,7 +125,7 @@ export default function About() {
               />
               <img
                 src="/ich.jpg"
-                alt="Patrick, Freelance Webentwickler (Xepter)"
+                alt="Patrick Fraunhofer, Webentwickler & Webdesigner aus Adlkofen bei Landshut (Xepter)"
                 width={884}
                 height={1400}
                 loading="lazy"
