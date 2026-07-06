@@ -9,7 +9,7 @@ const SITE = 'https://xepter.de'
 const DEFAULT = {
   title: 'Xepter — Der erste Eindruck entscheidet.',
   description:
-    'Xepter — Webentwicklung & Design. Websites, die im ersten Moment wirken und im zweiten überzeugen.',
+    'Webdesign & Webentwicklung aus dem Raum Landshut. Individuelle Websites, die im ersten Moment wirken und im zweiten überzeugen.',
 }
 
 const PAGE_META = {

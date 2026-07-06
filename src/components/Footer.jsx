@@ -21,6 +21,9 @@ export default function Footer() {
             <p className="mt-3 max-w-xs text-ink-faint">
               Weil der erste Eindruck zählt!
             </p>
+            <p className="mt-2 max-w-xs text-sm text-ink-faint">
+              Webdesign &amp; Webentwicklung aus Adlkofen bei Landshut.
+            </p>
           </div>
 
           <button

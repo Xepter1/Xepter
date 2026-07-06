@@ -54,9 +54,9 @@ export default function About() {
               className="mt-9 space-y-6 text-lg leading-relaxed text-ink-dim"
             >
               <p>
-                Ich bin <span className="text-ink">Patrick</span>, 27, und
-                studiere Wirtschaftsingenieurwesen. Seit ich ein Kind bin,
-                programmiere ich leidenschaftlich gerne.
+                Ich bin <span className="text-ink">Patrick</span>, 27, aus
+                Adlkofen bei Landshut und studiere Wirtschaftsingenieurwesen.
+                Seit ich ein Kind bin, programmiere ich leidenschaftlich gerne.
               </p>
               <p>
                 In den letzten Jahren habe ich unter anderem als{' '}
