@@ -9,6 +9,7 @@ import {
 import { motion, useScroll, useSpring, MotionConfig } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import SeoManager from './lib/seo'
 import Home from './pages/Home'
 import AblaufPage from './pages/AblaufPage'
 import AussergewoehnlichesPage from './pages/AussergewoehnlichesPage'
@@ -60,6 +61,7 @@ export default function App() {
       <MotionConfig reducedMotion="user">
         <ScrollProgress />
         <div className="grain" />
+        <SeoManager />
         <ScrollManager />
 
         <Navbar />

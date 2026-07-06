@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Interne Assets, die nicht in die Suche gehoeren
+Disallow: /email/
+Disallow: /kontakt.vcf
+
+Sitemap: https://xepter.de/sitemap.xml
