@@ -29,6 +29,11 @@ const PAGE_META = {
     description:
       'Hosting, Wartung, Sicherheit und Updates aus einer Hand – Du bekommst eine Website, um die Du Dich nie kümmern musst.',
   },
+  '/arztpraxen': {
+    title: 'Terminbuchung für Arztpraxen | Xepter',
+    description:
+      'Online-Terminbuchung für Deine Praxis: Patienten buchen selbst eine freie Zeit – passend zum Anliegen, ohne Anruf und ohne Gesundheitsdaten.',
+  },
   '/ablauf': {
     title: 'Ablauf – So entsteht Deine Website | Xepter',
     description:

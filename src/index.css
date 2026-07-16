@@ -1264,6 +1264,170 @@ section[id] {
 }
 .safari-url svg { width: 2.6cqw; height: 2.6cqw; opacity: 0.6; }
 
+/* Helle Variante — das Buchungstool ist eine Patienten-Seite, kein Admin. */
+.safari--light {
+  background: #eaf1ee;
+}
+.safari--light .safari-bar {
+  background: linear-gradient(180deg, #f3f5f4, #e4e9e7);
+  border-bottom: 1px solid rgba(19, 36, 29, 0.14);
+}
+.safari--light .safari-url {
+  background: #f9fbfa;
+  color: #5c6b64;
+  box-shadow: inset 0 0 0 1px rgba(19, 36, 29, 0.1);
+}
+
+/* --- Terminbuchung (hell, Praxis-Grün) --- */
+.bk {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 2.4cqw 3.4cqw;
+  background: #eaf1ee;
+  color: #13241d;
+  font-family: var(--font-sans);
+}
+.bk-doc {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  padding-bottom: 1.8cqw;
+  border-bottom: 1px solid rgba(19, 36, 29, 0.12);
+}
+.bk-avatar {
+  width: 6.4cqw;
+  height: 6.4cqw;
+  min-width: 20px;
+  min-height: 20px;
+  flex: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1d9e75, #0b5743);
+  color: #f6faf8;
+  font-size: 2.4cqw;
+  font-weight: 700;
+}
+.bk-doc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5cqw;
+  min-width: 0;
+}
+.bk-doc-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 3.1cqw;
+  line-height: 1.05;
+}
+.bk-doc-role {
+  font-size: 2.2cqw;
+  color: #5c6b64;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bk-next {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 1cqw;
+  padding: 1.1cqw 2cqw;
+  border-radius: 99px;
+  background: rgba(29, 158, 117, 0.14);
+  color: #0b5743;
+  font-size: 2.1cqw;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.bk-next-dot {
+  width: 1.4cqw;
+  height: 1.4cqw;
+  min-width: 5px;
+  min-height: 5px;
+  border-radius: 50%;
+  background: #1d9e75;
+  box-shadow: 0 0 1.6cqw rgba(29, 158, 117, 0.7);
+}
+.bk-week {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  padding: 1.7cqw 0;
+}
+.bk-arrow {
+  width: 5cqw;
+  height: 5cqw;
+  min-width: 16px;
+  min-height: 16px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid rgba(19, 36, 29, 0.16);
+  background: #f6faf8;
+  color: #5c6b64;
+  font-size: 2.6cqw;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bk-week-label {
+  font-weight: 600;
+  font-size: 2.6cqw;
+}
+.bk-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.4cqw;
+}
+.bk-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.bk-day {
+  text-align: center;
+  font-weight: 700;
+  font-size: 2.4cqw;
+  letter-spacing: 0.08em;
+}
+.bk-date {
+  text-align: center;
+  font-size: 2cqw;
+  color: #7f8e86;
+  padding-bottom: 1.1cqw;
+  margin-bottom: 1.3cqw;
+  border-bottom: 1px solid rgba(19, 36, 29, 0.12);
+}
+.bk-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1cqw;
+}
+.bk-slot {
+  text-align: center;
+  padding: 1.5cqw 0;
+  border-radius: 1.5cqw;
+  background: #14241f;
+  color: #f6faf8;
+  font-size: 2.3cqw;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.bk-none {
+  text-align: center;
+  color: #a8b5ae;
+  font-size: 2.4cqw;
+  padding-top: 1.2cqw;
+}
+
 /* --- Payload admin (dark) --- */
 .pl {
   flex: 1;

@@ -13,6 +13,7 @@ const NAV = [
   { label: 'Außergewöhnliches', to: '/aussergewoehnliches' },
   { label: 'Selbst verwalten', to: '/selbst-verwalten' },
   { label: 'Rundum-sorglos', to: '/rundum-sorglos' },
+  { label: 'Arztpraxen', to: '/arztpraxen' },
   { label: 'Über mich', to: '/ueber-mich' },
 ]
 

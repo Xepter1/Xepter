@@ -132,6 +132,39 @@ function CmsMini() {
   )
 }
 
+// Kompakte Wochenansicht (abstrahiert, im Stil des BookingShowcase).
+// Grün = freie Zeiten, Mittwoch ist voll — dieselbe Aussage wie auf dem iMac.
+function BookingMini() {
+  const WEEK = [4, 3, 0, 4, 2]
+  return (
+    <div className="flex h-full w-full max-w-[360px] flex-col gap-2.5 rounded-lg border border-line bg-white/[0.02] p-3">
+      {/* Kopf: Woche blättern */}
+      <div className="flex items-center justify-between">
+        <div className="h-1.5 w-1/3 rounded bg-white/20" />
+        <div className="flex gap-1.5">
+          <span className="h-3 w-3 rounded-full border border-line-2" />
+          <span className="h-3 w-3 rounded-full border border-line-2" />
+        </div>
+      </div>
+      {/* 5 Tage */}
+      <div className="grid flex-1 grid-cols-5 gap-1.5">
+        {WEEK.map((n, i) => (
+          <div key={i} className="flex flex-col gap-1.5">
+            <div className="mb-0.5 h-1.5 rounded bg-white/12" />
+            {n === 0 ? (
+              <div className="mt-1 h-px w-full bg-white/10" />
+            ) : (
+              Array.from({ length: n }).map((_, j) => (
+                <div key={j} className="h-3 rounded-[3px] bg-emerald-400/55" />
+              ))
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const CARDS = [
   {
     to: '/aussergewoehnliches',
@@ -175,6 +208,17 @@ const CARDS = [
     },
     media: <LockMini />,
   },
+  {
+    to: '/arztpraxen',
+    eyebrow: 'Für Arztpraxen',
+    title: 'Du willst Termine online vergeben?',
+    glow: {
+      left: '-12%',
+      top: '-25%',
+      background: 'radial-gradient(circle, rgba(139,61,240,0.24), transparent 60%)',
+    },
+    media: <BookingMini />,
+  },
 ]
 
 function Arrow() {
@@ -210,7 +254,7 @@ export default function HomeTeasers() {
           initial="hidden"
           whileInView="show"
           viewport={inView}
-          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
+          className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8"
         >
           {CARDS.map((c) => (
             <motion.div key={c.to} variants={fadeUp}>
